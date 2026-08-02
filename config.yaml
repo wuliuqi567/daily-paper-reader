@@ -25,5 +25,73 @@ subscriptions:
     stage: A
     diff_threshold_pct: 15
   keyword_recall_mode: or
-  intent_profiles: []
-source_backends: {}
+  intent_profiles:
+    - tag: satellite-rl
+      description: 持续检索卫星网络，尤其是低轨卫星互联网中的网络优化与智能路由研究，重点关注强化学习、深度强化学习、多智能体强化学习以及图神经网络在路由、资源优化、拥塞控制、切换管理等任务中的最新进展。
+      enabled: true
+      paper_sources:
+        - arxiv
+      keywords:
+        - keyword: satellite network optimization
+          keyword_cn: ''
+          query: satellite network optimization
+        - keyword: LEO satellite network routing
+          keyword_cn: 低轨卫星网络路由
+          query: routing optimization in low Earth orbit satellite mega-constellations
+        - keyword: deep reinforcement learning routing
+          keyword_cn: 深度强化学习路由
+          query: deep reinforcement learning for adaptive routing and traffic engineering in satellite networks
+        - keyword: multi-agent reinforcement learning resource allocation
+          keyword_cn: 多智能体强化学习资源分配
+          query: multi-agent reinforcement learning for distributed resource allocation in satellite constellations
+        - keyword: graph neural network topology prediction
+          keyword_cn: 图神经网络拓扑预测
+          query: graph neural network for modeling dynamic topology and link states in satellite networks
+        - keyword: QoS optimization satellite routing
+          keyword_cn: QoS优化卫星路由
+          query: QoS-aware routing with delay and throughput constraints for satellite mega-constellations
+      intent_queries:
+        - query: >-
+            How can deep reinforcement learning optimize routing decisions in LEO satellite mega constellations under
+            dynamic topology and time varying traffic?
+          query_cn: 深度强化学习如何在动态拓扑和时变流量条件下优化低轨卫星巨型星座的路由决策？
+          enabled: true
+          source: manual
+          note: ''
+        - query: >-
+            How are graph neural networks used for topology aware routing, traffic prediction, and resource optimization
+            in dynamic satellite networks?
+          query_cn: 图神经网络如何用于动态卫星网络中的拓扑感知路由、流量预测和资源优化？
+          enabled: true
+          source: manual
+          note: ''
+        - query: >-
+            How can multi agent reinforcement learning enable distributed routing, congestion control, and load
+            balancing over inter satellite links?
+          query_cn: 多智能体强化学习如何实现星间链路上的分布式路由、拥塞控制和负载均衡？
+          enabled: true
+          source: manual
+          note: ''
+        - query: >-
+            How can graph neural networks and reinforcement learning be combined for scalable multi objective routing
+            optimization in LEO satellite networks?
+          query_cn: 如何结合图神经网络与强化学习，实现低轨卫星网络中可扩展的多目标路由优化？
+          enabled: true
+          source: manual
+          note: ''
+      updated_at: '2026-08-02T09:29:59.088Z'
+source_backends:
+  arxiv:
+    papers_table: arxiv_papers
+    use_vector_rpc: true
+    vector_rpc: match_arxiv_papers
+    vector_rpc_exact: match_arxiv_papers_exact
+    use_bm25_rpc: true
+    bm25_rpc: match_arxiv_papers_bm25
+    sync_table: arxiv_sync_status
+    sync_success_value: success
+    schema: public
+    kind: supabase
+    enabled: true
+    url: https://lyucdwgefyfbmaiopjbk.supabase.co
+    anon_key: sb_publishable_lX-oi64Uxyd7SIVv3_w2Uw_MTOojeKq
