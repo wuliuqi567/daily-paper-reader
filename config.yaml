@@ -80,6 +80,60 @@ subscriptions:
           source: manual
           note: ''
       updated_at: '2026-08-02T09:29:59.088Z'
+    - tag: MARL-GNN
+      description: 检索强化学习、多智能体强化学习与图机器学习的最新方法，重点关注可迁移至动态网络控制、路由、调度和资源分配的技术。
+      enabled: true
+      paper_sources:
+        - arxiv
+      keywords:
+        - keyword: graph transformer
+          keyword_cn: 图 Transformer
+          query: graph transformer
+        - keyword: dynamic graph neural network
+          keyword_cn: 动态图神经网络
+          query: dynamic graph neural network
+        - keyword: multi-agent reinforcement learning
+          keyword_cn: 多智能体强化学习
+          query: multi-agent reinforcement learning
+        - keyword: safe constrained reinforcement learning
+          keyword_cn: 安全与约束强化学习
+          query: safe and constrained reinforcement learning for resource allocation and scheduling
+        - keyword: hierarchical reinforcement learning
+          keyword_cn: 分层强化学习
+          query: hierarchical reinforcement learning for scalable dynamic network control
+        - keyword: graph reinforcement learning
+          keyword_cn: 图强化学习
+          query: graph reinforcement learning combining GNNs with RL for network decision making
+      intent_queries:
+        - query: >-
+            What are the latest multi agent reinforcement learning methods for scalable coordination, communication,
+            credit assignment, and generalization in large partially observable dynamic environments?
+          query_cn: 面向大规模部分可观测动态环境，最新的多智能体强化学习方法如何解决可扩展协作、智能体通信、信用分配和泛化问题？
+          enabled: true
+          source: manual
+          note: ''
+        - query: >-
+            How do model based, offline, hierarchical, safe, and constrained reinforcement learning methods improve
+            sample efficiency and reliability in complex sequential decision making problems?
+          query_cn: 模型式、离线、分层、安全与约束强化学习如何提高复杂序贯决策问题中的样本效率和决策可靠性？
+          enabled: true
+          source: manual
+          note: ''
+        - query: >-
+            What are the latest dynamic graph neural networks, temporal graph models, graph transformers, and graph
+            foundation models for representing and predicting evolving graph structured systems?
+          query_cn: 最新的动态图神经网络、时序图模型、图 Transformer 和图基础模型如何表示与预测不断演化的图结构系统？
+          enabled: true
+          source: manual
+          note: ''
+        - query: >-
+            How can graph representation learning and reinforcement learning be combined for scalable neural
+            combinatorial optimization, routing, scheduling, and resource allocation?
+          query_cn: 如何结合图表示学习与强化学习，实现可扩展的神经组合优化、路由、调度和资源分配？
+          enabled: true
+          source: manual
+          note: ''
+      updated_at: '2026-08-02T09:37:38.107Z'
 source_backends:
   arxiv:
     papers_table: arxiv_papers
