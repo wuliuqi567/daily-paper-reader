@@ -1,0 +1,1120 @@
+Title: Long-Horizon Wireless Link Scheduling with State-Augmented Graph Neural Networks
+
+URL Source: https://arxiv.org/pdf/2607.18480v1
+
+Published Time: Wed, 22 Jul 2026 00:18:33 GMT
+
+Number of Pages: 15
+
+Markdown Content:
+> 1
+
+# Long-Horizon Wireless Link Scheduling with State-Augmented Graph Neural Networks 
+
+Romina Garcia Camargo Zhiyang Wang Navid NaderiAlizadeh Alejandro Ribeiro 
+
+Abstract —We address optimal link scheduling in large-scale wireless networks. The goal is to schedule transmissions over a time horizon so that to maximize sum rate while ensuring that average rates of each customer attain a minimum rate requirement. To this end, we formulate a constrained optimization problem and solve it using Lagrangian duality. Common primal-dual approaches lead to time invariant policies. Our constraint requires all links transmit a fraction of the time while avoiding interference, which calls for time-varying policies across time slots. We propose an iterative algorithm to sample optimal sequences of schedules and dual variables. The scheduling decisions are parameterized using a Graph Neural Network. We incorporate state-augmentation techniques to learn said parameterization, introducing dual variables as dynamic inputs to the policy. This augmentation enables the GNN to adapt scheduling decisions over time, balancing constraint satisfaction with performance maximization. We validate our approach through extensive numerical simulations, benchmarking against several baselines and considering varying constraint levels. 
+
+Index Terms —Link scheduling, state augmentation, graph neural networks 
+
+I. I NTRODUCTION 
+
+As wireless systems continue to grow in size and complexity, there is an increasing need for resource management algorithms that are both computationally efficient and capable of adapting to rapidly varying network conditions. One of the most fundamental challenges in large-scale wireless networks is link scheduling, which determines which links should transmit and when [2]–[7]. Effective link scheduling is essential for mitigating interference and ensuring fair and efficient utilization of scarce network resources. Under certain interference models, link scheduling can be reduced to classic combinatorial problems such as edge coloring or the maximum independent set (MIS), both of which are known to be NP-hard [8]–[11]. This inherent complexity has motivated extensive research, approached from both information-theoretic [4], [12] and combinatorial [13]–[15] perspectives. Traditional methods have provided a strong foundation for analyzing network topology, modeling interference, and designing scheduling heuristics [2], [16]–[19]. More recently, learning-based approaches have gained trac-tion for their ability to capture the intricacies of realistic and dynamic network environments [6], [7], [20], [21]. For 
+
+RGC and AR are with the Department of Electrical and Systems En-gineering, University of Pennsylvania, Philadelphia, PA (emails: {rominag, aribeiro}@seas.upenn.edu). ZW is with Halıcıo˘ glu Data Science Institute, UCSD, La Jolla, CA (email: zhw135@ucsd.edu). NN is with the Department of Biostatistics and Bioinformatics, Duke University, Durham, NC (email: navid.naderi@duke.edu). Preliminary results were presented in part at the Asilomar Conference on Signals, Systems, and Computers [1] 
+
+example, [6] introduces a deep neural network that bases scheduling decisions on geographic information, addressing interference while improving performance. Inspired by a related scenario, [20] constructs graph embeddings from link distances, eliminating the need for precise channel state information. The work in [21] targets long-term network performance in dynamic (vehicular) settings, relying on a geometric machine learning approach grounded in Riemannian manifolds. A common thread among many recent learning-based approaches is the use of graph-structured representations to encode network interactions. Wireless networks naturally admit a graph formulation, with nodes representing devices and edges capturing physical signal or interference relationships. This perspective has motivated the use of graph-based models, espe-cially Graph Neural Networks (GNNs), for link scheduling [15], [20], [22]. Under the primary interference model, two links interfere if they share a common user [23], leading to the construction of a conflict graph that explicitly captures these interactions [24]. This approach is used in [15], where link scheduling is reformulated as the problem of identifying an MIS in the conflict graph, with an emphasis on accelerating the computation of such sets. Nevertheless, most prior studies focus on maximizing the instantaneous sum rate [6], [7], [15], [20], [22], thereby overlooking the temporal coupling among scheduling decisions and failing to capture long-term performance metrics in dynamic wireless networks. In this paper we propose a method for learning link scheduling policies that optimize rates averaged over a time horizon. Our specific formulation requires that all customers achieve a minimum rate requirement, with excess resources devoted to maximizing average sum rates (Section II). It is noteworthy that the resulting constrained optimization problem is combinatorial in a very large dimensional space because the total number of variables involved is the product of the number of links and the number of slots in the time horizon. To learn solutions of this constrained optimization prob-lem we adopt state augmented algorithms [25], [26]. These algorithms include an offline training phase and and an online 
+
+execution phase. During the offline phase we train a learning parameterization to minimize a loss that penalizes for the violation of the constraints with penalty weights determined by a dual variable. During the online phase we consider time varying penalty weights and schedule links as dictated by the policy learned during the offline training phase. We complement the allocation of resources with an update of the penalty coefficients so that we increase weights for violated constraints and decrease weights for satisfied constraints (Section IV). We say that this is a state augmented algorithm because we can arXiv:2607.18480v1 [eess.SP] 20 Jul 2026 think of Lagrange multipliers as internal auxiliary states that guide link scheduling decisions. To explain why state augmented learning is a good idea we investigate link scheduling in the dual domain (Section III). In particular, we consider dual gradient descent algorithms (Section III-B ) and show that they yield schedule sequences that are approximately optimal in problems with large time horizons (Proposition 3). This is a remarkable fact because it implies that link scheduling problems over long time horizons are easier than expected. Approximate solutions can be found with an algorithm that is combinatorial with respect to the number of links but does not have combinatorial complexity with respect to the length of the time horizon. State augmented learning works because it imitates dual gradient descent provided that the learning parameterization is trained to a small loss (Section IV). The choice of state augmented learning may seem contrived but it is justified because more natural choices have limitations (Remarks 2 and 3). These limitations are related to the fact that recovering optimal primal variables from optimal dual variables in the optimal link scheduling problem we consider here is impossible (Section III-A). We corroborate our theoretical findings with numerical experiments (Section V). We show that the proposed algorithm returns schedules that satisfy the constraints for the vast major-ity of links (Section V-B ), such as the ones illustrated in Figure 1. For under-scheduled links, the level of constraint violation is minor. We compare our method with several baselines and demonstrate that it achieves improved performance and faster runtime (Section V-C ). We further observe that the learned policy generalizes across different transmission requirements (Section V-D ), adapts over time (Section V-E ), and achieves desirable effective rates (Section V-F). II. O PTIMAL LINK SCHEDULING 
+
+We address link scheduling in a device-to-device wireless network with K links. Let si ∈ { 0, 1} denote the status of link 
+
+i ∈ { 1, 2, . . . , K }, where si = 1 indicates that the link i is scheduled to transmit. Denote the scheduling status of all links by the vector s = [ s1; s2; · · · ; sK ] ∈ { 0, 1}K . Following a primary interference model, we consider that two links interfere with each other if they share a common device [23]. This interference model is described by a conflict graph G(V, E)
+
+in which the node set V = {1, 2, . . . , K } represents different links and the edge set E includes the edge (i, j ) whenever links 
+
+i and j interfere [24]. The adjacency matrix A ∈ { 0, 1}K×K
+
+of this conflict graph is a sparse matrix with nonzero entries 
+
+Aij = 1 if and only if (i, j ) is in the edge set E.With these definitions we can indicate successful transmis-sions r(s) of a schedule s by computing the Hadamard product between schedules s and the nonnegative projection [1 − As ]+,
+
+r(s) = s ⊙  1 − As 
+
+> +
+
+. (1) Indeed, in the conflict graph adjacency we have Aij = 1 
+
+whenever link j can interfere with link i. Since we also have that sj = 1 whenever j is scheduled, the product Aij sj = 1 
+
+indicates that link sj is actually interfering with link i. For a given schedule s the entries (As )i = P 
+
+> j
+
+Aij sj count the number of scheduled links j that interfere with link i. We thus have 1−(As )i = 1 only when no other link j is interfering with link i. If this link is scheduled, the transmission is successful. The nonnegative projection [1 − As ]+ is needed to make r(s)
+
+a proper indicator variable with entries ri(s) ∈ { 0, 1}.Since end users experience Quality of Service (QoS) over several transmission slots, the average rate over a time horizon 
+
+T is of interest. We therefore introduce s(t) to indicate the schedule for time t and ¯r to denote the rate of successful transmissions averaged over the time horizon, 
+
+¯r[s(1 : T )] = 1
+
+T
+
+> T
+
+X
+
+> t=1
+
+r[s(t)] = 1
+
+T
+
+> T
+
+X
+
+> t=1
+
+s(t) ⊙  1 − As (t) 
+
+> +
+
+,
+
+(2) The objective of wireless link scheduling is to design a policy that satisfies the interference constraints dictated by the network topology, while maximizing the long-term sum rate 1⊤¯r. We restrict our attention to scheduling sequences s(1 : T ) that meet a minimum transmission requirement for each link, specified by the vector ∆ ∈ RK 
+
+> +
+
+, such that ¯r ≥ ∆. With these definitions, the optimal scheduling problem can be formulated as the constrained optimization problem, 
+
+s⋆(1 : T ) = arg max 
+
+> s(t)∈{ 0,1}K
+
+1
+
+T
+
+> T
+
+X
+
+> t=1
+
+1⊤s(t) ⊙  1 − As (t) 
+
+> +
+
+,
+
+s.t. 1
+
+T
+
+> T
+
+X
+
+> t=1
+
+s(t) ⊙  1 − As (t)  
+
+> +
+
+≥ ∆,
+
+(3) where we call PT the optimal long-term sum rate achieved with s⋆(1 : T ). Note that the minimum transmission constraint implies that each link i transmits a fraction of the time ∆i. To meet this requirement while avoiding interference we require that policies are time-dependent, as illustrated in Figure 1. III. L INK SCHEDULING IN THE DUAL DOMAIN 
+
+To derive optimal scheduling policies, we introduce a penalty version with the Lagrangian dual. The Lagrangian of (3) is a linear combination of the objective and constraints in which the components λi of a dual variable λ define the weights of the rate constraints ¯ri[s(1 : T )] ≥ ∆i. Formally, introduce a dual variable λ and consider an instantaneous resource allocation s
+
+to define the instantaneous Lagrangian 
+
+M(s, λ) = 1⊤h
+
+s ⊙ 1 − As 
+
+> +
+
+i
+
++ λ⊤h
+
+s ⊙ 1 − As  
+
+> +
+
+− ∆
+
+i
+
+= ( 1 + λ)⊤h
+
+s ⊙  1 − As 
+
+> +
+
+i
+
+− λ⊤∆. (4) The maximization of M(s, λ) differs from (3) in two ways: (i) We consider a single resource allocation s instead of a sequence of resource allocations s(1 : T ). (ii) Rate constraints are not enforced but rather penalized with weight coefficients 
+
+λi determined by the entries of the dual variable λ.We can think of the instantaneous Lagrangian in (4) as the Lagrangian of (3) for the particular case of T = 1 . For 2Figure 1: Illustration of an optimal policy for different time steps. Links scheduled for transmission are highlighted with a thicker black line. The changes in the dual variable penalizing constraint violations are shown in shades of red. Only a portion of the graph is displayed for enhanced clarity. The scheduling decisions effectively alternate between non-interfering links, and links with higher constraint violation levels are scheduled. generic T , all of the summands that appear in the objective and constraints of (3) are evaluated at different schedule variables 
+
+s(t) but have the same functional form. Thus, the Lagrangian of (3) can be written as a time average of instantaneous Lagrangians M(s(t), λ), evaluated with a common multiplier 
+
+λ and different schedules s(t),
+
+L
+
+
+
+s(1 : T ), λ
+
+
+
+= 1
+
+T
+
+> T
+
+X
+
+> t=1
+
+M(s(t), λ). (5) The Lagrangian in (5) is a penalty formulation of (3) . Instead of requiring schedules to achieve rates ¯ri[s(1 : T )] ≥ ∆i, we penalize the violation of the rate constraints according to the values of the entries λi of the dual variable λ. Thus, in lieu of the optimal primal variables s⋆(1 : T ) we settle for the Lagrangian maximizing variables s†(1 : T, λ) computed as 
+
+s†(1 : T, λ) = arg max  
+
+> s(1: T)∈{ 0,1}K
+
+L
+
+
+
+s(1 : T ), λ
+
+
+
+. (6) It is important for forthcoming discussions that the Lagrangian maximizing variable s†(1 : T, λ) is a set. There may be – indeed, most likely there are – values of λ for which this set contains more than one value. We will use the symbol 
+
+s†(1 : T, λ) to also denote elements of the set of Lagrangian maximizers with context clarification. Lagrangian values associated with Lagrangian maximizers define the dual function d(λ) = L  s†(1 : T, λ), λ – if there is more than one Lagrangian maximizer they all achieve the same value. It is ready and well known that d(λ) is an upper bound on the optimal yield. I.e. that PT ≤ d(λ) for any multiplier λ
+
+[27]. It is therefore sensible to focus on the multiplier λ⋆ that minimizes this bound. This is the optimal dual variable which we define as, 
+
+λ⋆ = arg min 
+
+> λ∈RK
+> +
+
+d(λ) = arg min 
+
+> λ∈RK
+> +
+
+L
+
+
+
+s†(1 : T, λ), λ
+
+
+
+. (7) Since λ⋆ yields the dual function value DT = d(λ⋆) closest to the optimal primal yield PT , we can adopt the Lagrangian maximizers s†(1 : T, λ⋆) as an alternative to the optimal sched-ule s⋆(1 : T ). I.e., we redefine our goal as the determination of the Lagrangian maximizing schedules, 
+
+s†(1 : T, λ⋆) = arg max  
+
+> s(1: T)∈{ 0,1}K
+
+L
+
+
+
+s(1 : T ), λ⋆ 
+
+. (8) This is appealing for learning because training a parametrization to estimate solutions of (8) over a distribution of network real-izations is a standard learning problem. The added complexity of determining the optimal multiplier λ⋆ is not prohibitive because the dual function is always convex [27]. The challenge with using the Lagrangian maximizers s†(1 : 
+
+T, λ⋆) in (8) in lieu of the optimal schedule s⋆(1 : T ) [cf. (3) ] is that the properties of s†(1 : T, λ⋆) make it unworkable as a proxy for s⋆(1 : T ). The solution to this challenge is to leverage dual gradient descent dynamics. We explain why 
+
+s†(1 : T, λ⋆) is an unworkable proxy for s⋆(1 : T ) in Section III-A and how dual gradient descent dynamics circumvent this challenge in Section III-B . We leverage the latter to introduce the state augmented learning as an imitation of dual gradient descent(Section IV). 
+
+A. Primal Infeasibility of Lagrangian Maximizers 
+
+According to (5) , the Lagrangian of (3) is a sum of instantaneous Lagrangians M(s(t), λ). It is notable that only the variable s(t) appears in each instantaneous Lagrangian. Thus, to maximize the (aggregate) Lagrangian L(s(1 : T ), λ)
+
+we can maximize each instantaneous Lagrangian M(s(t), λ)
+
+separately. Also notable, instantaneous Lagrangians for different times are identical. They differ only in that the optimization variables are different, but they all share the same parameters – the conflict graph A, the multiplier λ and the rate requirement 
+
+∆. Thus, the schedules s†(t, λ) that maximize M(s(t), λ),and L (s(1 : T ), λ) by extension, are the same for all t. We summarize these two facts in the following proposition. 
+
+Proposition 1 Let s†(1 : T, λ) be a maximizing (6) schedule of the Lagrangian (5) and let s†(t, λ) be the time t entry of 
+
+3this schedule. Time t entries can be computed by maximizing the instantaneous Lagrangian (4) ,
+
+s†(t, λ) ≡ arg max 
+
+> s∈{ 0,1}K
+
+M(s, λ). (9) 
+
+Consequently, the set of time t and time v Lagrangian maximizers contain the same schedules. I.e., 
+
+s†(t, λ) ≡ s†(v, λ), (10) 
+
+for all dual variables λ and all time pairs t and v.Proof. See Appendix A. Proposition 1 holds for any multiplier λ, optimal multipliers 
+
+λ⋆ in particular. In this latter case, Result (9) is positive. It indi-cates that the maximization of the Lagrangian (8) decomposes into T separate maximizations of instantaneous Lagrangians. This implies that to find s†(1 : T, λ⋆) we need to solve T
+
+subproblems that are combinatorial in K variables. In contrast to the primal problem (6) which is combinatorial in KT 
+
+variables, this is a significant improvement of computational tractability. Result (9) is also negative. It indicates that the Lagrangian maximizing schedule s†(1 : T, λ⋆) is such that s†(t, λ⋆) = 
+
+s†(v, λ⋆) for all pairs of times t and v. This property makes it an unsuitable candidate for an approximate solution of the primal problem (6) . Indeed, a schedule s(t) with nonzero rate 
+
+ri(s(t)) > 0 in link i requires zero rates rj (s(t)) = 0 in adjacent links in the conflict graph [cf. (1) ]. Thus, except for situations in which rate requirements are ∆j = 0 for some nodes, schedules in which s(t) = s(v) for all t and v are not feasible in (3) . To satisfy requirements we need schedules that change over time so that different links can transmit at different times without conflicting with each other. Thus, if Lagrangian maximizers s†(1 : T, λ⋆) are such that s†(t, λ⋆) = s†(v, λ⋆)
+
+we have that the Lagrangian maximizing schedules in (8) are not even feasible in (3) – not to mention (close to) optimal. The unworkability of the Lagrangian maximizing schedule 
+
+s†(1 : T, λ⋆) as a solution of (3) requires a more creative use of duality for learning solutions of (3) . This can be done by leveraging properties of dual gradient descent dynamics that we discuss next (Section III-B). 
+
+Remark 1 A caveat to the infeasibility of the Lagrangian maximizing schedules in (8) is that (9) claims the equivalence of Lagrangian maximizing sets. It is then possible that when 
+
+λ = λ⋆, the Lagrangian maximizing sets s†(t, λ) = s†(t, λ⋆)
+
+contain multiple schedules. In this case we can select different schedules s†(t, λ⋆)̸ = s†(v, λ⋆) at different times to obtain a feasible joint schedule s†(1 : T, λ⋆). Having Lagrangian maximizing sets s†(t, λ⋆) with multiple elements is all but guaranteed but choosing the right combination of schedules from this set is, in general, as difficult as solving (3). 
+
+B. Dual Gradient Descent 
+
+Dual gradient descent algorithms follow negative subgra-dients of the dual function towards optimal dual variables 
+
+λ⋆. Formally, consider an iteration index u and let λ(u) be the corresponding dual iterate. At iteration u we determine a schedule s‡(u) that maximizes the instantaneous Lagrangian 
+
+M(s, λ(u)) associated with this multiplier, 
+
+s‡(u) ∈ arg max 
+
+> s∈{ 0,1}
+
+M
+
+
+
+s, λ(u)
+
+
+
+= arg max 
+
+> s∈{ 0,1}
+
+(1 + λ(u)) ⊤h
+
+s ⊙  1 − As 
+
+> +
+
+i
+
+. (11) In the second equality we do not write the term λ⊤∆ because it does not depend on the schedule choice – and therefore does not factor in finding the maximizing schedule s‡(u).Because of Proposition 1 we know that a schedule with 
+
+s(t) = s‡(u) for all t – recall that u and t represent different types of indices; while index u is a dual iteration step, index t is a scheduling slot – maximizes the (average) Lagrangian L(s(1 : 
+
+T ), λ). Because we also know that evaluating constraint slacks at Lagrangian maximizers yields a subgradient of the dual function [28], we use the maximizers in (11) to construct a subgradient of the dual function. A concrete expression is given in the following proposition. 
+
+Proposition 2 The instantaneous constraint slack associated with the instantaneous Lagrangian maximizer s‡(u) (11) is a subgradient of the dual function d(λ) at λ = λ(u). I.e., the vector 
+
+g(λ(u)) = s‡(u) ⊙  1 − As ‡(u)  
+
+> +
+
+− ∆ (12) 
+
+is such that g⊤(λ(u))( λ(u) − λ⋆) ≥ d(λ(u)) − d(λ⋆) ≥ 0.Proof. See Appendix A. The subgradient expression in Proposition 2 is unusual in that we use a schedule that maximizes the instantaneous Lagrangian [cf. (11) ] to find a descent direction of the dual function d(λ)
+
+obtained from maximization of the average Lagrangian [cf. (6) ]. Unusual as it may, it still provides a descent direction for the dual function d(λ). We therefore introduce a stepsize η
+
+and proceed to update the dual variable as 
+
+λ(u + 1) =
+
+h
+
+λ(u) − η g(λ(u)) 
+
+i
+
+> +
+
+(13) 
+
+=
+
+h
+
+λ(u) − η
+
+h
+
+s‡(u) ⊙  1 − As ‡(u)  
+
+> +
+
+− ∆
+
+ii 
+
+> +
+
+Since the dual function is convex, this iterative update is guaranteed to approach the set of optimal multipliers λ⋆.Asymptotically, we are guaranteed to be in the neighborhood of size O(η) of some optimal multiplier λ⋆ ( [28], see Appendix 4). Since dual iterates λ(u) approach λ⋆, Lagrangian maximiz-ers s‡(u) approach maximizers associated with optimal dual variables s†(λ⋆). However, as we already argued in Section III-A , the latter are not workable as proxies for the optimal schedules s⋆(1 : T ). Nevertheless, the sequence of Lagrangian maximizers does have an interesting property that makes it workable as a solution to the optimal scheduling problem (3) .To state this result define the average rate, 
+
+¯rs‡(1 : T ) = 1
+
+T
+
+> T
+
+X
+
+> u=1
+
+s‡(u) ⊙  1 − As ‡(u) 
+
+> +
+
+. (14) 4This is the average rate that we achieve if we execute the 
+
+sequence s‡(1 : T ) made up of Lagrangian maximizing schedules s‡(u) associated with multipliers λ(u) that make up a sequence of multipliers λ(1 : T ) generated by running the dual subgradient updates in (13). 
+
+Proposition 3 Let ¯r[s(1 : T )] be the average rates in (14) 
+
+obtained by executing the sequence of Lagrangian maximizing schedules s‡(λ(u)) . These maximizers are associated with the sequence of multipliers λ(1 : T ) obtained from running the subgradient updates in (13) . The average rates ¯r[s(1 : T )] are asymptotically nearly optimal 
+
+1⊤¯rs‡(1 : T ) ≥ P ⋆T − η
+
+2 ∥M − ∆∥2 − |λ(1) |2
+
+2ηT , (15) 
+
+and asymptotically feasible, 
+
+¯rs‡(1 : T ) ≥ ∆ − λ(T )
+
+ηT . (16) 
+
+In (15) and (16) , P ⋆T is the optimal average sum rate, M is the size of the maximum independent set of the network and η
+
+is the dual step size. Proof. See Appendix A. Proposition 3 establishes that for large T , the average rates of the sequence s‡(1 : T ) are near-optimal for (3) . Asymptotic feasibility follows from Equation (16) because the multipliers 
+
+λ(T ) remain bounded (see Appendix B), ensuring the violation term vanishes as T → ∞ . It follows from Proposition 3 that dual gradient descent finds an optimal solution of (3) despite the fact that it does not converge to a solution of (3) . More to the point, after running dual gradient descent for T iterations we cannot claim optimality of the schedule s‡(T ) but we can claim optimality of the schedule sequence s‡(1 : T ).Proposition 3 admits an alternative interpretation: We can use dual gradient descent as a scheduling algorithm. I.e., we equate dual iteration indexes u with scheduling indexes t, so that at time t = u we schedule links as dictated by s(t) = 
+
+s‡(u). At a generic scheduling slot t we have a dual variable 
+
+λ(t) = λ(u) that dictates the use of the schedule s‡(t) = s‡(u)
+
+as determined by the corresponding Lagrangian maximizers in (11) . We then update multipliers as per (13) and proceed to the next scheduling slot t + 1 = u + 1 .The challenge of using dual gradient descent as a scheduling algorithm is the cost of computing Lagrangian maximizers. The state augmented algorithm of Section IV circumvents this problem with the use of a learning parameterization that we train to approximate Lagrangian maximizers. IV. S TATE AUGMENTED LEARNING 
+
+Iterations between computing Lagrangian maximizers s‡(u)
+
+(11) and updating the dual variable λ (13) shape an algorithm that solves (3) . The focus shifts towards how to efficiently compute the Lagrangian maximizers for any λ. To this end, introduce a parametric function class Φ(A, λ; H) so that resource allocations s are functions of the interference matrix A
+
+and the multiplier λ as determined by the choice of parameter 
+
+Hs = Φ(A, λ; H). (17) Given the graph structure intrinsic to our problem, we use a Graph Neural Network (GNN) as the architecture (see Appendix C). The model will receive the network configuration via the adjacency matrix A and an input graph signal x ∈ RK
+
+supported on the nodes. GNNs are deterministic models, i.e. if the graph signal x remains constant and we assume the network structure does not change, the output of the model will be the same for all times. This requires explicitly incorporating time-varying components to the parameterization. A clever way to make the model’s output stochastic is by replacing the input signal x with the dual variable λ, a technique known as state augmentation [25], [29]. At each iteration u the GNN will process each link weighed by the violation of its individual constraint. The obtained scheduling decisions will adapt over iterations to attend undersatisfied links. Note that stable training would be prevented if λ
+
+is not considered an input, as the abrupt variations of the dual variables induce equally abrupt changes the scheduling decisions. The incorporated augmented parameterization is used as a proxy for s‡(u). The instantaneous Lagrangian is adjusted as follows: 
+
+M  Φ(A, λ; H), λ  = ( 1 + λ)⊤h
+
+Φ(A, λ; H)
+
+⊙ [1 − AΦ (A, λ; H)] +
+
+i
+
+, (18) where the term associated with ∆ is omitted as it does not affect the maximization. Our proposed learning approach involves an offline training phase and an online execution phase. During the training phase we adopt the instantaneous Lagrangian M(s, λ) as a loss to measure the fit of the resource allocation s = Φ(A, λ; H). We then consider a distribution of network realizations pA and a distribution of Lagrange multipliers pλ and search for the parameter H⋆ that minimizes the average of the instantaneous Lagrangian loss over the choice of network and multiplier, 
+
+H⋆ = arg max 
+
+> H
+
+EA,λ
+
+h
+
+M  Φ(A, λ; H), λ  i
+
+. (19) We begin with parameters H1. At each epoch, we obtain the scheduling decisions via the parameterization for a random 
+
+λ. During training, we sample λ from an arbitrary probability distribution pλ. This ensures the model is robust to different levels of constraint violation for different links. The adjusted instantaneous Lagrangian can be computed via (18) . Stochastic gradient ascent solves the maximization of (19) , updating the parameters in the direction of steepest ascent with step size 
+
+ζ. The training procedure of the proposed State Augmented GNN (SAGNN) is detailed in Algorithm 1. During the online execution phase we consider a time varying Lagrange multiplier λ(t) and schedule links as dictated by the optimal parameter H⋆,
+
+s(t) = Φ(A, λ; H⋆). (20) 5Algorithm 1 Training Phase for SAGNN Link Scheduling  
+
+> 1:
+
+Input: Number of training iterations N , primal learning rate ζ. 
+
+> 2:
+
+Initialize: H(1) randomly  
+
+> 3:
+
+for n = 1 , · · · , N do  
+
+> 4:
+
+Randomly sample λ ∼ pλ. 
+
+> 5:
+
+Generate scheduling decisions Φ(A, H(n); λ). 
+
+> 6:
+
+Use Eq. (18) to compute the instantaneous Lagrangian 
+
+M(H(n), λ). 
+
+> 7:
+
+Update the primal parameters: 
+
+H(n + 1) = H(n) + ζ∇HM(H(n), λ). 
+
+> 8:
+
+end for  
+
+> 9:
+
+Return: Optimal model parameters H⋆ = H(N ).
+
+Algorithm 2 Execution Phase for SAGNN Link Scheduling  
+
+> 1:
+
+Input: Optimal model parameters H⋆, number of times 
+
+T , dual learning rate η 
+
+> 2:
+
+Initialize: λ(1) = 0 
+
+> 3:
+
+for t = 1 , · · · , T do  
+
+> 4:
+
+Sample the model and store s(t) = Φ(A, H⋆; λ(t)) . 
+
+> 5:
+
+Update the dual variables via Eq. (21): 
+
+λ(t + 1) = 
+
+
+
+λ(t) − η
+
+h
+
+s(t) ⊙ 1 − As (t) 
+
+> +
+
+− ∆
+
+i 
+
+> +
+
+. 
+
+> 6:
+
+end for  
+
+> 7:
+
+Return: Sequence of scheduling decisions s(1 : T ).After executing this schedule we proceed to update the dual variables according to the constraint slacks associated with the link schedule s(t),
+
+λ(t + 1) = 
+
+
+
+λ(t) − η
+
+h
+
+s(t) ⊙ 1 − As (t) 
+
+> +
+
+− ∆
+
+i 
+
+> +
+
+. (21) We initialize λ(1) = 0. For each iteration u (which is equated to scheduling indexes t), use the model trained with (20) to obtain the corresponding scheduling decisions 
+
+s(1) = Φ(A, λ(1); H⋆). This enables the update of the dual variable via (21) . The graph signal λ(u) is the input of the model in the following iteration u+1 . The execution procedure of SAGNN is summarized in Algorithm 2. We say that (19) -(21) is a state augmented learning algorithm because in addition to scheduling channels as a function of the network A, we also schedule channels as a function of the multiplier λ(t). We can therefore think of λ(t) as an internal state that augments the network realization A to guide scheduling decisions. The results in Section III-B explain why state augmented learning [cf. (19) - (21) ] solves 3. According to the results in Section III-B , we obtain schedules that are O(1 /ηT )-feasible and O(1 /ηT )-optimal if we implement the Lagrangian maximizing schedules in (11) and the multiplier updates as in (13) . State augmented learning [cf. (19) - (21) ] is an odd choice, but one that is justified because more straightforward alternatives have drawbacks. The two following remarks explain this. 
+
+Remark 2 The most natural choice is to choose schedules according to a learning parameterization without state augmen-tation, i.e., we choose schedules as s(t) = Φ1(A; H). This is unworkable because the schedule s(t) is the same for all times 
+
+t and schedules that solve (3) almost never have this property. Indeed unless the rate requirement is ∆i = 0 for some links, satisfying rate constraints requires alternating channel access. 
+
+Remark 3 An alternative choice of learning parameterization is s(1 : T ) = Φ2(A; H). I.e., we train a parametric function classes to find entire schedules s(1 : T ) instead of individual scheduling decisions s(t) = Φ1(A; H) – which as we explain in Remark 2 is unworkable. This is workable but expensive to train because we are trying to learn a function class whose output is of dimension KT . This is in contrast to the outputs of the state augmented learning parameterization in (17) which are of dimension K.V. N UMERICAL EXPERIMENTS 
+
+We conduct experiments to evaluate the proposed algorithm. 1
+
+We generated a dataset of Random Geometric Graphs (RGGs), a standard model for real-world wireless networks where two nodes are connected if and only if they are within a fixed communication radius of each other. Our implementation places nodes on a regular grid, with Gaussian noise added to the positions to introduce irregularity, and forms edges according to the distances between nodes. This construction provides a balance between controllability and scalability in network complexity, as we can decide the variance of the added noise. For each communication graph, we compute its corresponding conflict graph. The distribution of node degrees in the conflict graph reflects the complexity of the scheduling task, as it governs interference. Each graph in the training and testing datasets has an average of K ≃ 500 links. We leave the study of transferability across scales for future work, as discussed in Section VI. Unless otherwise stated, we assign an identical minimum transmission requirement to all links, i.e., ∆ = ∆ 1K . The choice of the transmission requirement ∆ must be made carefully. If set too high, the problem may become infeasible. Conversely, if it is too low, it will have little to no effect on the resulting scheduling policy. To guide the selection of ∆,we consider the average degree of the conflict graph as an indicator of the network’s interference level, which loosely bounds the feasible scheduling capacity [12]. We provide a comprehensive evaluation of our algorithm’s performance, testing on graphs with Gaussian degree distribu-tions. This introduces higher structural variability and increases scheduling complexity. We first analyze the training process to confirm that optimization proceeds as expected and converges successfully (Section V-A ). To assess the feasibility of the obtained solutions, we evaluate the trained model on unseen data and observe that constraints are satisfied for the vast majority of links. The remaining violations are minor (Section V-B). 
+
+> 1Code is available at https://github.com/romm32/SAGNN.
+
+6Since we imitate optimal solutions, it is sensical to compare our method against existing heuristic approaches (Section V-C ). One of the differences between our approach and other baselines is that, as explained in Section IV, we do not learn to solve the problem directly. We instead learn to compute Lagrangian maximizers. Nonetheless, the maximization does not involve the transmission requirement ∆ (see Section III-B ). We study the generalization of our policy under differ-ent transmission requirements (Section V-D ). Meeting the requirement while avoiding interference implies the policy switches across different subsets of links as time advances. We characterize the behavior at the start and end of the considered time window to observe the performance over time (Section V-E ). Furthermore, we find that we schedule avoiding collisions the majority of the time (Section V-F ). The frequency of collisions can be further reduced with a simple masking technique. 
+
+A. Training 
+
+The model is trained using Algorithm 1 for N = 100 epochs. A GNN is used as the main architecture, followed by a sigmoid activation function to produce values in the continuous range 
+
+[0 , 1] (see Appendix D for more details on the architecture and the implementation). During the first epoch, dual variables λ are sampled from a uniform distribution U[0 , 2] K . In subsequent epochs, we instead sample from empirical dual variable vectors. We carry out the evaluation (Algorithm 2) at every epoch to monitor the performance of the model. This gives access to plausible dual variables we can feedback into our training. As these empirical dual variables were obtained via Equation (13) , the value of ∆ is implicitly reintroduced into training. Appendix E presents an analysis of how the distribution of dual variables affects performance across graphs with different levels of regularity. The parameters H are optimized via primal gradient ascent with ζ = 5 × 10 −5 using the Adam optimizer [30]. Evaluation is carried out considering T = 200 in Algorithm 2. The training requires continuous scheduling decisions to allow for backpropagation in the neural network. However, a threshold of 0.5 is used at evaluation time to binarize which links are scheduled for transmission, allowing for more accurate performance measurement. The minimum transmission requirement is ∆ = {0.1, 0.125 , 0.15 } for different trained models, where the task complexity increases with ∆. Unless otherwise stated, we use the model with ∆ = 0 .1 for subsequent experiments. The value of ∆ is needed to compute the subgradient with Equation (12) . Dual variable updates use a step size of η = 2 . To mitigate the effects that a few links with infeasible constraints might have on the overall solution, we consider a resilient formulation of the problem [31], [32]. The result is the addition of an L1 regularization term to the instantaneous Lagrangian in Equation (18) . As the term is independent of the parameters H, the training algorithm remains unchanged. The updates for the dual variable are as follows: 
+
+λ(u + 1) = 
+
+h
+
+λ(u) − η[ g(H⋆, λ(u)) + λα]
+
+i
+
+> +
+
+. (22) 
+
+Figure 2: Evolution of constraint violation during training for different minimum transmission requirements. The mean across three experiments is presented, with the standard deviation shown in a lighter color. A running average of factor 5 was applied on the curves to enhance clarity. The resilience factor α is fixed at 0.05 for all transmission requirements. For more details on the resilient formulation, see Appendix D. Figure 2 shows constraint violation results for models trained for different minimum transmission requirements, evaluated on a validation dataset at the end of each epoch. More specifically, we present the percentage of links for which 
+
+r < ∆. The curves represent the mean and standard deviation over three independent experiments with different random seeds. Higher values of ∆ increase problem complexity and approach infeasibility. As training progresses, the number of constraint violations decreases, indicating that the model effectively learns to schedule links over time successfully. For each model, Figure 3 shows the achieved average rates 
+
+1⊤r. Our proposed method, SAGNN, converges to a value close to the average Maximum Weighted Independent Set (MWIS) size of the graphs used, which serves as an upper bound on the achievable objective value. The comparison is further developed in Section V-C. 
+
+B. Constraint Satisfaction 
+
+The curves shown in Figure 2 indicate that a small fraction of links still fails to meet the minimum transmission requirement at the end of training. To assess the severity of the remaining constraint violations, we analyze the violation magnitude 
+
+∆ − r. Figure 4 shows the distribution of constraint violation levels. For a more consistent comparison, violations are normalized such that a value of 1 represents a complete failure to transmit (i.e., a shortfall equal to ∆). Across all transmission requirements, the vast majority of violations remain below 15% , with only a few outliers. These results provide strong evidence that the proposed algorithm effectively learns to satisfy the transmission constraints. Furthermore, the introduction of resilience ensures that links at risk of violating the constraint still receive high transmission rates, rather than 7Figure 3: Evolution of the average successful transmissions in the network during training. The mean across three experiments is presented, with the standard deviation shown in a lighter color. SAGNN shows convergence close to the average MWIS in the dataset. 
+
+Figure 4: Box plot of the distribution of values for links violating the constraint. The values are scaled such that 1 is the largest possible value (which would indicate a complete violation of amount ∆). being disregarded by the model due to infeasibility. This is illustrated in Figure 5. 
+
+C. Benchmark Comparison 
+
+We compare the proposed algorithm against several heuristic baselines, listed below. We do not include any learning-based approach, as the state-of-the-art baseline FPLinQ is used for comparison in the literature. i. p-persistent scheduling: Determine a probability of trans-mission for each link, correlated to its degree of conflict. Sample Bernoulli trials according to these probabilities to schedule transmissions. 
+
+Figure 5: Successful transmission rates achieved by links for varying requirements. ii. p-persistent with collision avoidance (CA): Determine the scheduling using the p-persistent strategy. For every pair of conflicting links, randomly turn one of them off. iii. FPlinQ [2]: State-of-the-art baseline for link scheduling based on fractional programming. It maximizes the instan-taneous sum rate. iv. Maximum weight independent set (MWIS) scheduling [33]–[35]: Optimal solution to the problem where the links are weighted by their corresponding entry as the dual variable λ.The performance of our algorithm and the baselines are summarized in Table I, averaging results over T = 200 
+
+time steps for 10 graphs from the test set (due to the high computational cost of the baseline methods). Although SAGNN does not attain the highest average sum rate, it remains competitive while offering inference runtimes that are orders of magnitude faster. Beyond its strong performance, SAGNN is also naturally suited for decentralized deployment since it relies only on local information [36]. In contrast, decentralizing FPLinQ or MWIS would require each node to replicate complex centralized computations, which could lead to inconsistent network views and degraded scheduling decisions. Additionally, SAGNN operates without requiring full channel state information (CSI), unlike FPLinQ, and thus incurs 8Constraint violation (%) Objective function (%) Runtime                               
+
+> p-persistent 97.57 ±0.62 2.69 ±0.08 0.04 ±4.88 μs
+> p-persistent CA 85.47 ±1.44 6.27 ±0.14 0.04 ±3.73 μsFPLinQ 74.91 ±0.75 25.09 ±0.75 15 .3±0.50 ms MWIS 1.55 ±0.34 27.12 ±0.21 14 .22 ±2.30 sSAGNN 0.75 ±0.45 21.91 ±0.26 1.11 ±0.03 ms
+
+Table I: Performance evaluation averaged across 10 graphs from the testing dataset, showing constraint violation and objective function in percentage of links. We also present the average runtime required for generating a link scheduling for one time step, for one graph. 
+
+Figure 6: In red, percentage of constraint violation when a model with ∆T (rain ) is evaluated in different ∆E(xecution ). In blue, the average of the violation level for each corresponding case of ∆T , ∆E . Performance is best for the diagonal, where the requirement aligns for training and execution. significantly lower communication and information overhead. 
+
+D. Robustness to Different Link Priorities 
+
+Figure 6 demonstrates the performance of the proposed method when the requirement for training ∆T differs from the requirement of execution ∆E . We present the percentage of links for which r < ∆, and further quantify the severity of these violations. As expected, performance degrades when the evaluation constraint deviates from the training value. Nev-ertheless, all three models demonstrate strong generalization, maintaining low average violation levels even when evaluated under mismatched transmission requirements. Previous evaluations have considered that the minimum trans-mission requirement meets ∆ = 1∆, i.e., all links are subject to the same constraint. We test the robustness of the trained model under more realistic conditions where links are assigned different transmission priorities. Firstly, we randomly select half of the links and assign them zero requirement—effectively removing their scheduling priority—while the remaining links receive requirement values sampled uniformly between 0 and 0.15, consistent with the feasible range observed in previous experiments. In the second configuration, all links are assigned requirement values from this same uniform distribution. Figure 7 displays the cumulative density function (CDF) of the requirements in light colors with a dashed line and the rates achieved in darker colors. The results show that the model adapts its scheduling behavior to align with the assigned priorities, effectively generalizing to these new problem instances. The achieved CDF is almost always smaller 
+
+Figure 7: Robustness of the model to different minimum transmission requirements across links. In lighter colors, the corresponding distribution of requirements. In darker colors, the percentages of links that achieved different transmission rates. In the top plot (red), half the links have ∆ = 0 , while the other half have a requirement uniformly distributed in [0 , 0.15] . In the middle plot (green), all links have a requirement sampled from a uniform distribution in [0 , 0.15] . In the bottom plot (blue), we show the results for all links having ∆ = 0 .15 .than the required CDF, which implies most of the links are achieving higher rates than assigned. 
+
+E. Properties of Scheduling Policies 
+
+Previous results have demonstrated the success of our algorithm in terms of performance averaged over time, as required by the problem formulation in Equation (3) . It is reasonable to also study the behavior of the algorithm in the time domain. Figure 8 illustrates the evolution of the percentage of links scheduled at least once during the initial evaluation times. SAGNN rapidly approaches 100% , matching the performance of MWIS. Unlike FPLinQ, which repeatedly schedules the same subset of links and thus limits diversity in channel access, SAGNN distributes channel access more evenly across links. Figure 1 illustrates a subset of nodes and edges in an example conflict graph. Scheduled links for the last three 9Figure 8: Percentage of links scheduled at least once at the first T = 25 steps of evaluation in a subset of 10 graphs from the test dataset. time steps of evaluation are highlighted with a thicker black line. The obtained policy is indeed achieving a switching behavior between different independent sets in the conflict graph. Moreover, the links scheduled are associated to high values of the dual variable, shown in shades of red. Observe that after a link has been scheduled, its corresponding multiplier decreases in the next time step. 
+
+F. Interference Evaluation 
+
+Figure 9 compares the number of successful transmissions to the total number of transmission attempts. The evaluation is performed on the test dataset using 100 unseen graphs, with transmission counts averaged across these samples. Results show that the success ratio remains stable as the minimum transmission requirement ∆ increases. This demonstrates that the algorithm effectively avoids scheduling conflicting links, minimizing wasted channel resources and sustaining a high rate of successful transmissions. Further gains in performance can be achieved by masking out interfering transmissions. If the adjacency matrix A of the conflict graph is available, we can compute the conflict term As binary (t) to identify collisions at time step t. For each set of colliding links, we deactivate all but the one involved in less collisions, ensuring that only non-conflicting links are scheduled. This guarantees that all active transmissions are successful, reducing wasted power and increasing the overall achieved rates. The masking procedure is simple, can be implemented in a decentralized fashion, and enhances the model’s effectiveness. Table II demonstrates the performance improvement, where results for our method are repeated from Table I for comparison. Evaluation is conducted on the same 10 unseen graphs. A drawback of this approach is the increased average runtime required to resolve collisions and finalize the schedule for each time step t.
+
+Figure 9: Number of total and successful transmissions for different requirements. The average across 100 graphs is presented for different values of ∆.            
+
+> Constraint violation (%) Objective function (%) Runtime SAGNN 0.75 ±0.45 21.91 ±0.26 1.11 ±0.03 ms
+> SAGNN masked 0.16 ±0.25 23.11 ±0.23 4.15 ±10 .8ms
+
+Table II: Performance results averaged over 10 unseen graphs for SAGNN and a masked version of the algorithm. We present mean and standard deviation. VI. C ONCLUSIONS 
+
+We presented a formulation for the link scheduling problem that optimizes a long-term performance metric subject to per-link rate constraints. More importantly, we introduced an algorithm that leverages dual dynamics to obtain sequences of schedules that solve the problem. Our theoretical analysis demonstrates that the average rate achieved by our scheduling policy is asymptotically feasible and near-optimal as the time horizon T increases. These findings are corroborated by numerical experiments, which show that our policy effectively maximizes the network sum rate while satisfying minimum transmission requirements on average. We observe that con-straint violations are rare and, when they occur, remain minimal in magnitude. Compared to heuristic approaches, our algorithm achieves superior constraint satisfaction and reduced runtime while maintaining a competitive average sum rate. Furthermore, the proposed method demonstrates strong generalization across varying transmission requirements and yields high effective rates. The link scheduling problem considered in this paper is very relevant to the topological interference management and index coding problems, which have been extensively studied in the information theory literature [12], [37]–[42]. The implications of this work for better approximations and characterization of the (generalized) degrees of freedom (DoF) and capacity regions of multi-user interference channels [4], [43], [44] are interesting research directions that we leave for future work. Our algorithm employs a State-Augmented Graph Neural Network (SAGNN). Beyond stability and scalability, a critical advantage of GNNs in this context is transferability—the 10 ability to generalize to larger or varying network topologies. However, existing theoretical analyses of GNN transferability focus primarily on dense graphs [45], [46], a regime that does not accurately model the sparse, geometric nature of wireless networks. While this transferability has been extensively observed in experiments [47]–[50], establishing its theoretical foundations in wireless scenarios remains an open challenge that recent works have begun to address [51]. REFERENCES [1] R. G. Camargo, Z. Wang, N. NaderiAlizadeh, and A. Ribeiro, “Wireless link scheduling with state-augmented graph neural networks,” 2025. [Online]. Available: https://arxiv.org/abs/2505.07598 [2] K. Shen and W. Yu, “FPLinQ: A cooperative spectrum sharing strategy for device-to-device communications,” in 2017 IEEE international symposium on information theory (ISIT) . IEEE, 2017, pp. 2323–2327. [3] X. Wu, S. Tavildar, S. Shakkottai, T. Richardson, J. Li, R. Laroia, and A. Jovicic, “FlashLinQ: A synchronous distributed scheduler for peer-to-peer ad hoc networks,” IEEE/ACM Transactions on Networking , vol. 21, no. 4, pp. 1215–1228, 2013. [4] N. Naderializadeh and A. S. Avestimehr, “ITLinQ: A new approach for spectrum sharing in device-to-device communication systems,” IEEE Journal on Selected Areas in Communications , vol. 32, no. 6, pp. 1139– 1151, 2014. [5] X. Yi and G. Caire, “Itlinq+: An improved spectrum sharing mechanism for device-to-device communications,” in 2015 49th Asilomar Conference on Signals, Systems and Computers . IEEE, 2015, pp. 1310–1314. [6] W. Cui, K. Shen, and W. Yu, “Spatial deep learning for wireless scheduling,” IEEE Journal on Selected Areas in Communications , vol. 37, no. 6, pp. 1248–1261, 2019. [7] Z. Shan, X. Yi, L. Liang, C.-S. Liao, and S. Jin, “Grlinq: A distributed link scheduling mechanism with graph reinforcement learning,” in 2024 IEEE International Symposium on Information Theory (ISIT) , 2024, pp. 2436–2441. [8] I. Holyer, “The np-completeness of edge-coloring,” SIAM Journal on Computing , vol. 10, no. 4, pp. 718–720, 1981. [Online]. Available: https://doi.org/10.1137/0210055 [9] M. R. Garey and D. S. Johnson, “Strong np-completeness results: Motivation, examples, and implications,” J. ACM , vol. 25, no. 3, p. 499–508, Jul. 1978. [Online]. Available: https://doi.org/10.1145/322077. 322090 [10] J. Yu, B. Huang, X. Cheng, and M. Atiquzzaman, “Shortest link scheduling algorithms in wireless networks under the sinr model,” IEEE Transactions on Vehicular Technology , vol. 66, no. 3, pp. 2643–2657, 2017. [11] S. Borbash and A. Ephremides, “Wireless link scheduling with power control and sinr constraints,” IEEE Transactions on Information Theory ,vol. 52, no. 11, pp. 5106–5111, 2006. [12] S. A. Jafar, “Topological interference management through index coding,” 
+
+IEEE Transactions on Information Theory , vol. 60, no. 1, pp. 529–568, 2013. [13] S. Gandham, M. Dawande, and R. Prakash, “Link scheduling in wireless sensor networks: Distributed edge-coloring revisited,” Journal of Parallel and Distributed Computing , vol. 68, no. 8, pp. 1122–1134, 2008. [Online]. Available: https://www.sciencedirect.com/science/article/ pii/S0743731508000142 [14] W. Wang, Y. Wang, X.-Y. Li, W.-Z. Song, and O. Frieder, “Efficient interference-aware tdma link scheduling for static wireless networks,” in 
+
+Proceedings of the 12th Annual International Conference on Mobile Computing and Networking , ser. MobiCom ’06. New York, NY, USA: Association for Computing Machinery, 2006, p. 262–273. [Online]. Available: https://doi.org/10.1145/1161089.1161119 [15] Z. Zhao, G. Verma, C. Rao, A. Swami, and S. Segarra, “Link scheduling using graph neural networks,” IEEE Transactions on Wireless Communi-cations , vol. 22, no. 6, pp. 3997–4012, 2023. [16] D. M. Blough, G. Resta, and P. Santi, “Approximation algorithms for wireless link scheduling with sinr-based interference,” IEEE/ACM Transactions on Networking , vol. 18, no. 6, pp. 1701–1712, 2010. [17] P. Santi, R. Maheshwari, G. Resta, S. Das, and D. M. Blough, “Wireless link scheduling under a graded sinr interference model,” in Proceedings of the 2nd ACM International Workshop on Foundations of Wireless Ad Hoc and Sensor Networking and Computing , ser. FOWANC ’09. New York, NY, USA: Association for Computing Machinery, 2009, p. 3–12. [Online]. Available: https://doi.org/10.1145/1540343.1540346 [18] P.-J. Wan, O. Frieder, X. Jia, F. Yao, X. Xu, and S. Tang, “Wireless link scheduling under physical interference model,” in 2011 Proceedings IEEE INFOCOM , 2011, pp. 838–845. [19] M. Saad, A. El-Moursy, O. Alfawaz, K. Alnajjar, and S. Abdallah, “Wireless link scheduling via parallel genetic algorithm,” Concurrency and Computation: Practice and Experience , vol. 34, 12 2021. [20] M. Lee, G. Yu, and G. Y. Li, “Graph embedding-based wireless link scheduling with few training samples,” IEEE Transactions on Wireless Communications , vol. 20, no. 4, pp. 2282–2294, 2021. [21] R. Shelim and A. S. Ibrahim, “Geometric machine learning over riemannian manifolds for wireless link scheduling,” IEEE Access , vol. 10, pp. 22 854–22 864, 2022. [22] S. He, S. Xiong, W. Zhang, Y. Yang, J. Ren, and Y. Huang, “Gblinks: Gnn-based beam selection and link activation for ultra-dense d2d mmwave networks,” IEEE Transactions on Communications , vol. 70, no. 5, pp. 3451–3466, 2022. [23] B. Hajek and G. Sasaki, “Link scheduling in polynomial time,” IEEE Transactions on Information Theory , vol. 34, no. 5, pp. 910–917, 1988. [24] K. Jain, J. Padhye, V. N. Padmanabhan, and L. Qiu, “Impact of interference on multi-hop wireless network performance,” in Proceedings of the 9th Annual International Conference on Mobile Computing and Networking , ser. MobiCom ’03. New York, NY, USA: Association for Computing Machinery, 2003, p. 66–80. [Online]. Available: https://doi.org/10.1145/938985.938993 [25] M. Calvo-Fullana, S. Paternain, L. F. O. Chamon, and A. Ribeiro, “State augmented constrained reinforcement learning: Overcoming the limitations of learning with rewards,” 2023. [Online]. Available: https://arxiv.org/abs/2102.11941 [26] N. NaderiAlizadeh, M. Eisen, and A. Ribeiro, “State-augmented learnable algorithms for resource management in wireless networks,” IEEE Transactions on Signal Processing , vol. 70, pp. 5898–5912, 2022. [27] S. Boyd and L. Vandenberghe, Convex optimization . Cambridge university press, 2004. [28] D. P. Bertsekas, “Nonlinear programming,” Journal of the Operational Research Society , vol. 48, no. 3, pp. 334–334, 1997. [29] N. NaderiAlizadeh, M. Eisen, and A. Ribeiro, “State-augmented learnable algorithms for resource management in wireless networks,” IEEE Transactions on Signal Processing , vol. 70, pp. 5898–5912, 2022. [30] D. P. Kingma and J. Ba, “Adam: A method for stochastic optimization,” 2017. [Online]. Available: https://arxiv.org/abs/1412.6980 [31] I. Hounie, A. Ribeiro, and L. F. O. Chamon, “Resilient constrained learning,” in Advances in Neural Information Processing Systems ,A. Oh, T. Naumann, A. Globerson, K. Saenko, M. Hardt, and S. Levine, Eds., vol. 36. Curran Associates, Inc., 2023, pp. 71 767–71 798. [Online]. Available: https://proceedings.neurips.cc/paper_files/paper/ 2023/file/e32349fe7e3cd4f9ef598c2b7b7a31f4-Paper-Conference.pdf [32] N. NaderiAlizadeh, M. Eisen, and A. Ribeiro, “Learning resilient radio resource management policies with graph neural networks,” IEEE Transactions on Signal Processing , vol. 71, pp. 995–1009, 2023. [33] S. Lamm, P. Sanders, C. Schulz, D. Strash, and R. F. Werneck, “Finding near-optimal independent sets at scale,” J. Heuristics ,vol. 23, no. 4, pp. 207–229, 2017. [Online]. Available: https: //doi.org/10.1007/s10732-017-9337-x [34] D. Hespe, C. Schulz, and D. Strash, “Scalable kernelization for maximum independent sets,” ACM Journal of Experimental Algorithmics ,vol. 24, no. 1, pp. 1.16:1–1.16:22, 2019. [Online]. Available: https://doi.org/10.1145/3355502 [35] S. Lamm, C. Schulz, D. Strash, R. Williger, and H. Zhang, “Exactly solving the maximum weight independent set problem on large real-world graphs,” in Proceedings of the Twenty-First Workshop on Algorithm Engineering and Experiments, ALENEX 2019 . SIAM, 2019, pp. 144–158. [Online]. Available: https://doi.org/10.1137/1.9781611975499.12 [36] Z. Wang, M. Eisen, and A. Ribeiro, “Decentralized wireless resource allocation with graph neural networks,” in 2020 54th Asilomar Conference on Signals, Systems, and Computers , 2020, pp. 299–303. [37] N. Naderializadeh and A. S. Avestimehr, “Interference networks with no csit: Impact of topology,” IEEE Transactions on Information Theory ,vol. 61, no. 2, pp. 917–938, 2014. [38] X. Yi and D. Gesbert, “Topological interference management with transmitter cooperation,” IEEE Transactions on Information Theory ,vol. 61, no. 11, pp. 6107–6130, 2015. [39] H. Yang, N. Naderializadeh, A. S. Avestimehr, and J. Lee, “Topological interference management with reconfigurable antennas,” IEEE Transac-tions on Communications , vol. 65, no. 11, pp. 4926–4939, 2017. [40] X. Yi and G. Caire, “Topological interference management with decoded message passing,” IEEE Transactions on Information Theory , vol. 64, no. 5, pp. 3842–3864, 2018. 
+
+11 [41] C. Geng, H. Sun, and S. A. Jafar, “Multilevel topological interference management: A tim-tin perspective,” IEEE Transactions on Communica-tions , vol. 69, no. 11, pp. 7350–7362, 2021. [42] Z. Shan, X. Yi, H. Yu, C.-S. Liao, and S. Jin, “Revisiting topological interference management: A learning-to-code on graphs perspective,” 
+
+arXiv preprint arXiv:2502.09344 , 2025. [43] R. H. Etkin, N. David, and H. Wang, “Gaussian interference channel capacity to within one bit,” IEEE Transactions on information theory ,vol. 54, no. 12, pp. 5534–5562, 2008. [44] C. Geng, N. Naderializadeh, A. S. Avestimehr, and S. A. Jafar, “On the optimality of treating interference as noise,” IEEE Transactions on Information Theory , vol. 61, no. 4, pp. 1753–1767, 2015. [45] L. Ruiz, L. F. Chamon, and A. Ribeiro, “Transferability Properties of Graph Neural Networks,” arXiv preprint arXiv:2112.04629 , 2021. [46] R. Levie, W. Huang, L. Bucci, M. Bronstein, and G. Kutyniok, “Transferability of spectral graph convolutional neural networks,” Journal of Machine Learning Research , vol. 22, no. 272, pp. 1–59, 2021. [47] M. Eisen and A. Ribeiro, “Optimal wireless resource allocation with random edge graph neural networks,” ieee transactions on signal processing , vol. 68, pp. 2977–2991, June 2020. [48] ——, “Transferable policies for large scale wireless networks with graph neural networks,” in ICASSP 2020 - 2020 IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP) , 2020, pp. 5040– 5044. [49] S. Fernández, R. G. Camargo, M. Eisen, A. Ribeiro, and F. Larroca, “On the transferability of graph neural networks for resource allocation in wireless networks,” in 2024 IEEE URUCON , 2024, pp. 1–5. [50] Z. Wang, M. Eisen, and A. Ribeiro, “Learning decentralized wireless resource allocations with graph neural networks,” IEEE Transactions on Signal Processing , vol. 70, pp. 1850–1863, 2022. [51] R. G. Camargo, Z. Wang, and A. Ribeiro, “Graph neural networks in large scale wireless communication networks: Scalability across random geometric graphs,” 2025. [Online]. Available: https: //arxiv.org/abs/2510.00896 [52] F. Gama, A. G. Marques, G. Leus, and A. Ribeiro, “Convolutional neural network architectures for signals supported on graphs,” IEEE Transactions on Signal Processing , vol. 67, no. 4, pp. 1034–1049, 2019. [53] F. Scarselli, M. Gori, A. C. Tsoi, M. Hagenbuchner, and G. Monfardini, “The graph neural network model,” IEEE transactions on neural networks ,vol. 20, no. 1, pp. 61–80, 2008. [54] A. Ortega, P. Frossard, J. Kovaˇ cevi´ c, J. M. Moura, and P. Vandergheynst, “Graph signal processing: Overview, challenges, and applications,” Pro-ceedings of the IEEE , vol. 106, no. 5, pp. 808–828, 2018. [55] L. Ruiz, F. Gama, and A. Ribeiro, “Graph neural networks: Architectures, stability, and transferability,” Proceedings of the IEEE , vol. 109, no. 5, pp. 660–682, 2021. [56] F. Gama, A. Ribeiro, and J. Bruna, “Stability of graph scattering transforms,” Advances in Neural Information Processing Systems , vol. 32, pp. 8038–8048, 2019. [57] Z. Wang, L. Ruiz, and A. Ribeiro, “Geometric graph filters and neural networks: Limit properties and discriminability trade-offs,” IEEE Transactions on Signal Processing , 2024. [58] J. Du, S. Zhang, G. Wu, J. M. F. Moura, and S. Kar, “Topology adaptive graph convolutional networks,” CoRR , vol. abs/1710.10370, 2017. [Online]. Available: http://arxiv.org/abs/1710.10370 [59] S. Ioffe and C. Szegedy, “Batch normalization: Accelerating deep network training by reducing internal covariate shift,” CoRR , vol. abs/1502.03167, 2015. [Online]. Available: http://arxiv.org/abs/1502.03167 [60] E. Jang, S. Gu, and B. Poole, “Categorical reparameterization with gumbel-softmax,” 2017. [Online]. Available: https://arxiv.org/abs/1611. 01144 
+
+APPENDIX 
+
+A. Proofs 
+
+We present the proofs of the propositions from Section III. 
+
+Proposition 1 Let s†(1 : T, λ) be a maximizing (6) schedule of the Lagrangian (5) and let s†(t, λ) be the time t entry of this schedule. Time t entries can be computed by maximizing the instantaneous Lagrangian (4) ,
+
+s†(t, λ) ≡ arg max 
+
+> s∈{ 0,1}K
+
+M(s, λ). (23) 
+
+Consequently, the set of time t and time v Lagrangian maximizers contain the same schedules. I.e., 
+
+s†(t, λ) ≡ s†(v, λ), (24) 
+
+for all dual variables λ and all time pairs t and v.Proof. From Equation (5) we have: 
+
+L
+
+
+
+s(1 : T ), λ
+
+
+
+= 1
+
+T
+
+> T
+
+X
+
+> t=1
+
+M(s(t), λ). (25) Observe that to obtain s†(v, λ) we maximize the Lagrangian 
+
+L( s(1 : T ), λ ) evaluated at time v:
+
+s†(v, λ) = arg max 
+
+> s(v)∈{ 0,1}K
+
+L
+
+
+
+s(v), λ
+
+
+
+= arg max 
+
+> s(v)∈{ 0,1}K
+> v
+
+X
+
+> t=v
+
+M(s(t), λ)= arg max 
+
+> s(v)∈{ 0,1}K
+
+M(s(v), λ). (26) This can be repeated for all times v ∈ { 1, . . . , T }. Nonethe-less, from our definition of the instantaneous Lagrangian from Equation (4) we have that it does not exhibit time dependence. The set of time t and time v Lagrangian maximizers contain the same schedules for all times t, v and dual variable λ:
+
+s†(t, λ) ≡ s†(v, λ). (27) 
+
+Proposition 2 The instantaneous constraint slack associated with the instantaneous Lagrangian maximizer s‡(u) (11) is a subgradient of the dual function d(λ) at λ = λ(u). I.e., the vector 
+
+g(λ(u)) = s‡(u) ⊙  1 − As ‡(u)  
+
+> +
+
+− ∆ (28) 
+
+is such that g⊤(λ(u))( λ(u) − λ⋆) ≥ d(λ(u)) − d(λ⋆) ≥ 0.Proof. Let us first consider the term g⊤(λ(u))( λ(u) − λ⋆):
+
+g⊤(λ(u))( λ(u) − λ⋆) = ( s‡(u) ⊙  1 − As ‡(u)  
+
+> +
+
+− ∆)⊤
+
+(λ(u) − λ⋆). (29) We defined d(λ(u)) = L(s†(1 : T, λ(u)) , λ(u)) :
+
+d(λ(u)) − d(λ⋆) = 1
+
+T
+
+> T
+
+X
+
+> t=1
+
+M(s†(t), λ(u)) 
+
+− 1
+
+T
+
+> T
+
+X
+
+> t=1
+
+M(s†(t), λ⋆)= 1
+
+T
+
+> T
+
+X
+
+> t=1
+
+(λ(u) − λ⋆)⊤
+
+(s†(t) ⊙ [1 − As †(t)] + − ∆). (30) 12 Observe that both (29) and (30) share the factor λ(u) − λ⋆,which does not depend on t. It remains to see that 
+
+s‡(u) ⊙ [1 − As ‡(u)] + ≥ 1
+
+T
+
+> T
+
+X
+
+> t=1
+
+s†(t) ⊙ [1 − As †(t)] + ≥ ∆
+
+(31) Note that we are assuming constraints are not violated, i.e. the achieved average rates are higher than the transmission requirement ∆. Moreover, the first inequality in Equation (31) arises from the definitions of s‡ and s† and observing the average sum rate will be smaller or equal to the optimal rate for a specific time or iteration index. 
+
+Proposition 3 Let ¯r[s(1 : T )] be the average rates in (14) 
+
+obtained by executing the sequence of Lagrangian maximizing schedules s‡(λ(u)) . These maximizers are associated with the sequence of multipliers λ(1 : T ) obtained from running the subgradient updates in (13) . The average rates ¯r[s(1 : T )] are asymptotically nearly optimal 
+
+1⊤¯rs‡(1 : T ) ≥ P ⋆T − η
+
+2 ∥M − ∆∥2 − |λ(1) |2
+
+2ηT , (32) 
+
+and asymptotically feasible, 
+
+¯rs‡(1 : T ) ≥ ∆ − λ(T )
+
+ηT . (33) 
+
+In (32) and (33) , P ⋆T is the optimal average sum rate, M is the size of the maximum independent set of the network and η
+
+is the dual step size. Proof. We first prove optimality as per Equation (32) .To show optimality it suffices to bound the optimality gap. Consider Lagrangian maximizers s‡(1 : T ), which maximize the instantaneous Lagrangian, and write the following in terms of the complete Lagrangian. 
+
+1
+
+T
+
+> T
+
+X
+
+> t=1
+
+1⊤s‡(t) ⊙  1 − As ‡(t) 
+
+> +
+
++λ⊤(t)s‡(t) ⊙  1 − As ‡(t)  
+
+> +
+
+− ∆
+
+≥ 1
+
+T
+
+> T
+
+X
+
+> t=1
+
+1⊤s(t) ⊙  1 − As (t) 
+
+> +
+
++ λ⊤(t)s(t) ⊙  1 − As (t)  
+
+> +
+
+− ∆. (34) The second term on the RHS is non-negative if we assume 
+
+s(1 : T ) feasible. Reordering and applying Equation (28) for the second term on the LHS: 
+
+1
+
+T
+
+> T
+
+X
+
+> t=1
+
+s‡(t)[ 1 − As ‡(t)] + ≥
+
+1
+
+T
+
+> T
+
+X
+
+> t=1
+
+s(t)[ 1 − As (t)] + − λ⊤(t)g(λ(t)) . (35) Evaluate s(1 : T ) = s⋆(1 : T ) the optimal schedules: 
+
+1
+
+T
+
+> T
+
+X
+
+> t=1
+
+s‡(t)[ 1 − As ‡(t)] + ≥ P ⋆T − 1
+
+T
+
+> T
+
+X
+
+> t=1
+
+λ⊤(t)g(λ(t)) .
+
+(36) To show that the optimality gap is bounded, we simply need to bound the RHS of 
+
+P ⋆T − 1⊤¯rs‡(1 : T ) ≤ 1
+
+T
+
+> T
+
+X
+
+> t=1
+
+λ⊤(t)g(λ(t)) . (37) We begin by bounding the norm of λ(t + 1) .
+
+∥λ(t + 1) ∥2 =∥[λ(t) − ηg(λ(t))] +∥2
+
+≤∥ λ(t)∥2 + η2∥g(λ(t)) ∥2
+
+− 2ηλ⊤(t)g(λ(t)) , (38) where we expand the square and remove the projection on the positive orthant. We can show the second term is bounded because η is finite and g(λ(t)) is bounded considering a vector whose norm is the size of the maximum independent set of the conflict graph, M ∈ { 0, 1}K .
+
+∥g(λ(t)) ∥2 = ∥s‡(t) ⊙  1 − As ‡(t)  
+
+> +
+
+− ∆∥2 ≤ ∥ M − ∆∥2
+
+(39) We rewrite our bound for ∥λ(t + 1) ∥2. As it is true for all time indexes, we can unroll the recursion on the RHS of Equation (38). 
+
+0 ≤ ∥ λ(t + 1) ∥2 ≤ ∥ λ(t)∥2 + η2∥M − ∆∥2 (40) 
+
+− 2ηλ⊤(t)g(λ(t)) .
+
+The term on the LHS of (40) is positive because it is a squared norm. We sum from 1 to T and use (40) iteratively. Further we divide over 2ηT to obtain the following: 
+
+1
+
+T
+
+> T
+
+X
+
+> t=1
+
+λ⊤(t)g(λ(t)) ≤ ∥λ(1) ∥2
+
+2ηT − ∥λ(T )∥2
+
+2ηT 
+
++ η
+
+2 ∥M − ∆∥2. (41) We return to our previous objective from Equation (37). 
+
+P ⋆T − 1⊤¯rs‡(1 : T ) ≤ 1
+
+T
+
+> T
+
+X
+
+> t=1
+
+λ⊤(t)g(λ(t)) 
+
+≤ η
+
+2 ∥M − ∆∥2 + ∥λ(1) ∥2 − ∥ λ(T )∥2
+
+2ηT .
+
+(42) The first term on the RHS of (42) is constant and proportional to η. The second term vanishes asymptotically as T → ∞ 
+
+(it is O( 1 
+
+> T
+
+) for a fixed η, see Proposition 4). Consequently, the upper bound is dominated by the first term, yielding an optimality gap of O(η). This recovers (32). 13 We show feasibility starting from the update rule of the dual variable in (13). 
+
+λ(t + 1) = λ(t) − η(s‡(t) ⊙  1 − As ‡(t)  
+
+> +
+
+− ∆)
+
+> +
+
+≥λ(t) − η(s‡(t) ⊙  1 − As ‡(t)  
+
+> +
+
+− ∆), (43) where the inequality follows by removing the projection onto the positive orthant. Summing this inequality over t = 1 , . . . , T 
+
+yields: 
+
+λ(T ) ≥ λ(1) − η
+
+> T
+
+X
+
+> t=1
+
+s‡(t) ⊙  1 − As ‡(t)  
+
+> +
+
++ ηT ∆. (44) Rearranging the terms to isolate the accumulated rates, we obtain: 
+
+η
+
+> T
+
+X
+
+> t=1
+
+s‡(t) ⊙  1 − As ‡(t)  
+
+> +
+
+≥ ηT ∆ + λ(1) − λ(T ). (45) Dividing both sides by ηT recovers the average rate ¯rs‡(1 : 
+
+T ):
+
+¯rs‡(1 : T ) ≥ ∆ − λ(T ) − λ(1) 
+
+ηT (46) 
+
+≥ ∆ − λ(T )
+
+ηT . (47) Since the dual variables λ(T ) remain bounded within a neighborhood of the optimal multipliers λ⋆, the second term on the RHS vanishes as O( 1 
+
+> T
+
+) for large T . This implies that the constraint violation converges to zero, proving that the policy is asymptotically feasible and recovering (33). 
+
+B. Bound in the Dual Variables 
+
+We present in Proposition 4 the bound for the dual variables when updated via Equation (13) for increasing iterations. 
+
+Proposition 4 The dual variable λ strictly approaches the optimal dual variable λ⋆ via the update in Equation (13) 
+
+whenever the current approximation error is sufficiently large. Specifically, the distance to the optimum decreases monotoni-cally, 
+
+∥λ(u + 1) − λ⋆∥ < ∥λ(u) − λ⋆∥, (48) 
+
+provided that the current distance satisfies: 
+
+∥λ(u) − λ⋆∥ > η∥M − ∆∥2
+
+2ε . (49) 
+
+Consequently, the sequence {λ(u)} does not diverge but oscillates within a bounded neighborhood of λ⋆.Proof. We analyze the evolution of the dual variables via (13) .
+
+∥λ(u + 1) − λ⋆∥2 = ∥[λ(u) − ηg(λ(u))] + − λ⋆∥2
+
+≤ ∥ λ(u) − ηg(λ(u)) − λ⋆∥2
+
+= ∥λ(u) − λ⋆∥2 − 2ηg⊤(λ(u))( λ(u) − λ⋆)+ η2∥g(λ(u)) ∥2. (50) Using Proposition 2 and the bound for ∥g(λ(u)) ∥2 derived in Appendix A, we get 
+
+∥λ(u + 1) − λ⋆∥2 ≤ ∥ λ(u) − λ⋆∥2 − 2η(d(λ(u)) − d(λ⋆)) + η2∥M − ∆∥2. (51) Since d(λ(u)) − d(λ⋆) ≥ 0, the distance to the optimum decreases strictly whenever the duality gap is sufficiently large: 
+
+2η(d(λ(u)) − d(λ⋆)) > η 2∥M − ∆∥2. (52) Substituting the strict feasibility condition d(λ(u)) − d(λ⋆) ≥
+
+ε∥λ(u) − λ⋆∥ into the inequality in Equation (52) , we observe that the distance to the optimum decreases strictly whenever the current error is sufficiently large: 
+
+∥λ(u) − λ⋆∥ > η∥M − ∆∥2
+
+2ε . (53) This inequality defines a region of guaranteed descent. As long as the dual variable λ(u) lies outside this radius, the gradient information dominates the noise introduced by the constant step size, ensuring monotonic convergence toward λ⋆. Once inside this region, the constant step size prevents further convergence to the exact optimum. Consequently, the sequence λ(u) does not diverge but remains uniformly bounded, oscillating within a neighborhood of λ⋆ with a radius proportional to η.
+
+C. Graph Neural Networks 
+
+Graph Neural Networks consist of a cascade of layers, each comprising a graph convolutional filter followed by a pointwise nonlinearity [52], [53]. These filters are polynomials on a matrix representation of the graph, aggregating information from neighboring nodes. The graph shift operator (GSO) [54] serves as this matrix representation, enabling signal diffusion over the graph’s edges. We use the adjacency matrix A of the conflict graph as the GSO. Formally, the graph convolutional filter at the l-th layer, with input graph signal xl−1, is expressed as follows: 
+
+yl =
+
+> K−1
+
+X
+
+> k=0
+
+hlk Akxl−1, xl−1, yl ∈ RK , (54) where {hlk }K−1 
+
+> k=0
+
+are the learnable parameters of the filter in the 
+
+l-th layer. The output of the graph convolutional filter is then passed through a pointwise nonlinearity σ : R → R, resulting in xl = σ(yl).
+
+GNNs possess several desirable properties that make them well-suited for real-world applications [45], [49], [55]–[57]. One such property is scalability, which enables their use in high-dimensional problems. This stems from their ability to exploit the structure encoded in the graph and apply convolutional filters efficiently. GNNs also provide stability, a critical feature for tasks involving large-scale or dynamic systems. A further advantage is transferability: when trained on one graph, a GNN can generalize to different graph structures and signals—provided the model is encapsulated in a filter tensor—while maintaining strong performance. This allows training on one network and deploying on others with similar statistical properties. Perhaps the most fundamental property of 14 (a) No noise (b) Moderate noise (c) High noise 
+
+Figure 10: Degree distributions for conflict graphs with increasing noise in positions. GNNs is permutation equivariance, inherited from graph filters. This allows GNNs to operate independently of node labels and to leverage the symmetries present in both graph structures and signals. As a result, they can learn rich representations from a single input, enhancing the model’s expressive power. 
+
+D. Implementation Details 
+
+We adopt a Graph Neural Network (GNN) architecture with L = 3 layers, each with 256 features. Convolutional stages use TagConv filters [58] of order 3, followed by Batch Normalization [59] and a leaky ReLU activation as the pointwise nonlinearity. A sigmoid activation is applied at the output to produce values in the range [0 , 1] . While more complex techniques such as the REINFORCE algorithm and the Gumbel-Softmax [60] trick were considered, the relaxation to the continuous range proved enough to obtain good performance. The model is trained for N = 100 epochs. In each epoch we iterate through the entire training and validation dataset. We generate 300 conflict graphs, and split them equally into train, validation, and test datasets. The average number of links in each network is K ≃ 500 links. 
+
+E. Dual Variable Sample Distribution 
+
+In the preliminary experiments presented in [1], the evalu-ation was conducted on nearest-neighbor graphs constructed from grid topologies without noise added to positions. This setting significantly simplifies the scheduling problem: nodes exhibit nearly identical interference patterns, and the graph structure is highly regular. Under the assumption that each node in the conflict graph has degree d, an effective scheduling policy would consist of identifying d largely disjoint maximum independent sets and alternating among them over time. In such a case, using a uniform distribution for pλ is reasonable, as all nodes play similar roles. However, as we introduce irregularity by adding noise to the node positions, the homogeneity of the interference patterns breaks down, and uniform scheduling strategies become suboptimal. In these scenarios, the choice of λ must account for the varying transmission opportunities of different links. While in the experiments in Section V we consider a single dataset with high irregularity, we now consider three datasets with increasing levels of irregularity, induced by different noise levels applied to the grid node positions. The corresponding degree distributions of their conflict graphs are shown in Figure 10. In Figure 11, we show the evolution of constraint violations over the first 30 training epochs for each dataset, evaluated  
+
+> (a) No noise (b) Moderate noise
+> (c) High noise
+
+Figure 11: Constraint violation evolution during training, running evaluation on the test dataset. We perform running averages on the time series to make them smoother. under different sampling strategies for λ. Distribution 1 samples each entry of λ uniformly between 0 and a fixed scale (set to 2). To expose the model to edge cases, a fixed percentage of entries are manually set to 0 or 1 in some instances. Distribution 2 combines uniform sampling with empirical sampling: half of the dual variable vectors are sampled uniformly, while the other half are drawn from a stored set of λ vectors collected during extra evaluation runs on the training graphs. Distribution 3 emphasizes reuse of previous training signals: uniform sampling occurs in only 10% of iterations, while the remaining 90% 
+
+sample from the stored empirical set of dual variables. These strategies allow the model to train under a mix of exploratory and realistic scheduling demands. As shown in Figure 11, increased graph irregularity leads to better performance when a greater proportion of previously seen λ vectors are reused. This aligns with the intuition that, as the degree distribution deviates further from uniformity, purely random sampling becomes less effective at capturing the structure needed for constraint satisfaction. 15

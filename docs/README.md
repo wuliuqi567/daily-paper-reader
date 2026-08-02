@@ -44,14 +44,14 @@
       <span class="dpr-home-dashboard-kicker">2026-07-04 ~ 2026-08-02</span>
       <h3 class="dpr-home-dashboard-title">今日汇总</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">共 16 篇</strong>
+    <strong class="dpr-home-dashboard-count">共 23 篇</strong>
   </div>
   <dl class="dpr-home-dashboard-stats">
-    <div class="dpr-home-dashboard-stat"><dt>累计更新</dt><dd>1 次</dd></div>
-    <div class="dpr-home-dashboard-stat"><dt>精读</dt><dd>5</dd></div>
-    <div class="dpr-home-dashboard-stat"><dt>速读</dt><dd>11</dd></div>
+    <div class="dpr-home-dashboard-stat"><dt>累计更新</dt><dd>2 次</dd></div>
+    <div class="dpr-home-dashboard-stat"><dt>精读</dt><dd>9</dd></div>
+    <div class="dpr-home-dashboard-stat"><dt>速读</dt><dd>14</dd></div>
   </dl>
-  <p class="dpr-home-dashboard-body">最近更新：2026-08-02 09:48:38 UTC<br>状态：成功</p>
+  <p class="dpr-home-dashboard-body">最近更新：2026-08-02 10:12:58 UTC<br>状态：成功</p>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-brief-card">
   <div class="dpr-home-dashboard-header">
@@ -62,10 +62,9 @@
     <strong class="dpr-home-dashboard-count">AI</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<p>今日共生成 16 篇推荐（精读 5 篇，速读 11 篇）</p>
-<p>精读：《SATLOCK: Handover-Coupled Scheduling for Weather-Resilient Quantum Key Distribution over LEO Constellations》（9.0/10）, 《Deadline-Bound Finite-Object Delivery over Intermittent LEO Satellite Contact Plans under Residual-Service Accounting》（8.0/10）</p>
-<p>速读：《Beam Hopping Low Earth Orbit Satellite Resource Allocation for Differentiated Services and Robustness Analysis under Model Attacks》（7.0/10）, 《Handover-Optimal User Association Policy for LEO Satellite-based 5G NTN》（7.0/10）, 《Small Language Model-based Control for BBR over Low Earth Orbit Satellite Internet》（7.0/10）</p>
-<p>这些结果覆盖了当下较热的方向，建议先看精读区论文的关键问题与方法。</p>
+<p>本期日报覆盖23篇论文，精读9篇、速读14篇，核心聚焦低轨卫星网络与无线资源智能调度。</p>
+<p>最值得关注两大方向：天气鲁棒的LEO量子密钥分发切换调度（9.0分），以及抗模型攻击的波束跳变资源分配（8.0分）。</p>
+<p>建议普通读者优先精读上述高分论文，并顺带浏览MARL在无人机MEC与两跳中继功率控制中的应用。</p>
   </div>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-deep-card">
@@ -74,12 +73,12 @@
       <span class="dpr-home-dashboard-kicker">今日累计</span>
       <h3 class="dpr-home-dashboard-title">精读推荐</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">5 篇</strong>
+    <strong class="dpr-home-dashboard-count">9 篇</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="SATLOCK: Handover-Coupled Scheduling for Weather-Resilient Quantum Key Distribution over LEO Constellations">SATLOCK: Handover-Coupled Scheduling for Weather-Resilient Quantum Key Distribution over LEO Constellations</span></li><li><span class="dpr-home-dashboard-paper-title" title="Deadline-Bound Finite-Object Delivery over Intermittent LEO Satellite Contact Plans under Residual-Service Accounting">Deadline-Bound Finite-Object Delivery over Intermittent LEO Satellite Contact Plans under Residual-Service Accounting</span></li><li><span class="dpr-home-dashboard-paper-title" title="Scalable Policy Optimization for Networked Multi-Agent Reinforcement Learning with Continuous State-Action Spaces">Scalable Policy Optimization for Networked Multi-Agent Reinforcement Learning with Continuous State-Action Spaces</span></li></ul>
+<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="SATLOCK: Handover-Coupled Scheduling for Weather-Resilient Quantum Key Distribution over LEO Constellations">SATLOCK: Handover-Coupled Scheduling for Weather-Resilient Quantum Key Distribution over LEO Constellations</span></li><li><span class="dpr-home-dashboard-paper-title" title="Beam Hopping Low Earth Orbit Satellite Resource Allocation for Differentiated Services and Robustness Analysis under Model Attacks">Beam Hopping Low Earth Orbit Satellite Resource Allocation for Differentiated Services and Robustness Analysis under Model Attacks</span></li><li><span class="dpr-home-dashboard-paper-title" title="Deadline-Bound Finite-Object Delivery over Intermittent LEO Satellite Contact Plans under Residual-Service Accounting">Deadline-Bound Finite-Object Delivery over Intermittent LEO Satellite Contact Plans under Residual-Service Accounting</span></li></ul>
   </div>
-  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">satellite-rl <strong>5</strong></span></div>
+  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">satellite-rl <strong>9</strong></span></div>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-skim-card">
   <div class="dpr-home-dashboard-header">
@@ -87,12 +86,12 @@
       <span class="dpr-home-dashboard-kicker">今日累计</span>
       <h3 class="dpr-home-dashboard-title">速读推荐</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">11 篇</strong>
+    <strong class="dpr-home-dashboard-count">14 篇</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="Beam Hopping Low Earth Orbit Satellite Resource Allocation for Differentiated Services and Robustness Analysis under Model Attacks">Beam Hopping Low Earth Orbit Satellite Resource Allocation for Differentiated Services and Robustness Analysis under Model Attacks</span></li><li><span class="dpr-home-dashboard-paper-title" title="Handover-Optimal User Association Policy for LEO Satellite-based 5G NTN">Handover-Optimal User Association Policy for LEO Satellite-based 5G NTN</span></li><li><span class="dpr-home-dashboard-paper-title" title="Small Language Model-based Control for BBR over Low Earth Orbit Satellite Internet">Small Language Model-based Control for BBR over Low Earth Orbit Satellite Internet</span></li></ul>
+<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="Small Language Model-based Control for BBR over Low Earth Orbit Satellite Internet">Small Language Model-based Control for BBR over Low Earth Orbit Satellite Internet</span></li><li><span class="dpr-home-dashboard-paper-title" title="Multi-Agent Reinforcement Learning for SLA-Aware Network Slicing in UAV-Enabled MEC">Multi-Agent Reinforcement Learning for SLA-Aware Network Slicing in UAV-Enabled MEC</span></li><li><span class="dpr-home-dashboard-paper-title" title="Cooperative MARL-Based Energy-Efficient Power Control for Two-Hop Relaying Networks">Cooperative MARL-Based Energy-Efficient Power Control for Two-Hop Relaying Networks</span></li></ul>
   </div>
-  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">satellite-rl <strong>11</strong></span></div>
+  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">satellite-rl <strong>14</strong></span></div>
 </section>
 </div>
 

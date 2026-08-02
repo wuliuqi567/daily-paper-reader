@@ -1,9 +1,9 @@
 {
   "date": "20260704-20260802",
   "date_label": "2026-07-04 ~ 2026-08-02",
-  "generated_at": "2026-08-02 09:48:38 UTC",
+  "generated_at": "2026-08-02 10:12:58 UTC",
   "recommend_exists": true,
-  "run_count": 1,
+  "run_count": 2,
   "papers": [
     {
       "paper_id": "2607.17076v1",
@@ -17,9 +17,25 @@
         }
       ],
       "score": 9.0,
-      "evidence": "面向低轨星座的切换感知量子密钥分发路由，采用深度Q网络在线优化",
+      "evidence": "深度Q网络用于低轨QKD星座的切换感知天气自适应在线路由",
       "first_seen_at": "2026-08-02 09:48:38 UTC",
-      "updated_at": "2026-08-02 09:48:38 UTC"
+      "updated_at": "2026-08-02 10:12:58 UTC"
+    },
+    {
+      "paper_id": "2607.03859v1",
+      "route": "20260704-20260802/2607.03859v1-beam-hopping-low-earth-orbit-satellite-resource-allocation-for-differentiated-services-and-robustness-analysis-under-model-attacks",
+      "title": "Beam Hopping Low Earth Orbit Satellite Resource Allocation for Differentiated Services and Robustness Analysis under Model Attacks",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "satellite-rl"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "基于AI的跳波束低轨卫星资源分配与鲁棒性分析，直接相关",
+      "first_seen_at": "2026-08-02 09:48:38 UTC",
+      "updated_at": "2026-08-02 10:12:58 UTC"
     },
     {
       "paper_id": "2607.04405v1",
@@ -33,9 +49,41 @@
         }
       ],
       "score": 8.0,
-      "evidence": "面向LEO卫星接触计划的截止时间约束QoS路由",
+      "evidence": "低轨接触计划上的限期交付优化，类似QoS",
       "first_seen_at": "2026-08-02 09:48:38 UTC",
-      "updated_at": "2026-08-02 09:48:38 UTC"
+      "updated_at": "2026-08-02 10:12:58 UTC"
+    },
+    {
+      "paper_id": "2607.04829v1",
+      "route": "20260704-20260802/2607.04829v1-handover-optimal-user-association-policy-for-leo-satellite-based-5g-ntn",
+      "title": "Handover-Optimal User Association Policy for LEO Satellite-based 5G NTN",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "satellite-rl"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "面向LEO卫星切换最优的用户关联策略，属于卫星网络优化与切换管理核心主题",
+      "first_seen_at": "2026-08-02 09:48:38 UTC",
+      "updated_at": "2026-08-02 10:12:58 UTC"
+    },
+    {
+      "paper_id": "2607.17561v1",
+      "route": "20260704-20260802/2607.17561v1-self-directed-spectrum-allocation-framework-for-integrated-tn-ntn-6g-networks",
+      "title": "Self-Directed Spectrum Allocation Framework for Integrated TN-NTN 6G Networks",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "satellite-rl"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "基于Q学习的综合地面-非地面（含卫星）频谱分配，优化吞吐量、公平性与干扰",
+      "first_seen_at": "2026-08-02 09:48:38 UTC",
+      "updated_at": "2026-08-02 10:12:58 UTC"
     },
     {
       "paper_id": "2607.18554v1",
@@ -49,9 +97,25 @@
         }
       ],
       "score": 8.0,
-      "evidence": "面向连续空间的网络化多智能体策略优化方法，可迁移至卫星星座分布式资源分配",
+      "evidence": "面向连续空间的网络化多智能体强化学习，可用于卫星星座分布式资源分配",
       "first_seen_at": "2026-08-02 09:48:38 UTC",
-      "updated_at": "2026-08-02 09:48:38 UTC"
+      "updated_at": "2026-08-02 10:12:58 UTC"
+    },
+    {
+      "paper_id": "2607.21876v1",
+      "route": "20260704-20260802/2607.21876v1-variance-reduced-q-learning-over-static-and-time-varying-networks",
+      "title": "Variance-Reduced Q-Learning over Static and Time-Varying Networks",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "satellite-rl"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "基于方差缩减的分布式Q学习算法，适用于时变网络中的多智能体强化学习与分布式决策",
+      "first_seen_at": "2026-08-02 10:12:58 UTC",
+      "updated_at": "2026-08-02 10:12:58 UTC"
     },
     {
       "paper_id": "2607.19809v1",
@@ -86,38 +150,6 @@
       "updated_at": "2026-08-02 09:48:38 UTC"
     },
     {
-      "paper_id": "2607.03859v1",
-      "route": "20260704-20260802/2607.03859v1-beam-hopping-low-earth-orbit-satellite-resource-allocation-for-differentiated-services-and-robustness-analysis-under-model-attacks",
-      "title": "Beam Hopping Low Earth Orbit Satellite Resource Allocation for Differentiated Services and Robustness Analysis under Model Attacks",
-      "section": "quick",
-      "tags": [
-        {
-          "kind": "query",
-          "label": "satellite-rl"
-        }
-      ],
-      "score": 7.0,
-      "evidence": "低轨卫星波束跳变资源分配结合数字孪生，直接针对卫星网络优化",
-      "first_seen_at": "2026-08-02 09:48:38 UTC",
-      "updated_at": "2026-08-02 09:48:38 UTC"
-    },
-    {
-      "paper_id": "2607.04829v1",
-      "route": "20260704-20260802/2607.04829v1-handover-optimal-user-association-policy-for-leo-satellite-based-5g-ntn",
-      "title": "Handover-Optimal User Association Policy for LEO Satellite-based 5G NTN",
-      "section": "quick",
-      "tags": [
-        {
-          "kind": "query",
-          "label": "satellite-rl"
-        }
-      ],
-      "score": 7.0,
-      "evidence": "LEO卫星5G NTN中的切换最优用户关联，博弈论优化",
-      "first_seen_at": "2026-08-02 09:48:38 UTC",
-      "updated_at": "2026-08-02 09:48:38 UTC"
-    },
-    {
       "paper_id": "2607.07142v1",
       "route": "20260704-20260802/2607.07142v1-small-language-model-based-control-for-bbr-over-low-earth-orbit-satellite-internet",
       "title": "Small Language Model-based Control for BBR over Low Earth Orbit Satellite Internet",
@@ -129,9 +161,73 @@
         }
       ],
       "score": 7.0,
-      "evidence": "使用小语言模型进行低轨卫星互联网拥塞控制,属于自适应流量工程",
+      "evidence": "面向低轨卫星互联网的拥塞控制，采用小语言模型应对链路变化性和吞吐量稳定性问题。",
       "first_seen_at": "2026-08-02 09:48:38 UTC",
-      "updated_at": "2026-08-02 09:48:38 UTC"
+      "updated_at": "2026-08-02 10:12:58 UTC"
+    },
+    {
+      "paper_id": "2607.09295v1",
+      "route": "20260704-20260802/2607.09295v1-multi-agent-reinforcement-learning-for-sla-aware-network-slicing-in-uav-enabled-mec",
+      "title": "Multi-Agent Reinforcement Learning for SLA-Aware Network Slicing in UAV-Enabled MEC",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "satellite-rl"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "多智能体强化学习实现SLA感知的网络切片与资源分配，可迁移至卫星星座资源管理。",
+      "first_seen_at": "2026-08-02 10:12:58 UTC",
+      "updated_at": "2026-08-02 10:12:58 UTC"
+    },
+    {
+      "paper_id": "2607.16703v1",
+      "route": "20260704-20260802/2607.16703v1-cooperative-marl-based-energy-efficient-power-control-for-two-hop-relaying-networks",
+      "title": "Cooperative MARL-Based Energy-Efficient Power Control for Two-Hop Relaying Networks",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "satellite-rl"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "合作式多智能体强化学习用于中继网络能效功率控制，可迁移至卫星星座分布式资源分配",
+      "first_seen_at": "2026-08-02 09:48:38 UTC",
+      "updated_at": "2026-08-02 10:12:58 UTC"
+    },
+    {
+      "paper_id": "2607.18480v1",
+      "route": "20260704-20260802/2607.18480v1-long-horizon-wireless-link-scheduling-with-state-augmented-graph-neural-networks",
+      "title": "Long-Horizon Wireless Link Scheduling with State-Augmented Graph Neural Networks",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "satellite-rl"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "基于状态增强GNN的无线链路长时调度，可用于卫星网络中的资源优化",
+      "first_seen_at": "2026-08-02 10:12:58 UTC",
+      "updated_at": "2026-08-02 10:12:58 UTC"
+    },
+    {
+      "paper_id": "2607.20554v1",
+      "route": "20260704-20260802/2607.20554v1-ai-driven-multi-hop-relay-selection-for-smart-urban-nr-v2x-networks-via-learning-to-optimize-graph-neural-networks",
+      "title": "AI-Driven Multi-Hop Relay Selection for Smart Urban NR-V2X Networks via Learning-to-Optimize Graph Neural Networks",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "satellite-rl"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "基于GNN学习优化的动态中继选择，可迁移到卫星路由",
+      "first_seen_at": "2026-08-02 10:12:58 UTC",
+      "updated_at": "2026-08-02 10:12:58 UTC"
     },
     {
       "paper_id": "2607.09372v1",
@@ -150,9 +246,9 @@
       "updated_at": "2026-08-02 09:48:38 UTC"
     },
     {
-      "paper_id": "2607.16703v1",
-      "route": "20260704-20260802/2607.16703v1-cooperative-marl-based-energy-efficient-power-control-for-two-hop-relaying-networks",
-      "title": "Cooperative MARL-Based Energy-Efficient Power Control for Two-Hop Relaying Networks",
+      "paper_id": "2607.11577v1",
+      "route": "20260704-20260802/2607.11577v1-structure-feature-aligned-graph-learning-via-alternating-constrained-optimization",
+      "title": "Structure-Feature Aligned Graph Learning via Alternating Constrained Optimization",
       "section": "quick",
       "tags": [
         {
@@ -160,15 +256,15 @@
           "label": "satellite-rl"
         }
       ],
-      "score": 7.0,
-      "evidence": "协作多智能体强化学习用于部分可观CSI下的中继功率控制，可迁移至卫星星座分布式资源分配",
+      "score": 6.0,
+      "evidence": "图学习方法解耦结构与特征，对拓扑噪声鲁棒，适用于基于GNN的动态拓扑建模。",
       "first_seen_at": "2026-08-02 09:48:38 UTC",
-      "updated_at": "2026-08-02 09:48:38 UTC"
+      "updated_at": "2026-08-02 10:12:58 UTC"
     },
     {
-      "paper_id": "2607.17561v1",
-      "route": "20260704-20260802/2607.17561v1-self-directed-spectrum-allocation-framework-for-integrated-tn-ntn-6g-networks",
-      "title": "Self-Directed Spectrum Allocation Framework for Integrated TN-NTN 6G Networks",
+      "paper_id": "2607.11602v1",
+      "route": "20260704-20260802/2607.11602v1-spatial-and-temporal-correlation-of-interference-in-a-narrow-multibeam-leo-satellite-random-access-network",
+      "title": "Spatial and Temporal Correlation of Interference in a Narrow Multibeam LEO Satellite Random Access Network",
       "section": "quick",
       "tags": [
         {
@@ -176,10 +272,42 @@
           "label": "satellite-rl"
         }
       ],
-      "score": 7.0,
-      "evidence": "基于Q学习的集成地面与非地面网络自适应频谱分配",
-      "first_seen_at": "2026-08-02 09:48:38 UTC",
-      "updated_at": "2026-08-02 09:48:38 UTC"
+      "score": 6.0,
+      "evidence": "分析窄波束LEO卫星网络的时空干扰相关性，可支撑网络优化设计",
+      "first_seen_at": "2026-08-02 10:12:58 UTC",
+      "updated_at": "2026-08-02 10:12:58 UTC"
+    },
+    {
+      "paper_id": "2607.17914v1",
+      "route": "20260704-20260802/2607.17914v1-value-aware-prediction-for-robust-multi-agent-coordination-under-communication-loss",
+      "title": "Value-Aware Prediction for Robust Multi-Agent Coordination Under Communication Loss",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "satellite-rl"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "面向通信丢失的鲁棒多智能体协调的价值感知预测方法，适用于星间链路下的鲁棒MARL",
+      "first_seen_at": "2026-08-02 10:12:58 UTC",
+      "updated_at": "2026-08-02 10:12:58 UTC"
+    },
+    {
+      "paper_id": "2607.17922v1",
+      "route": "20260704-20260802/2607.17922v1-prime-plasticity-recovery-in-multi-agent-environments-for-uav-assisted-emergency-communication-networks",
+      "title": "PRIME: Plasticity Recovery in Multi-Agent Environments for UAV-Assisted Emergency Communication Networks",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "satellite-rl"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "非平稳多智能体RL可塑性恢复，可迁移至卫星路由/拥塞控制",
+      "first_seen_at": "2026-08-02 10:12:58 UTC",
+      "updated_at": "2026-08-02 10:12:58 UTC"
     },
     {
       "paper_id": "2607.07584v1",
@@ -226,22 +354,6 @@
       ],
       "score": 6.0,
       "evidence": "约束策略复用深度强化学习用于无线资源分配，可迁移至卫星资源优化",
-      "first_seen_at": "2026-08-02 09:48:38 UTC",
-      "updated_at": "2026-08-02 09:48:38 UTC"
-    },
-    {
-      "paper_id": "2607.11577v1",
-      "route": "20260704-20260802/2607.11577v1-structure-feature-aligned-graph-learning-via-alternating-constrained-optimization",
-      "title": "Structure-Feature Aligned Graph Learning via Alternating Constrained Optimization",
-      "section": "quick",
-      "tags": [
-        {
-          "kind": "query",
-          "label": "satellite-rl"
-        }
-      ],
-      "score": 6.0,
-      "evidence": "面向拓扑噪声鲁棒的图神经网络学习，与动态卫星拓扑建模相关",
       "first_seen_at": "2026-08-02 09:48:38 UTC",
       "updated_at": "2026-08-02 09:48:38 UTC"
     },
