@@ -1,0 +1,472 @@
+Title: Handover-Optimal User Association Policy for LEO Satellite-based 5G NTN
+
+URL Source: https://arxiv.org/pdf/2607.04829v1
+
+Published Time: Tue, 07 Jul 2026 02:52:10 GMT
+
+Number of Pages: 7
+
+Markdown Content:
+# Handover-Optimal User Association Policy for LEO Satellite-based 5G NTN 
+
+Pradnya Taksande ∗, Jainesh Mehta †, Prasanna Chaporkar ‡
+
+Department of Electrical Engineering, Indian Institute of Technology Bombay, India Email: {20001816, 210071001, chaporkar }@iitb.ac.in 
+
+Abstract —The integration of Non-Terrestrial Networks (NTN) into 5G and beyond cellular systems has introduced a significant paradigm shift, enabling ubiquitous connectivity and extending services to previously unconnected and underserved remote re-gions. In particular, Low Earth Orbit (LEO) satellites, operating close to the Earth’s surface, can provide communication latency comparable to that of terrestrial networks. However, due to their high mobility, LEO satellites trigger frequent handovers, which degrade users’ quality of experience and increase signaling overhead. In this work, our objective is to minimize the number of handovers in a LEO satellite system while preventing satellite overloading. We formulate the problem within a game-theoretic framework and apply the Spatial Adaptive Play (SAP) algorithm to obtain a handover-efficient and load-balanced solution. Ad-ditionally, we propose a low-complexity heuristic algorithm to achieve similar objectives with reduced computational overhead. 
+
+Index Terms —NTN, LEO satellite, user handover, user asso-ciation, 5G network 
+
+I. I NTRODUCTION 
+
+With the evolution of 5G-Advanced and future 6G cel-lular networks, a key design objective is to achieve truly global coverage, service ubiquity, and reliable continuous connectivity. To meet these ambitious requirements, non-terrestrial networks (NTNs) have emerged as a promising and essential complement to traditional terrestrial networks [1]. NTNs leverage spaceborne and airborne platforms, such as satellites in Low Earth Orbit (LEO), Medium Earth Orbit (MEO), Geostationary Orbit (GEO), as well as High Alti-tude Platform Stations (HAPS) to extend connectivity beyond the limitations of ground-based deployments. By integrating NTNs with terrestrial cellular networks, it becomes possible to provide seamless connectivity to users anywhere on the globe, including remote, rural, maritime, and aerial environments. Recognizing the potential of NTN, the Third Generation Partnership Project (3GPP) has incorporated NTN support into 5G cellular standards with significant work introduced in Release 15 and further enhancements in subsequent releases [2]. This standardization effort enables the harmonized op-eration of terrestrial and non-terrestrial components within a unified cellular framework. LEO satellites typically operate at altitudes between approximately 300 km and 1500 km above the Earth’s surface. Their close proximity to the ground significantly reduces the signal propagation delay, resulting in much lower communication latency compared to MEO and GEO satellite systems, and latency levels that are comparable to those of terrestrial networks. In addition, LEO satellites offer advantages such as high speed throughput, lower launch and manufacturing costs, reduced power needs, and improved resiliency. In this work, we consider an LEO satellite system with a 5G gNB onboard. An LEO satellite is typically visible from a fixed location on Earth for only about 8–12 minutes, depending on its altitude. Due to the high orbital speeds of LEO satellites, ensuring continuous connectivity between users and satellites is a key challenge in such networks. As a result, users must periodically transition their connection from one satellite to another through a process known as satellite handover. Based on user-reported measurements and satellite ephemeris data, the network identifies a set of candidate target satellites. It then proactively selects the most suitable target and initiates the handover following the standard phases of the 3GPP 5G—namely handover preparation, execution, and completion. Since satellite trajectories are predictable and available in advance through ephemeris data, handover events can be pre-determined and strategically planned for a given satellite system. Unlike terrestrial networks, where handovers are primarily triggered by user mobility, handovers in LEO satellite net-works occur mainly due to satellite mobility. The frequent movement of satellites makes handovers inevitable, even for stationary users. This leads to significant signaling overhead, increased power consumption, and potential service interrup-tions, which negatively affect throughput and latency. There-fore, our objective is to minimize the number of handovers in LEO systems. Reducing handovers can enhance overall system performance by reducing power consumption and improving both throughput and latency. In [3], the authors give a general overview of the different solutions for handover in LEO satellite systems. In [4], the authors propose a handover strategy by modeling the user satellite connection as a potential game on a bipartite graph. In [5], the authors propose a distributed multi-agent deep Q-network-based handover strategy for LEO satellite networks that enables each user to independently make real-time han-dover decisions to minimize handovers while maximizing throughput and Quality of Service (QoS) satisfaction. [6] puts forward a distributed Graph Neural Network (GNN)-based handover procedure for LEO satellite networks that selects target satellites while ensuring load balancing to maximize the user sum rate and reduce handover failures. The authors in [7] propose a graph-based customizable handover framework 
+
+> arXiv:2607.04829v1 [cs.ET] 6 Jul 2026
+
+that jointly determines the optimal handover timing and target satellite in LEO networks by modeling satellite instances over time as a graph and selecting the QoS-optimal handover sequence using shortest path optimization. [8] proposes a caching-aware intelligent handover strategy for LEO satellite networks based on deep reinforcement learn-ing, jointly considering caching capacity, remaining service time, and idle channels to reduce handover failures and call blocking. In [9], the authors propose a distributed load-aware satellite handover strategy based on multi-agent reinforcement learning that minimizes average handovers while reducing the user blocking rate in LEO networks. In this work, our objective is to design a handover policy for the LEO satellite system that minimizes the number of handovers while ensuring that the system is not overloaded. Our work differs from existing studies [6]–[9] in that it focuses on minimizing the instantaneous number of handovers rather than optimizing other metrics such as the average number of handovers [9], handover failures [6], [8], or handover delay [7]. II. S YSTEM MODEL AND PROBLEM FORMULATION 
+
+We consider a communication system with M stationary (not mobile) users and N LEO satellites. Note that each satellite, depending on its position in the orbit, covers a certain limited area on the surface of the earth. Thus, based on user’s position, it may have potential connectivity to only a few satellites at a given point in time. Moreover, this connectivity evolves over time due to the mobility of the satellites. Let cij (t) denote the coverage indicator between user i and satellite j at time t. cij (t) is defined as follows: 
+
+cij (t) = 
+
+{
+
+1, if user i can associate to satellite j at time t
+
+0, otherwise. Let C(t) = [ cij (t)] i∈1,...,M,j ∈1,...,N . We refer to the M × N
+
+matrix C(t) as the coverage matrix at time t as it captures potential associations between users and satellites at time t.Since satellites move in a predictable manner and users are assumed to be stationary, C(t) can be calculated in advance for every time t. Let us define t0 = 0 , and time instance tk
+
+recursively as follows: 
+
+tk = inf {t | t > t k−1 and C(t) 6 = C(tk−1)}.
+
+Note that {tk}k≥0 denotes the time epochs at which the cover-age matrix changes. Alternatively, the coverage matrix remains unchanged in the interval (tk−1, t k] for every k ≥ 0. We refer to this as the kth time slot. Let C[k] equal C(tk ). Due to the periodic nature of satellite mobility in their respective orbits, we assume that the sequence {C[k]}k≥1 is also periodic, that is, there exists K such that C[k] = C[K + k] for every 
+
+k ≥ 1. Our aim is to manage the association between users and satellites over time. To achieve this, it is sufficient to make association decisions at discrete time epochs {t1, . . . , t K } due to the periodicity in the coverage matrix. Let Si[k] denote the set of satellites with which user i can associate in the kth time-slot. Define: 
+
+Si[k] = {j|cij [k] = 1 , j = 1 , . . . , N }.
+
+Next, we formulate our problem. 
+
+Definition 1 (Association Policy) . An association policy δ is a function that maps each user and time instant to a satellite: 
+
+δ : {1, . . . , M } × { 1, . . . , K } −→ { 1, . . . , N }.
+
+Let the K-dimensional vector xδi = [ xδi1 · · · xδiK ] denote the association for user i under policy δ. Specifically, xδik = j
+
+indicates that user i is associated to satellite j in kth time-slot under policy δ.
+
+Definition 2 (Feasible Association Policy) . An association policy δ is said to be feasible if: (a) xδik ∈ S i[k] for every i
+
+and k. Let F denote the set of all feasible association policies. 
+
+The condition (a) of Definition 2 ensures that at each point in time a user is associated with a satellite that covers it. For a user i, the total number of handovers under δ is given by: 
+
+Hi(δ) = 
+
+> K
+
+∑
+
+> k=1
+> 1
+
+(xδi(k−1) 6 = xδik ). (1) The handover of the user i would incur a handover cost Hi(δ).The total handover cost for the policy δ would then be: 
+
+H(δ) = 
+
+> M
+
+∑
+
+> i=1
+
+Hi(δ).
+
+Each satellite has finite resources like bandwidth, power, etc. Hence, if a large number of users are associated with a single satellite, then the user experience may degrade. Hence, we assume that each satellite j can meet the QoS requirements of all associated users if the total number of users associated with satellite j is less than a given constant, say Uj . The value of Uj may depend on the availability of resources at the satellite and the QoS requirement of the users. If the number of users associated with satellite j exceeds Uj , then the QoS experienced by all users associated with satellite j deteriorates. For user i associated with satellite j, the overload cost is given by 
+
+Oi(δ) = 1(
+
+> M
+
+∑
+
+> m=1
+> 1
+
+(xδmk = j) > U j ).
+
+The total overload cost for policy δ would then be: 
+
+O(δ) = 
+
+> M
+
+∑
+
+> i=1
+
+Oi(δ).
+
+Definition 3 (Handover-Optimal Association Policy) . An as-sociation policy δ⋆λ is optimal if (a) it is feasible ( δ⋆λ ∈ F ), and (b) it minimizes the sum of the handover and overload cost over all feasible policies, i.e., 
+
+δ⋆λ ∈ arg min  
+
+> δ∈F
+
+(H(δ) + λO (δ)) ,
+
+where λ denotes the constant that represents the overload cost associated with QoS degradation. 
+
+We refer to δ⋆λ as Handover-Optimal Association Policy (HOAP). Lemma 1. The total cost is a monotonically non-decreasing function of λ. In other words, for λ > λ ′, the total cost corresponding to the optimal solution with parameter λ is greater than that with λ′, i.e., 
+
+H(δ⋆λ) + λO (δ⋆λ) > H (δ⋆λ′ ) + λ′O(δ⋆λ′ ).
+
+III. HOAP WITHOUT OVERLOAD COST 
+
+Finding HOAP, that is, δ⋆λ is NP-hard. However, when λ =0, the overload cost is 0 and HOAP ( δ⋆ 
+
+> 0
+
+) can be found in polynomial time, which we discuss in the next subsection. 
+
+A. Optimal Handover Strategy ( δ⋆ 
+
+> 0
+
+)
+
+When λ = 0 , the overload cost in the network becomes zero, and the objective is reduced to minimizing only the handover cost. This case therefore represents the lower bound on the total cost and can be found in polynomial time. The following lemma characterizes this scenario. 
+
+Lemma 2. If each user follows a path where they associate with the satellite that ensures the longest continuous duration of connectivity and indulges in a handover only at the time instant when connection is lost, the total number of handovers is minimized. Proof. We will analyze the simple case of one user and multiple satellites to show that if each user follows the path in which they connect to the satellite that ensures the longest continuous duration of connectivity, the number of handovers for that user will be minimized. Since the total number of handovers is the sum of individual handovers, if it is ensured that each user follows this strategy, then the total number of handovers will also be minimized. Given a single user and n satellites, our objective is to minimize the number of handovers that occur in K time instants. At each time instant the user can connect with only a subset of satellites, as specified by the matrix C(t). The element cij (t) indicates whether the user i can connect to satellite j at time instant t or not. Our task is to determine the assignment policy δ for each t which gives us xδi (t),where xδi (t) = j if the user i is associated to satellite j
+
+at time t. The number of handovers for user i would be defined by eq. (1). The greedy strategy to solve the problem is to assign the user to the satellite that provides the longest duration of connectivity to the user before switching to another satellite. Specifically, if the user i is associated to a satellite 
+
+j at any time instant t then it should remain associated to that satellite until connectivity is lost, that is, when cij (t)
+
+becomes 0. At the time instant when connectivity is lost, the user shifts to a satellite j⋆ which provides the longest duration of uninterrupted connectivity to the user i.e., 
+
+j⋆ = arg max  
+
+> j∈S (t)
+
+dj (t),
+
+where S(t) is the set of satellites available at time t and 
+
+dj (t) represents the time duration for which connectivity of the satellite can be ensured and is defined as: 
+
+dj (t) = max {τ ≥ 0|cij (t + k) = 1 ∀ k ∈ { 0, 1, . . . , τ − 1}} .
+
+This greedy algorithm ensures that the user is associated to a satellite for the longest possible duration before switching, thereby reducing the number of handovers. To establish that the greedy approach is optimal we consider any alternate assignment where at some time instant t, the user is switched to some other satellite j′ that does not provide the longest continuous connectivity among all available satellites; then the user will surely experience a handover faster than that experienced in the greedy approach. This introduces an ad-ditional handover, which contradicts the assumption that the assignment is optimal. Each decision in the greedy strategy delays each handover as much as possible and thus minimizes the total number of handovers in the entire time horizon. This is the optimal policy δ⋆ 
+
+> 0
+
+where the overload cost is zero. 
+
+Next, we consider the case λ > 0, where the total cost is the sum of the handover cost and the overload cost. In this scenario, if each user independently follows its optimal path ( δ⋆ 
+
+> 0
+
+) and associates with the satellite that provides the longest continuous connectivity duration, the resulting assign-ment would be optimal from an individual user’s perspective. However, this strategy may lead to satellite overloading, since multiple users may have overlapping paths and may prefer to associate with the same satellite at a given time instant. When a satellite is overloaded, each user connected with the satellite faces a degradation in QoS which is the overload cost per user. In such situations, certain users must deviate from their optimal assignment to balance the overall handover and overload costs. Unlike the single-user case, the multi-user scenario introduces interdependencies, where the decision of one user impacts the others. The assignment of users to satellites must be determined globally by considering both the current and future time instants, due to the interdependencies among users. This makes the problem NP-hard. However, the user dependency is largely localized, since users that are geographically close tend to compete for the same satellite resources. Therefore, the problem can be simplified to resource sharing within local groups of users rather than across all users in the network. This allows the problem structure to be modeled as a local interaction game. In the following section, we present the formulation of this local interaction game. IV. L OCAL INTERACTION GAME 
+
+We integrate our model into the game-based analytical framework. We model each user i as a player who chooses an action xik at kth time-slot. xik takes values from respective finite action set Si[k], consisting of the satellites to which the user i can associate at time-slot k. Then the strategy of user i for K time-slots is the vector xi := ( xi1, x i2, . . . x iK )
+
+and let Si = ∏Kk=1 Si[k] denote the collection of all possible strategies (states) of player i. Then xi ∈ S i. The terms user and player are used interchangeably throughout the rest of the paper. There are a total of M players in the network. Let M =
+
+{1, . . . , M } denote the set of the players in the network. Let the vector x := ( x1, x2, . . . , xM) denote the state (or the strategy profile) of all players. Let us denote S := S1 ×S 2 · · ·× SM . Then x ∈ S . Let the utility function of player i, which is dependent on the actions of all players, be denoted as ui(x) : 
+
+S → R. Then G = {M , S, (ui(x), i ∈ M )} is a game. 
+
+A. Definition of utility function Definition of ui(x): We now begin to define the utility function ui(x), i ∈ M . The handover cost experienced by player i is defined as: 
+
+Hi(xi) = 
+
+> K
+
+∑
+
+> k=1
+> 1
+
+(xi(k−1) 6 = xik ).
+
+Now, the total handover cost of all the players is given by: 
+
+H(x) = 
+
+> M
+
+∑
+
+> i=1
+
+Hi(xi).
+
+Now, let Yjk (x) = ∑Mi=1 1(xik = j) denote the number of users associated with satellite j in the time-slot k. Let Uj
+
+indicate the maximum number of users that can associate to a satellite j at any point of time so that their QoS are satisfied. If user i overloads satellite j, that is, if user i associates to satellite j and j already has Yjk (x) = Uj users associated with it, then satellite j is overloaded and user i incurs an overload cost of λ. This overload cost for player i is defined as: 
+
+Oi(x) = 
+
+{0, if Yjk (x) ≤ Uj ,λ, otherwise, where λ is a constant denoting per-user overload cost. Then, the total overload cost in the network is given by: 
+
+O(x) = 
+
+> M
+
+∑
+
+> i=1
+
+Oi(x).
+
+Our objective is to determine user associations that mini-mize both handover and overload costs across the network. The optimization problem is as follows: 
+
+P : min 
+
+> x∈S
+
+∑
+
+> i∈M
+
+Hi(x) + Oi(x). (2) Now, construct the welfare function fi(x) corresponding to every player i as 
+
+fi(x) = −Hi(x) − Oi(x). (3) Thus, let the social welfare function be defined as 
+
+f (x) := ∑
+
+> i∈M
+
+fi(x). (4) Next, we formally define the Neighbors of a player. 
+
+Definition 4 (Neighbors) . Users i and i′ are neighbors if ∃k
+
+such that Si[k] ∩ S i′ [k] 6 = ∅. Users are considered neighbors if they can connect to the same satellite in a time-slot k. Let 
+
+Mi = {i′ : ∪Kk=1 (Si[k] ∩ S i′ [k]) 6 = ∅} .
+
+Note that nodes i and i′ will be neighbors if they are geographically close to each other. Thus, |M i| ≪ |M| , that is, the number of neighbors of a user is significantly smaller than the total number of users in the system. In other words, each user interacts only with a small subset of users, resulting in a sparse interaction graph. By this definition of Neighbors, the nodes are symmetric, that is, if node i is a neighbor of 
+
+i′, then node i′ is a neighbor of i and the interaction graph simplifies to an undirected graph. Now, define the utility function of a user i as the sum of the welfare functions of all its neighbors. 
+
+ui(x) = ∑
+
+> m∈M i
+
+fm(x), (5) where Mi denotes the neighbors of user i. That is, the utility function of the user i depends only on the welfare functions of its neighbors. The undirected graph formed by (M, {M i})
+
+is called as the interaction graph with each player in M
+
+represented as node and Mi specifies their neighbors. This implies that if player i changes its decision unilaterally, it affects only the utilities of the players in Mi, while the utilities of other players remain unchanged. Therefore, the action of a player leads to only local changes in utility within the interaction graph. Hence, it is called a local interaction game. Thus, our game G = {M , S, (ui(x), i ∈ M )} is a local interaction game. 
+
+B. Exact potential game 
+
+Consider the following notation. For x = ( xi, i ∈ M ), de-note x−i := ( x1, . . . , xi−1, xi+1, . . . , xM) and (x′
+
+> i
+
+, x−i) := (x1, . . . , xi−1, x′
+
+> i
+
+, xi+1, . . . , xM).
+
+Definition 5 (Exact Potential game) . A game 
+
+{M , S, (ui, i ∈ M )} is said to be an exact potential game if there exists a function V : S → R, known as a potential function that satisfies 
+
+ui(x′
+
+> i
+
+, x−i) − ui(x) = V (x′
+
+> i
+
+, x−i) − V (x), (6) 
+
+for all i ∈ M , x′ 
+
+> i
+
+∈ S i, x ∈ S .
+
+In a potential game, the incentives for all players to change their strategy are captured by a single global function called the potential function V . All maximizers of a potential func-tion V are Nash equilibria of the potential game. If the local utility of users is maximized, the global social welfare of the system would, in turn, be maximized. The utility functions of players are totally aligned with our objective of maximizing social welfare, which leads to the following lemma. 
+
+Lemma 3. The local interaction game G is an exact potential game, with the social welfare function f (x) as its potential function V (x).Proof. Let the players use a strategy x = (xi, i ∈ M).Consider a player i and assume that it changes its strategy from xi to x′
+
+> i
+
+. Here, the potential function V (·) = f (·). Then, to prove this theorem, we need to prove the condition in Eq. (6) holds. Now, 
+
+V (x′
+
+> i
+
+, x−i) − V (x)= f (x′
+
+> i
+
+, x−i) − f (x)= ∑
+
+> m∈M
+
+(fm(x′
+
+> i
+
+, x−i) − fm(x)) = ∑
+
+> m∈M i
+
+(fm(x′
+
+> i
+
+, x−i) − fm(x)) + ∑
+
+> m / ∈M i
+
+(fm(x′
+
+> i
+
+, x−i) − fm(x)) 
+
+> (∗)
+
+= ∑
+
+> m∈M i
+
+fm(x′
+
+> i
+
+, x−i) − ∑
+
+> m∈M i
+
+fm(x)) = ui(x′
+
+> i
+
+, x−i) − ui(x),
+
+where (∗) follows from the fact that for all m, i / ∈ M i, their utility functions um() are independent of i’s strategy. So, the function f (x) is the potential function of the game G. The game is thus an exact potential game. This theorem implies that the global social welfare function captures the effect of unilateral action changes by an individual player. 
+
+Corollary 4. ∃ at least one pure strategy Nash Equilibrium (NE). Every pure strategy NE is a local maxima for the objective (social welfare function) f (x).
+
+Corollary 5. The global maxima is also a pure strategy NE of the game G. The strategy x⋆ selected by the policy δ⋆λ is a pure strategy NE of the local interaction game G.
+
+Next, we look at algorithms to find the global optimizer of the potential function f (x).V. P ROPOSED ALGORITHMS 
+
+Our aim is to find the solution to the optimization P defined in Eq. (2). Since the game formulation of this problem G is an exact potential game, global optima exist and can be found using certain learning algorithms. Spatial Adaptive Play (SAP) is one such learning algorithm which finds the global optima after performing a sufficiently large number of iterations. 
+
+A. SAP algorithm 
+
+SAP is one of the algorithms that leads to an optimizer of the potential function with high probability, in the case of potential games. It is often used in spatial or networked environments where agents are connected through a graph structure, and their decisions influence each other through local interactions. The SAP Algorithm is presented in Algorithm 1. The main idea of the algorithm is to choose a strategy 
+
+xi for a player i chosen at random and compute its utility function ui(xi, x−i) (Step 5), by changing the strategy of the player i and keeping the strategies of other players intact. Then compute the following probability (Step 7): 
+
+p(xi) = eβu i(xi,x−i)
+
+∑ 
+
+> z∈S i
+
+eβu i(z,x−i) , (7) Then change the strategy of the player i according to this 
+
+p(xi), otherwise with probability 1 − p(xi), do not change the strategy of the player i (Step 6). We repeat this process 
+
+Algorithm 1 SAP algorithm 
+
+Input: M, {ui(x)}, β, max iter 
+
+Output: x ← global optimizer of f (·) 
+
+> 1:
+
+iter ← 1 
+
+> 2:
+
+for iter < max iter do  
+
+> 3:
+
+i ← uniformly random player from M 
+
+> 4:
+
+xi ← uniformly random strategy from the set Si 
+
+> 5:
+
+Compute ui(xi, x−i), 
+
+> 6:
+
+xi ← sample according to probability distribution  
+
+> 7:
+
+p(xi) = eβu i (xi ,x−i)    
+
+> ∑
+> z∈S ieβu i(z,x−i)
+> 8:
+
+end for 
+
+until the maximum number of iterations max iter is reached. 
+
+β is the learning rate for the SAP algorithm; it determines the trade-off between exploration and exploitation in SAP. The SAP algorithm provides the following analytical guarantee. 
+
+Theorem 6 (As shown in [10]) . The SAP algorithm converges to a global optimal solution with high probability. 
+
+The SAP Algorithm updates one node at a time, which can lead to slow convergence. Next, we discuss a modified version of SAP, called Concurrent-SAP (C-SAP), which is found to be effective in the case of local interaction games. 
+
+B. Concurrent-SAP algorithm 
+
+The nodes that are separated by more than two hops (i.e., non-neighboring nodes) can update their utility functions simultaneously and independently without causing conflicts. Due to this parallel update capability, this version of SAP is referred to as the Concurrent-SAP (C-SAP) algorithm. For this modification of SAP, the stationary distribution is the same as the Gibbs distribution (Eq. 7). Moreover, it results in faster convergence compared to SAP, where only one node is updated at a time. For C-SAP, we use the selection scheme presented in [10]. However, it is computationally intensive. Therefore, in the next subsection, we propose a heuristic algorithm that has a lower computational complexity while achieving performance comparable to that of the C-SAP algorithm, as demonstrated by our simulations in Section VI. 
+
+C. Heuristic algorithm 
+
+In this subsection, we propose a greedy hill-climbing scheme that begins with an initial policy and iteratively moves toward the optimal solution by modifying one action at a time. Starting from the initial random policy, the algorithm examines each action in each iteration, changes one action, and evaluates the resulting social welfare function. If an improvement is observed, the new action is adopted. In this manner, the scheme greedily climbs toward the optimum. However, its performance depends on the choice of the initial policy. We refer to this as the greedy algorithm. VI. S IMULATION RESULTS 
+
+In this section, we compare the three schemes discussed in the preceding section through extensive simulations. We consider a square region of 1000 km × 1000 km within which 74 satellites are in motion. The region is divided into four vertical bands. In each band, two satellites have a fixed position along the x-axis while their starting positions along the y-axis are randomly assigned. The remaining satellites are randomly distributed throughout the region. The velocity of each satellite is randomly selected in the range of 7 to 8 km/s. The users are assumed to be stationary and are uniformly distributed throughout the region. The simulation parameters used are as listed in Table I, unless otherwise specified. TABLE I: Simulation Parameters                  
+
+> Parameter Value
+> Per user overload cost ( λ)10
+> Number of Satellites ( N)74
+> Capacity of satellite ( k)3
+> Number of time-slots ( T)100
+> Parameter for C-SAP ( β)5
+> Parameter for C-SAP ( max iter )10000000
+> Number of users
+> 50 100 150 200 250 300 350 400
+> Number of Handovers
+> 01000 2000 3000 4000 5000 6000 7000 8000
+> Handover optimal policy Greedy hill climbing algo C-SAP algo
+
+Fig. 1: Number of handovers vs number of users. 
+
+Number of users              
+
+> 50 100 150 200 250 300 350 400
+> 00.5 11.5 22.5 33.5 4
+> Social Welfare
+> ×10 5
+> Handover optimal policy Greedy hill climbing algo C-SAP algo
+
+Fig. 2: Social Welfare or Total Cost vs number of users. Figures 1 and 2 illustrate the variation in the number of handovers and total cost, respectively, as the number of users increases from 50 to 400. Green line represents the first base-line, namely the handover optimal policy ( δ⋆ 
+
+> 0
+
+), which results in the minimum number of handovers, since overload cost is zero. Blue line represents the second baseline, the C-SAP algorithm, which provides the optimal policy by considering both handover cost and overload cost. However, this algorithm is computationally expensive. Therefore, a greedy heuristic algorithm (red) is proposed, which achieves performance com-parable to the C-SAP algorithm. In these simulations, the system parameters are fixed as follows: λ = 10 , the number of satellites is 74, the number of time-slots is 100, and each satellite has a fixed capacity of 3 users per time-slot. As the user population grows, the network becomes more congested, leading to increased handovers and higher overall system cost, showing the general trend in the plots. For the ’Handover optimal policy’, the objective reduces to minimizing only the number of handovers. Consequently, this policy achieves the minimum number of handovers among all schemes. However, because it does not penalize satellite overloading, it allows capacity violations, resulting in artifi-cially high social welfare in Figure 2. The C-SAP algorithm, which accounts for the overload cost ( λ = 10 ), yields the lowest social welfare among the compared schemes. This is because it strictly considers both handover and overload costs, thereby avoiding excessive satellite congestion. The greedy hill-climbing algorithm is a heuristic approach that makes locally optimal decisions. Its performance closely tracks that of the C-SAP algorithm across the entire user range, indicating that it provides a reasonable approximation with lower computational complexity. VII. C ONCLUSIONS 
+
+In this paper, we model the problem of user handovers and satellite overloading in a LEO satellite system as alocal interaction game within a game-theoretic framework. To achieve a handover-optimal and load-balanced network state, we apply the SAP algorithm from game theory. To improve convergence speed, we further propose a modified version of SAP, termed Concurrent-SAP (C-SAP), in which multiple users update their utility functions simultaneously, enabling faster convergence to a stable solution. In addition, we design a simple greedy heuristic algorithm with lower computational complexity compared to SAP. Finally, we evaluated and com-pared the performance of these algorithms against a minimum-handover policy through extensive simulations. REFERENCES [1] F. Rinaldi, H.-L. Maattanen, J. Torsner, S. Pizzi, S. Andreev, A. Iera, Y. Koucheryavy, and G. Araniti, “Non-terrestrial networks in 5G & beyond: A survey,” IEEE Access , vol. 8, pp. 165 178–165 200, 2020. [2] 3GPP TR 38.821 V16.2.0 (2023-03), “Technical Specification Group Radio Access Network; Solutions for NR to support non-terrestrial networks (NTN) (Release 16) ,” Technical Report , 2023. [Online]. Available: ”http://www.3gpp.org/DynaReport/38821.htm” [3] E. Juan, M. Lauridsen, J. Wigard, and P. Mogensen, “Handover solutions for 5g low-earth orbit satellite networks,” IEEE Access , vol. 10, pp. 93 309–93 325, 2022. [4] Y. Wu, G. Hu, F. Jin, and J. Zu, “A satellite handover strategy based on the potential game in LEO satellite networks,” IEEE Access , vol. 7, pp. 133 641–133 652, 2019. [5] C. Lee, I. Bang, T. Kim, H. Lee, B. C. Jung, and S. H. Chae, “Multi-agent deep reinforcement learning based handover strategy for LEO satellite networks,” IEEE Commun. Lett. , 2025. [6] J.-W. Lee, B. Lim, K.-H. Kim, J.-M. Lee, Y.-S. Ha, Y.-J. Han, and Y.-C. Ko, “Handover strategy for LEO satellite communication using graph neural network,” ICT Express , vol. 11, no. 2, pp. 239–244, 2025. [7] Z. Wu, F. Jin, J. Luo, Y. Fu, J. Shan, and G. Hu, “A graph-based satellite handover framework for LEO satellite communication networks,” IEEE Commun. Lett. , vol. 20, no. 8, pp. 1547–1550, 2016. [8] T. Leng, Y. Xu, G. Cui, and W. Wang, “Caching-aware intelligent handover strategy for LEO satellite networks,” Remote Sensing , vol. 13, no. 11, p. 2230, 2021. [9] S. He, T. Wang, and S. Wang, “Load-aware satellite handover strategy based on multi-agent reinforcement learning,” in IEEE GLOBECOM .IEEE, 2020, pp. 1–6. [10] K. Kumar, P. Chaporkar, and A. Karandikar, “Joint cell zooming and channel allocation using C-SAP for large action sets,” IEEE Trans. Mobile Comput. , vol. 16, no. 7, pp. 1926–1939, 2016.

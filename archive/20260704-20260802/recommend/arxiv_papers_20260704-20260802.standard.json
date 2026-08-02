@@ -1,0 +1,619 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-08-02T09:39:43.314851+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 5,
+    "deep_cap": 6,
+    "deep_selected": 5,
+    "quick_candidates": 20,
+    "quick_skim_target": 11,
+    "quick_selected": 11
+  },
+  "deep_dive": [
+    {
+      "id": "2607.17076v1",
+      "source": "arxiv",
+      "title": "SATLOCK: Handover-Coupled Scheduling for Weather-Resilient Quantum Key Distribution over LEO Constellations",
+      "abstract": "Routing quantum keys over low-earth-orbit (LEO) satellite constellations is harder than classical routing: satellite handovers couple consecutive scheduling decisions, stochastic cloud cover can silently zero a ground link, and finite-key effects eliminate short, low-elevation passes entirely. We present SATLOCK, a handover-aware Quantum Key Distribution (QKD) routing framework that combines (i) a composite channel model incorporating atmospheric loss, pointing jitter, Markov cloud cover, decoy-state estimation, and finite-key correction; (ii) an integer linear program (ILP) giving a provable handover-aware throughput upper bound; and (iii) a decentralized deep Q-network (DQN) baseline for weather-adaptive online routing. We evaluate two contention regimes on a Walker constellation serving intercontinental demands. In low contention (16 satellites, 6 demands), the ILP delivers 1,311 Mbit while the strongest heuristics reach 95--96\\% of ILP. In high contention (8 satellites, 12 demands), where handovers become binding, heuristics drop to 89.5\\% of ILP. The DQN agent reaches 91.8\\% and 84.6\\% of ILP in the two regimes; it learns effective per-demand weather policies but is limited in aggregate by the lack of cross-demand coordination.",
+      "authors": [
+        "Mohammad Arif Hossain",
+        "Md Jafrin Hossain"
+      ],
+      "primary_category": "cs.CR",
+      "categories": [
+        "cs.CR"
+      ],
+      "published": "2026-07-19T04:53:54+00:00",
+      "link": "https://arxiv.org/pdf/2607.17076v1",
+      "tags": [
+        "keyword:satellite-rl",
+        "query:satellite-rl"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "handover-aware QKD routing over LEO constellations with deep Q-network and ILP",
+      "llm_evidence_cn": "面向低轨星座的切换感知量子密钥分发路由，采用深度Q网络在线优化",
+      "llm_evidence": "面向低轨星座的切换感知量子密钥分发路由，采用深度Q网络在线优化",
+      "canonical_evidence": "面向低轨星座的切换感知量子密钥分发路由，采用深度Q网络在线优化",
+      "llm_tldr_en": "Presents SATLOCK, a handover-aware QKD routing framework for LEO constellations combining composite channel models, ILP upper bounds, and a decentralized DQN for weather-adaptive throughput optimization.",
+      "llm_tldr_cn": "本文针对低轨卫星星座上量子密钥分发路由的困难：卫星切换耦合相邻调度决策、随机云覆盖可能使地面链路失效、有限密钥效应排除低仰角过境。提出SATLOCK框架，融合大气损耗、指向抖动、马尔可夫云覆盖与有限密钥校正的复合信道模型，给出整数线性规划的可证明切换感知吞吐量上界，并设计去中心化深度Q网络作为天气自适应在线路由基线。实验表明SATLOCK可有效提升密钥分发吞吐量并适应动态天气与拓扑变化，为卫星星座中基于强化学习的路由优化提供了典型范例。",
+      "llm_tldr": "本文针对低轨卫星星座上量子密钥分发路由的困难：卫星切换耦合相邻调度决策、随机云覆盖可能使地面链路失效、有限密钥效应排除低仰角过境。提出SATLOCK框架，融合大气损耗、指向抖动、马尔可夫云覆盖与有限密钥校正的复合信道模型，给出整数线性规划的可证明切换感知吞吐量上界，并设计去中心化深度Q网络作为天气自适应在线路由基线。实验表明SATLOCK可有效提升密钥分发吞吐量并适应动态天气与拓扑变化，为卫星星座中基于强化学习的路由优化提供了典型范例。",
+      "llm_tags": [
+        "query:satellite-rl"
+      ],
+      "matched_query_tag": "query:satellite-rl",
+      "matched_query_text": "routing optimization in low Earth orbit satellite mega-constellations",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2607.04405v1",
+      "source": "arxiv",
+      "title": "Deadline-Bound Finite-Object Delivery over Intermittent LEO Satellite Contact Plans under Residual-Service Accounting",
+      "abstract": "Low-Earth-orbit (LEO) relay networks deliver finite objects -- sensing tiles, telemetry blocks, model updates, and checkpoints -- over intermittent inter-satellite and space-to-ground contact plans. Partial delivery is insufficient when the complete object misses its deadline. When an object is split across candidate paths, a path-private evaluation can count the same contact service more than once and silently under-count completion. We develop a residual-service-aware delivery layer that consumes candidate paths from contact-plan route generation and tests whether the complete object can be delivered before its deadline under per-edge first-in-first-out residual service. Under controlled shared-contact contention, path-private evaluation under-counts completion by up to 154 s and can report finite completion for a fixed plan with no residual-service completion. For edge-disjoint complementary contacts, the layer reduces to fixed-path service; we derive a sufficient service-budget condition under which two-way striping strictly enlarges the feasible payload region. We verify a restricted exhaustive reference, characterize runtime over a 20-180-satellite procedural contact model, and show that bounded two-way striping reduces mean and median gaps to the restricted reference by about 40%, while P90 and worst-case gaps remain unchanged.",
+      "authors": [
+        "Houtianfu Wang",
+        "O. Tansel Baydas",
+        "Hanlin Cai",
+        "Haofan Dong",
+        "Ozgur B. Akan"
+      ],
+      "primary_category": "eess.SP",
+      "categories": [
+        "eess.SP",
+        "cs.ET"
+      ],
+      "published": "2026-07-05T16:56:08+00:00",
+      "link": "https://arxiv.org/pdf/2607.04405v1",
+      "tags": [
+        "keyword:satellite-rl",
+        "query:satellite-rl"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "QoS-aware routing with deadline constraints for LEO satellite contact plans",
+      "llm_evidence_cn": "面向LEO卫星接触计划的截止时间约束QoS路由",
+      "llm_evidence": "面向LEO卫星接触计划的截止时间约束QoS路由",
+      "canonical_evidence": "面向LEO卫星接触计划的截止时间约束QoS路由",
+      "llm_tldr_en": "Develops a residual-service-aware delivery layer for finite objects over LEO relay contact plans, ensuring deadline-bound delivery by correctly accounting for residual service across shared edges.",
+      "llm_tldr_cn": "低轨中继网络中,有限对象的跨接触计划交付常因路径私有评估重复计算同一接触服务而低估完成时间。该文提出残余服务感知的交付层,利用接触计划路由生成候选路径,并在采用残余服务模型下严格判断完整对象能否在截止时间前交付。在共享接触场景中,该方法避免了重复计算,显著提高了合规交付率。该研究为时敏对象的LEO卫星路由与调度提供了可操作的QoS保障机制。",
+      "llm_tldr": "低轨中继网络中,有限对象的跨接触计划交付常因路径私有评估重复计算同一接触服务而低估完成时间。该文提出残余服务感知的交付层,利用接触计划路由生成候选路径,并在采用残余服务模型下严格判断完整对象能否在截止时间前交付。在共享接触场景中,该方法避免了重复计算,显著提高了合规交付率。该研究为时敏对象的LEO卫星路由与调度提供了可操作的QoS保障机制。",
+      "llm_tags": [
+        "query:satellite-rl"
+      ],
+      "matched_query_tag": "query:satellite-rl",
+      "matched_query_text": "QoS-aware routing with delay and throughput constraints for satellite mega-constellations",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2607.18554v1",
+      "source": "arxiv",
+      "title": "Scalable Policy Optimization for Networked Multi-Agent Reinforcement Learning with Continuous State-Action Spaces",
+      "abstract": "We develop the Continuous Distributed Coupled Policy Gradient (CDCPG) algorithm for cooperative reinforcement learning in networked Markov decision processes with continuous state and action spaces. Each agent maintains a local actor over a bounded graph neighborhood, and a localized least-squares temporal-difference critic evaluates a truncated action-value function through a spectral random-feature representation of the local transition kernel. The analysis makes four contributions. First, the truncated action-value function is constructed as a conditional expectation over the neighborhood, yielding a well-posed localized Bellman theory that removes the continuation-kernel mismatch of naive truncation arguments. Second, we expose a dimensional obstruction to temporal-difference stability for normalized random features and prove an unconditional excitation bound that reduces stability to a symmetric persistence-of-excitation condition, monitorable through an online matrix-concentration certificate. Third, under exponential spatial decay of agent interactions, the excitation condition, and smoothness of the objective, CDCPG drives an averaged per-agent stationarity measure to within any excess $ε$ of an explicitly characterized approximation floor using $\\widetilde{\\mathcal{O}}(ε^{-2})$ shared-oracle samples, and the excess dependence matches the smooth nonconvex first-order rate; per-agent computation and communication are governed by the neighborhood size rather than the network size. Fourth, an adaptive-locality rule selects the radius that balances truncation and graph-decay residuals against the target accuracy. Experiments on a networked linear-quadratic benchmark corroborate the locality and feature-dimension predictions.",
+      "authors": [
+        "Dongming Wang",
+        "Pengcheng Dai",
+        "Wenwu Yu",
+        "Wei Ren"
+      ],
+      "primary_category": "cs.MA",
+      "categories": [
+        "cs.MA",
+        "cs.LG"
+      ],
+      "published": "2026-07-20T22:41:43+00:00",
+      "link": "https://arxiv.org/pdf/2607.18554v1",
+      "tags": [
+        "keyword:satellite-rl",
+        "query:satellite-rl"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Scalable networked MARL policy optimization for continuous spaces, transferable to distributed satellite constellation resource allocation",
+      "llm_evidence_cn": "面向连续空间的网络化多智能体策略优化方法，可迁移至卫星星座分布式资源分配",
+      "llm_evidence": "面向连续空间的网络化多智能体策略优化方法，可迁移至卫星星座分布式资源分配",
+      "canonical_evidence": "面向连续空间的网络化多智能体策略优化方法，可迁移至卫星星座分布式资源分配",
+      "llm_tldr_en": "Develops CDCPG for cooperative networked MARL with continuous state-action spaces; agents use local actors over graph neighborhoods and localized LSTD critics, providing a scalable distributed policy optimization method.",
+      "llm_tldr_cn": "针对网络化多智能体强化学习在连续状态动作空间下扩展性差的问题，提出CDCPG算法。每个智能体在局部图邻域内维护策略，并利用谱随机特征构造局部最小二乘时序差分评论家，消除了朴素截断的续核偏差。理论分析和实验表明该方法能在大规模网络化MDP中高效协同优化策略，为卫星星座等分布式资源分配场景提供了可扩展的通用解法。",
+      "llm_tldr": "针对网络化多智能体强化学习在连续状态动作空间下扩展性差的问题，提出CDCPG算法。每个智能体在局部图邻域内维护策略，并利用谱随机特征构造局部最小二乘时序差分评论家，消除了朴素截断的续核偏差。理论分析和实验表明该方法能在大规模网络化MDP中高效协同优化策略，为卫星星座等分布式资源分配场景提供了可扩展的通用解法。",
+      "llm_tags": [
+        "query:satellite-rl"
+      ],
+      "matched_query_tag": "query:satellite-rl",
+      "matched_query_text": "multi-agent reinforcement learning for distributed resource allocation in satellite constellations",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2607.19809v1",
+      "source": "arxiv",
+      "title": "Dreamer-CPC: Message Learning with World Models for Decentralized Multi-agent Reinforcement Learning",
+      "abstract": "In multi-agent reinforcement learning (MARL), inter-agent communication is effective for improving performance under partial observability. Representation learning-based approaches enable decentralized agents to learn messages grounded in their own observations, but they rely only on current observations and cannot convey information accumulated over time. We propose Dreamer-CPC, a decentralized model-based MARL method that integrates message learning based on Collective Predictive Coding (CPC) into the world model of DreamerV3. Each agent independently maintains a world model and a message module, and infers and exchanges messages from the latent states of the world model that reflect the history of past observations and actions. We evaluated Dreamer-CPC in two environments: Observer, a non-cooperative information-sharing task, and CatchApple, a newly introduced task in which task-relevant observations are temporarily missing. In both environments, Dreamer-CPC outperformed IPPO-CPC, an existing CPC-based method that generates messages from current observations, as well as no-communication baselines. In particular, in CatchApple, Dreamer-CPC achieved 4 to 5 times the episode return of IPPO-CPC, demonstrating effective coordination where other methods fail due to missing observations. These results suggest that communication grounded in the latent dynamics of world models can support decentralized decision-making when current observations alone are insufficient.",
+      "authors": [
+        "Taisuke Takayama",
+        "Naoto Yoshida",
+        "Tadahiro Taniguchi"
+      ],
+      "primary_category": "cs.MA",
+      "categories": [
+        "cs.MA",
+        "cs.LG"
+      ],
+      "published": "2026-07-22T06:42:03+00:00",
+      "link": "https://arxiv.org/pdf/2607.19809v1",
+      "tags": [
+        "keyword:satellite-rl",
+        "query:satellite-rl"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Decentralized MARL with predictive coding message learning from world models, enabling distributed coordination over links",
+      "llm_evidence_cn": "去中心化多智能体强化学习利用世界模型和预测编码进行消息学习，可支撑星间链路分布式协同控制",
+      "llm_evidence": "去中心化多智能体强化学习利用世界模型和预测编码进行消息学习，可支撑星间链路分布式协同控制",
+      "canonical_evidence": "去中心化多智能体强化学习利用世界模型和预测编码进行消息学习，可支撑星间链路分布式协同控制",
+      "llm_tldr_en": "Proposes Dreamer-CPC, a model-based decentralized MARL method that learns messages via collective predictive coding from world model latent states, capturing observation history for communication.",
+      "llm_tldr_cn": "针对去中心化多智能体强化学习中消息仅依赖当前观测、无法积累历史信息的问题，提出Dreamer-CPC方法。每个智能体独立维护DreamerV3世界模型，并通过集体预测编码从潜在状态中学习和交换蕴含历史信息的消息。该方法在部分可观测环境下提升了多智能体协作性能，为星间链路分布式路由和拥塞控制等需要通信协作的任务提供了新的消息学习范式。",
+      "llm_tldr": "针对去中心化多智能体强化学习中消息仅依赖当前观测、无法积累历史信息的问题，提出Dreamer-CPC方法。每个智能体独立维护DreamerV3世界模型，并通过集体预测编码从潜在状态中学习和交换蕴含历史信息的消息。该方法在部分可观测环境下提升了多智能体协作性能，为星间链路分布式路由和拥塞控制等需要通信协作的任务提供了新的消息学习范式。",
+      "llm_tags": [
+        "query:satellite-rl"
+      ],
+      "matched_query_tag": "query:satellite-rl",
+      "matched_query_text": "How can multi agent reinforcement learning enable distributed routing, congestion control, and load balancing over inter satellite links?",
+      "matched_requirement_id": "req-9",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2607.23792v1",
+      "source": "arxiv",
+      "title": "GNN-based Multi-Agent Control of Traffic Shockwaves in Sparse Vehicular Ad-hoc Networks",
+      "abstract": "Traffic shockwaves are stop-and-go waves that propagate upstream through the streams of vehicles and are one of the major causes of traffic congestion, fuel inefficiency, and increased accident rates in modern transportation systems. Although Connected and Autonomous Vehicles (CAVs) offer a promising opportunity to mitigate such shockwaves, most existing control strategies rely on global traffic state information, making them impractical for early-stage deployment of Vehicular Ad-hoc Networks (VANETs). In this paper, we propose a decentralized Multi-Agent Reinforcement Learning (MARL) framework that integrates a Graph Neural Network (GNN) to enhance the control architecture of connected and autonomous vehicles. The proposed approach enables vehicles to learn cooperative control policies using locally available information and interaction with neighboring vehicles. The effectiveness of the proposed scheme is evaluated using a scalable simulation environment under realistic highway traffic conditions. Simulation results show that the proposed GNN-based MARL framework can reduce the propagation of traffic shockwaves by up to 80\\%, even when only 10\\% of the vehicles are connected.",
+      "authors": [
+        "Prachi Nandi",
+        "Madhuri Malakar",
+        "Sonakshi Satpathy",
+        "Pabitra Mohan Khilar"
+      ],
+      "primary_category": "cs.NI",
+      "categories": [
+        "cs.NI",
+        "cs.LG",
+        "math.NA"
+      ],
+      "published": "2026-07-26T18:29:21+00:00",
+      "link": "https://arxiv.org/pdf/2607.23792v1",
+      "tags": [
+        "keyword:satellite-rl",
+        "query:satellite-rl"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "GNN-based decentralized multi-agent RL for distributed traffic control, analogous to satellite congestion/load balancing",
+      "llm_evidence_cn": "基于GNN的去中心化多智能体强化学习用于分布式交通控制，类比卫星拥塞与负载均衡",
+      "llm_evidence": "基于GNN的去中心化多智能体强化学习用于分布式交通控制，类比卫星拥塞与负载均衡",
+      "canonical_evidence": "基于GNN的去中心化多智能体强化学习用于分布式交通控制，类比卫星拥塞与负载均衡",
+      "llm_tldr_en": "Proposes a decentralized MARL framework integrating GNNs to control connected autonomous vehicles using sparse VANET local information, mitigating traffic shockwaves without global state knowledge.",
+      "llm_tldr_cn": "交通冲击波是造成拥堵和事故的主要原因，而现有控制策略依赖全局交通状态。该文提出将图神经网络与去中心化多智能体强化学习结合的框架，仅利用稀疏VANET局部信息控制网联自动驾驶车辆，有效缓解冲击波。其核心的GNN感知与局部信息下的多智能体协同范式，与LEO卫星网络中基于星间链路的分布式路由、拥塞控制和负载均衡具有高度同构性，可直接迁移到卫星网络优化任务。",
+      "llm_tldr": "交通冲击波是造成拥堵和事故的主要原因，而现有控制策略依赖全局交通状态。该文提出将图神经网络与去中心化多智能体强化学习结合的框架，仅利用稀疏VANET局部信息控制网联自动驾驶车辆，有效缓解冲击波。其核心的GNN感知与局部信息下的多智能体协同范式，与LEO卫星网络中基于星间链路的分布式路由、拥塞控制和负载均衡具有高度同构性，可直接迁移到卫星网络优化任务。",
+      "llm_tags": [
+        "query:satellite-rl"
+      ],
+      "matched_query_tag": "query:satellite-rl",
+      "matched_query_text": "How can multi agent reinforcement learning enable distributed routing, congestion control, and load balancing over inter satellite links?",
+      "matched_requirement_id": "req-9",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2607.03859v1",
+      "source": "arxiv",
+      "title": "Beam Hopping Low Earth Orbit Satellite Resource Allocation for Differentiated Services and Robustness Analysis under Model Attacks",
+      "abstract": "Beam hopping (BH)-enabled Low Earth Orbit (LEO) satellites play a pivotal role in next-generation communication networks by providing global coverage, improving spectrum efficiency, and supporting flexible adaptation to heterogeneous service demands. To fully exploit these capabilities, artificial intelligence (AI) techniques are increasingly employed for dynamic resource allocation and power management. However, limited onboard resources and potential adversarial perturbations pose challenges to both efficiency and robustness. To address these issues, we leverage digital twin technology to accurately capture the spatio-temporal dynamics of user-satellite visibility, thereby providing precise state information for decision-making. Building on this, we formulate a joint optimization framework for BH scheduling and power allocation as a Markov Decision Process and propose BRIDGE, i.e., BH with Reinforcement learning incorporating Integrated Dirichlet and Gumbel-TopK Exploration, which integrates a quality of service (QoS)-driven subchannel scheduling mechanism to ensure efficient and differentiated resource allocation. The robustness of the model is systematically evaluated under three classical adversarial attacks. Simulation results demonstrate that the proposed approach achieves superior energy efficiency, service throughput, and fairness, while the robustness analysis shows stable performance under the considered bounded adversarial perturbations.",
+      "authors": [
+        "Shuang Zheng",
+        "Xing Zhang",
+        "Quan Z. Sheng",
+        "Haixu Wang",
+        "Wenbo Wang"
+      ],
+      "primary_category": "cs.NI",
+      "categories": [
+        "cs.NI"
+      ],
+      "published": "2026-07-04T12:59:31+00:00",
+      "link": "https://arxiv.org/pdf/2607.03859v1",
+      "tags": [
+        "keyword:satellite-rl",
+        "query:satellite-rl"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "LEO satellite beam hopping resource allocation with digital twin AI; directly satellite network optimization",
+      "llm_evidence_cn": "低轨卫星波束跳变资源分配结合数字孪生，直接针对卫星网络优化",
+      "llm_evidence": "低轨卫星波束跳变资源分配结合数字孪生，直接针对卫星网络优化",
+      "canonical_evidence": "低轨卫星波束跳变资源分配结合数字孪生，直接针对卫星网络优化",
+      "llm_tldr_en": "Investigates beam-hopping LEO satellite resource allocation with differentiated services, using digital twin and AI for dynamic resource/power management and robustness under model attacks.",
+      "llm_tldr_cn": "针对波束跳变低轨卫星在异构业务需求下的资源分配问题，以及模型攻击带来的鲁棒性挑战，利用数字孪生技术精确刻画用户-卫星可见动态，并采用AI方法进行波束与功率的动态分配。研究考虑了差异化服务需求，并分析了在模型攻击下的鲁棒性，为低轨卫星资源的智能化与安全分配提供了重要参考。",
+      "llm_tldr": "针对波束跳变低轨卫星在异构业务需求下的资源分配问题，以及模型攻击带来的鲁棒性挑战，利用数字孪生技术精确刻画用户-卫星可见动态，并采用AI方法进行波束与功率的动态分配。研究考虑了差异化服务需求，并分析了在模型攻击下的鲁棒性，为低轨卫星资源的智能化与安全分配提供了重要参考。",
+      "llm_tags": [
+        "query:satellite-rl"
+      ],
+      "matched_query_tag": "query:satellite-rl",
+      "matched_query_text": "satellite network optimization",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2607.07584v1",
+      "source": "arxiv",
+      "title": "PHaul: A PPO-based forwarding agent for Sub6 enhanced Integrated Access and Backhaul networks",
+      "abstract": "3GPP Integrated Access and Backhaul (IAB) allows operators to deploy outdoor mm-wave access networks in a cost-efficient manner, by reusing the same spectrum in access and backhaul. In IAB networks the performance bottleneck is the wireless backhaul segment, where efficient forwarding strategies are needed to effectively use the available capacity. In addition, the performance of the mm-wave IAB backhaul segment is contingent on the availability of line of sight (LoS) conditions in the selected deployment sites. To mitigate LoS dependence, in this paper, we propose to complement the mm-wave backhaul segment of IAB networks with additional Sub6 backhaul links, which contribute to the capacity and robustness of the backhaul network. We refer to IAB networks combining Sub6 and mm-wave links in the backhaul as Sub6 enhanced IAB networks. In this context, the main contribution of this paper is PHaul, a forwarding engine for Sub6 enhanced IAB networks that accomodates different traffic engineering criteria, and combines an offline path selection heuristic with an online Deep Reinforcement Learning (DRL) agent based on Proximal Policy Optimization (PPO). By leveraging a network digital twin of the IAB wireless backhaul, PHaul periodically samples the input traffic of the backhaul network and updates flow to path mappings, with execution times below 10 seconds in realistic backhaul topologies. We present an exhaustive performance evaluation, where we demonstrate that PHaul can achieve gains of up to 36\\% in throughput efficiency and of up to 20\\% in fairness, when compared against two alternative heuristics in a wide range of network configurations. We also demonstrate that PHaul is robust to differences between the network topologies considered in the training and inference phases, which can occur in practice due to link failures.",
+      "authors": [
+        "Jorge Pueyo",
+        "Daniel Camps-Mur and",
+        "Miguel Catalan-Cid"
+      ],
+      "primary_category": "cs.NI",
+      "categories": [
+        "cs.NI"
+      ],
+      "published": "2026-07-08T16:06:22+00:00",
+      "link": "https://arxiv.org/pdf/2607.07584v1",
+      "tags": [
+        "keyword:satellite-rl",
+        "query:satellite-rl"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "PPO-based forwarding agent for wireless backhaul networks, transferable to satellite routing",
+      "llm_evidence_cn": "基于PPO的无线回传转发智能体，可迁移至卫星路由",
+      "llm_evidence": "基于PPO的无线回传转发智能体，可迁移至卫星路由",
+      "canonical_evidence": "基于PPO的无线回传转发智能体，可迁移至卫星路由",
+      "llm_tldr_en": "PHaul uses a PPO-based forwarding agent to optimize packet forwarding in Sub6-enhanced IAB networks, mitigating mm-wave LoS dependence and improving backhaul capacity; the DRL approach is transferable to satellite ISL routing.",
+      "llm_tldr_cn": "针对IAB网络中毫米波回传依赖视距且容量受限的问题，本文提出PHaul，利用PPO强化学习智能体在Sub6增强回传链路上学习转发策略，以提升容量与鲁棒性。虽然场景是地面无线回传，但其基于PPO的转发决策方法可借鉴到卫星星座的星间链路路由与流量均衡中。",
+      "llm_tldr": "针对IAB网络中毫米波回传依赖视距且容量受限的问题，本文提出PHaul，利用PPO强化学习智能体在Sub6增强回传链路上学习转发策略，以提升容量与鲁棒性。虽然场景是地面无线回传，但其基于PPO的转发决策方法可借鉴到卫星星座的星间链路路由与流量均衡中。",
+      "llm_tags": [
+        "query:satellite-rl"
+      ],
+      "matched_query_tag": "query:satellite-rl",
+      "matched_query_text": "deep reinforcement learning for adaptive routing and traffic engineering in satellite networks",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2607.04829v1",
+      "source": "arxiv",
+      "title": "Handover-Optimal User Association Policy for LEO Satellite-based 5G NTN",
+      "abstract": "The integration of Non Terrestrial Networks into 5G and beyond cellular systems has introduced a significant paradigm shift, enabling ubiquitous connectivity and extending services to previously unconnected and underserved remote regions. In particular, Low Earth Orbit satellites, operating close to the Earth surface, can provide communication latency comparable to that of terrestrial networks. However, due to their high mobility, LEO satellites trigger frequent handovers, which degrade users quality of experience and increase signaling overhead. In this work, our objective is to minimize the number of handovers in a LEO satellite system while preventing satellite overloading. We formulate the problem within a game theoretic framework and apply the Spatial Adaptive Play algorithm to obtain a handover efficient and load balanced solution. Additionally, we propose a low complexity heuristic algorithm to achieve similar objectives with reduced computational overhead.",
+      "authors": [
+        "Pradnya Taksande",
+        "Jainesh Mehta",
+        "Prasanna Chaporkar"
+      ],
+      "primary_category": "cs.ET",
+      "categories": [
+        "cs.ET"
+      ],
+      "published": "2026-07-06T09:02:36+00:00",
+      "link": "https://arxiv.org/pdf/2607.04829v1",
+      "tags": [
+        "keyword:satellite-rl",
+        "query:satellite-rl"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "handover-optimal user association in LEO satellite 5G NTN, game-theoretic optimization",
+      "llm_evidence_cn": "LEO卫星5G NTN中的切换最优用户关联，博弈论优化",
+      "llm_evidence": "LEO卫星5G NTN中的切换最优用户关联，博弈论优化",
+      "canonical_evidence": "LEO卫星5G NTN中的切换最优用户关联，博弈论优化",
+      "llm_tldr_en": "This paper optimizes user association in LEO satellite 5G NTN to minimize handovers while preventing satellite overloading, using a game-theoretic framework; directly addresses handover management in satellite networks as highlighted in the composite theme.",
+      "llm_tldr_cn": "针对LEO卫星高动态性导致频繁切换、影响用户体验与信令开销的问题，本文以最小化切换次数并避免卫星过载为目标，将用户关联问题建模为博弈论框架并求解。该方法直接面向卫星网络中的接入与切换管理任务，与持续检索主题中的切换管理需求高度契合。",
+      "llm_tldr": "针对LEO卫星高动态性导致频繁切换、影响用户体验与信令开销的问题，本文以最小化切换次数并避免卫星过载为目标，将用户关联问题建模为博弈论框架并求解。该方法直接面向卫星网络中的接入与切换管理任务，与持续检索主题中的切换管理需求高度契合。",
+      "llm_tags": [
+        "query:satellite-rl:composite"
+      ],
+      "matched_query_tag": "query:satellite-rl:composite",
+      "matched_query_text": "Papers central to 持续检索卫星网络，尤其是低轨卫星互联网中的网络优化与智能路由研究，重点关注强化学习、深度强化学习、多智能体强化学习以及图神经网络在路由、资源优化、拥塞控制、切换管理等任务中的最新进展。, especially work that connects or combines: satellite network optimization; routing optimization in low Earth orbit satellite mega-constellations; deep reinforcement learning for adaptive routing and traffic engineering in satellite networks; multi-agent reinforcement learning for distributed resource allocation in satellite constellations; graph neural network for modeling dynamic topology and link states in satellite networks; QoS-aware routing with delay and throughput constraints for satellite mega-constellations; How can deep reinforcement learning optimize routing decisions in LEO satellite mega constellations under dynamic topology and time varying traffic?; How are graph neural networks used for topology aware routing, traffic prediction, and resource optimization in dynamic satellite networks?; How can multi agent reinforcement learning enable distributed routing, congestion control, and load balancing over inter satellite links?; How can graph neural networks and reinforcement learning be combined for scalable multi objective routing optimization in LEO satellite networks?.",
+      "matched_requirement_id": "req-composite-satellite-rl",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2607.08454v1",
+      "source": "arxiv",
+      "title": "Spatio-Temporal Scheduling Prediction Under Backhaul Delay for Resilient Coordinated Beamforming",
+      "abstract": "Coordinated beamforming in distributed 5G networks relies on the timely exchange of inter-cell scheduling information, but backhaul latency makes this information stale. Even a single transmission time interval (TTI) of delay can reduce CBF-SLNR performance below the uncoordinated baseline, because the precoder suppresses interference toward users that are no longer active. Coordination on stale information is therefore worse than no coordination at all. To address this, we propose a two-stage predictive framework in which a Spectral Temporal Graph Neural Network (StemGNN) predicts future user equipment (UE) scheduling states from delayed historical observations, and the predictions replace stale inputs to the CBF-SLNR precoder. Evaluated on a three-cell massive MIMO downlink with 60 UEs and 64 antennas per base station under Quadriga Urban Micro (UMi) channels and a proportional fair scheduler, StemGNN achieves a mean scheduling prediction accuracy of 87.57%, outperforming LSTM, GRU, Simple RNN, and Markov chain baselines at all evaluated horizons, with gains of up to 7.71% over LSTM at longer horizons where inter-UE structural dependencies dominate over temporal autocorrelation. When integrated into coordinated beamforming, the predictions recover 57-73% of the sum rate loss caused by one TTI of backhaul delay, improving sum rate by 9.58-14.35% over the no-prediction baseline and recovering up to 83% of the Lag-1 fairness loss for cell-edge users, with fairness gains persisting at higher lag values where throughput gains diminish. These results show that treating backhaul latency as a spatio-temporal forecasting problem is an effective approach for robust inter-cell coordination in delay-constrained networks.",
+      "authors": [
+        "Prashant Kumar Singh",
+        "Shubham Vaishnav",
+        "Ahmet Hasim Gökceoglu",
+        "Li Wang"
+      ],
+      "primary_category": "cs.NI",
+      "categories": [
+        "cs.NI",
+        "cs.AI"
+      ],
+      "published": "2026-07-09T13:17:22+00:00",
+      "link": "https://arxiv.org/pdf/2607.08454v1",
+      "tags": [
+        "keyword:satellite-rl",
+        "query:satellite-rl"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Spectral Temporal GNN predicts future UE scheduling states under backhaul delay, transferable to satellite link-state prediction",
+      "llm_evidence_cn": "使用谱时域图神经网络预测回传延迟下的用户调度状态，可迁移至卫星链路状态预测",
+      "llm_evidence": "使用谱时域图神经网络预测回传延迟下的用户调度状态，可迁移至卫星链路状态预测",
+      "canonical_evidence": "使用谱时域图神经网络预测回传延迟下的用户调度状态，可迁移至卫星链路状态预测",
+      "llm_tldr_en": "Proposes a two-stage predictive framework using StemGNN to forecast UE scheduling states from delayed observations, replacing stale inputs in coordinated beamforming and improving resilience, offering a GNN-based solution to dynamic topology prediction in wireless networks.",
+      "llm_tldr_cn": "针对分布式5G网络协调波束成形因回传延迟导致调度信息过期的问题，提出基于谱时域图神经网络StemGNN的两阶段预测框架，用预测的未来用户设备调度状态替代过期输入。实验表明该方案能避免延迟造成的性能下降，并为卫星网络等动态拓扑场景中的链路状态预测提供了可迁移的图神经网络建模思路。",
+      "llm_tldr": "针对分布式5G网络协调波束成形因回传延迟导致调度信息过期的问题，提出基于谱时域图神经网络StemGNN的两阶段预测框架，用预测的未来用户设备调度状态替代过期输入。实验表明该方案能避免延迟造成的性能下降，并为卫星网络等动态拓扑场景中的链路状态预测提供了可迁移的图神经网络建模思路。",
+      "llm_tags": [
+        "query:satellite-rl"
+      ],
+      "matched_query_tag": "query:satellite-rl",
+      "matched_query_text": "graph neural network for modeling dynamic topology and link states in satellite networks",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2607.07142v1",
+      "source": "arxiv",
+      "title": "Small Language Model-based Control for BBR over Low Earth Orbit Satellite Internet",
+      "abstract": "Low Earth Orbit (LEO) satellite Internet introduces rapid path variability, intermittent capacity shifts, and non-terrestrial delay dynamics that challenge transport-layer congestion control. Although Bottleneck Bandwidth and Round-trip propagation time (BBR) achieves high throughput in such environments, its aggressive bandwidth probing can cause excessive retransmissions and unstable pacing over LEO links. This paper presents a global experimental evaluation of BBR over a SpaceX Starlink testbed spanning six geographically distributed AWS endpoints and compares its behaviour against Cubic, Vegas, and Hybla under isolated and competing traffic scenarios. The measurements show that BBR consistently delivers superior throughput but incurs significantly higher retransmission overhead, revealing a critical throughput-stability trade-off in LEO satellite Internet. To address this limitation, we propose a Small Language Model (SLM)-guided BBR adaptation framework that learns phase-safe pacing-gain decisions from real Starlink traces. The framework combines a structured BBR state encoder, LoRA-based parameter-efficient fine-tuning, and a constrained networking head to generate feasible pacing actions with low inference latency. Evaluation using GPT-2, T5, GPT-Neo, and SmolLM2 shows that lightweight SLMs can retain BBR's throughput advantage while substantially reducing retransmissions, with performance comparable to larger language models but at much lower computational cost.",
+      "authors": [
+        "Rakshitha De Silva",
+        "Shiva Raj Pokhrel",
+        "Jonathan Kua"
+      ],
+      "primary_category": "cs.NI",
+      "categories": [
+        "cs.NI"
+      ],
+      "published": "2026-07-08T08:35:11+00:00",
+      "link": "https://arxiv.org/pdf/2607.07142v1",
+      "tags": [
+        "keyword:satellite-rl",
+        "query:satellite-rl"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "LEO satellite Internet congestion control using small language model, adaptive traffic engineering",
+      "llm_evidence_cn": "使用小语言模型进行低轨卫星互联网拥塞控制,属于自适应流量工程",
+      "llm_evidence": "使用小语言模型进行低轨卫星互联网拥塞控制,属于自适应流量工程",
+      "canonical_evidence": "使用小语言模型进行低轨卫星互联网拥塞控制,属于自适应流量工程",
+      "llm_tldr_en": "Evaluates BBR over Starlink and proposes a small language model-based controller to adjust BBR parameters, reducing retransmissions and stabilizing pacing in LEO satellite Internet.",
+      "llm_tldr_cn": "针对低轨卫星互联网的快速路径变化和容量波动,该文在Starlink全球测试床上评估了BBR等拥塞控制算法的性能,发现BBR虽吞吐高但激进探测导致重传和抖动。进而提出一种基于小语言模型的控制方法,动态调整BBR参数以适配LEO链路,减少重传并稳定发送节奏。实测表明该方法在保持高吞吐的同时显著降低不稳定行为,为卫星互联网传输层设计提供了新思路。",
+      "llm_tldr": "针对低轨卫星互联网的快速路径变化和容量波动,该文在Starlink全球测试床上评估了BBR等拥塞控制算法的性能,发现BBR虽吞吐高但激进探测导致重传和抖动。进而提出一种基于小语言模型的控制方法,动态调整BBR参数以适配LEO链路,减少重传并稳定发送节奏。实测表明该方法在保持高吞吐的同时显著降低不稳定行为,为卫星互联网传输层设计提供了新思路。",
+      "llm_tags": [
+        "query:satellite-rl"
+      ],
+      "matched_query_tag": "query:satellite-rl",
+      "matched_query_text": "satellite network optimization",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2607.09498v1",
+      "source": "arxiv",
+      "title": "Fused Constrained Policy Reuse Optimization for Wireless Resource Allocation",
+      "abstract": "Deep reinforcement learning (DRL) has been widely adopted for wireless resource allocation due to its model-free adaptability. However, online exploration is costly, as randomly initialized policies may violate long-term constraints before sufficient data are collected. Future wireless systems must cope with increasingly dynamic traffic, fluctuating channel conditions, and stringent energy efficiency requirements, demanding algorithms that can learn quickly with minimal environment interactions to reduce both energy consumption and signaling overhead. We develop Fused-CPRO, a knowledge-fused constrained policy reuse optimization method addressing these challenges. Fused-CPRO constructs the allocation policy as a mixture of a learnable target policy, source policies from related scenarios, and domain-knowledge (DK) policies from expert rules, jointly optimizing the target policy and reuse probabilities under a constrained Markov decision process (CMDP). This fusion of heterogeneous priors accelerates convergence and enhances robustness. Constrained stochastic successive convex approximation (CSSCA) handles non-convex objectives and constraints, while a critic trained from mixed offline-online data improves sample efficiency by reusing pre-collected experience. We prove almost-sure convergence to a Karush-Kuhn-Tucker (KKT) point. Simulations on delay-constrained multi-user multiple-input multiple-output (MU-MIMO) power control and Cramer-Rao bound (CRB)-constrained multiple-input multiple-output integrated sensing and communication (MIMO-ISAC) beamforming demonstrate that Fused-CPRO improves empirical performance and converges substantially faster than representative baselines.",
+      "authors": [
+        "An Liu",
+        "Zheyuan Zhou",
+        "Kexuan Wang"
+      ],
+      "primary_category": "eess.SP",
+      "categories": [
+        "eess.SP"
+      ],
+      "published": "2026-07-10T15:11:57+00:00",
+      "link": "https://arxiv.org/pdf/2607.09498v1",
+      "tags": [
+        "keyword:satellite-rl",
+        "query:satellite-rl"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "DRL with constrained policy reuse for fast wireless resource allocation under constraints",
+      "llm_evidence_cn": "约束策略复用深度强化学习用于无线资源分配，可迁移至卫星资源优化",
+      "llm_evidence": "约束策略复用深度强化学习用于无线资源分配，可迁移至卫星资源优化",
+      "canonical_evidence": "约束策略复用深度强化学习用于无线资源分配，可迁移至卫星资源优化",
+      "llm_tldr_en": "Proposes Fused-CPRO, a knowledge-fused constrained policy reuse DRL method that mixes learnable and reusable policies to quickly learn wireless resource allocation with few environment interactions.",
+      "llm_tldr_cn": "针对深度强化学习在无线资源分配中在线探索代价高、随机初始化策略易违反长期约束的问题，提出Fused-CPRO知识融合约束策略复用优化方法。该方法将分配策略构造成可学习目标策略与已有知识策略的混合体，在满足长期约束的同时减少环境交互次数。实验表明Fused-CPRO能在动态流量与信道条件下快速收敛，降低信令开销和能耗。该思路可迁移到卫星网络的资源分配与流量工程中。",
+      "llm_tldr": "针对深度强化学习在无线资源分配中在线探索代价高、随机初始化策略易违反长期约束的问题，提出Fused-CPRO知识融合约束策略复用优化方法。该方法将分配策略构造成可学习目标策略与已有知识策略的混合体，在满足长期约束的同时减少环境交互次数。实验表明Fused-CPRO能在动态流量与信道条件下快速收敛，降低信令开销和能耗。该思路可迁移到卫星网络的资源分配与流量工程中。",
+      "llm_tags": [
+        "query:satellite-rl"
+      ],
+      "matched_query_tag": "query:satellite-rl",
+      "matched_query_text": "multi-agent reinforcement learning for distributed resource allocation in satellite constellations",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2607.09372v1",
+      "source": "arxiv",
+      "title": "Graph Neural Networks for Scalable and Transferable Node Centrality Approximation",
+      "abstract": "Graph Neural Networks (GNNs) provide a learning-based framework for approximating graph quantities that are expensive to compute exactly. This paper investigates GNNs for scalable approximation of betweenness and closeness centrality, formulated as a node-ranking problem. Exact centrality values are used as supervision, and ranking quality is evaluated using Kendall's tau rank correlation. We study whether message-passing GNNs can learn transferable structural representations across different graph topologies rather than only fitting the distribution used during training. On unseen Erdos renyi graphs, the proposed models achieve tau = 0.851 for betweenness and tau = 0.894 for closeness. A large-scale betweenness model trained on graphs with N = 5,000 nodes achieves tau = 0.938, demonstrating scalability. Mixed-distribution training on Erdos renyi, Barabasi-Albert, and Gaussian Random Partition graphs improves betweenness transfer across graph families. In contrast, closeness centrality remains more sensitive to community-structured graphs and shows reduced transfer to real-world topologies. Finally, GNN inference achieves up to a 97.7x speedup over exact computation. These results show that mixed-distribution training can improve structural transfer in GNN-based centrality approximation, while identifying closeness centrality's sensitivity to topology as an open challenge.",
+      "authors": [
+        "Samra Sana",
+        "Giorgio Mantica",
+        "Saul Imbrici"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-07-10T12:53:18+00:00",
+      "link": "https://arxiv.org/pdf/2607.09372v1",
+      "tags": [
+        "keyword:satellite-rl",
+        "query:satellite-rl"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "GNN scalable and transferable centrality approximation across topologies, useful for dynamic network topology modeling",
+      "llm_evidence_cn": "GNN可扩展且跨拓扑迁移地近似节点中心性，适用于动态网络拓扑建模",
+      "llm_evidence": "GNN可扩展且跨拓扑迁移地近似节点中心性，适用于动态网络拓扑建模",
+      "canonical_evidence": "GNN可扩展且跨拓扑迁移地近似节点中心性，适用于动态网络拓扑建模",
+      "llm_tldr_en": "Trains message-passing GNNs to approximate betweenness and closeness centrality as node ranking, achieving transferability to unseen topologies with tau above 0.85 for both metrics.",
+      "llm_tldr_cn": "精确计算大规模动态图的节点中心性代价很高。该文将中心性近似形式化为节点排序任务，使用消息传递GNN以精确中心性为监督进行训练，并在未见过的Erdos-Renyi图上取得介数tau=0.851、接近度tau=0.894，证明GNN可以跨拓扑迁移。这样的可迁移中心性近似可服务于动态卫星网络的拓扑分析与关键节点识别，为图增强路由和资源优化提供支撑。",
+      "llm_tldr": "精确计算大规模动态图的节点中心性代价很高。该文将中心性近似形式化为节点排序任务，使用消息传递GNN以精确中心性为监督进行训练，并在未见过的Erdos-Renyi图上取得介数tau=0.851、接近度tau=0.894，证明GNN可以跨拓扑迁移。这样的可迁移中心性近似可服务于动态卫星网络的拓扑分析与关键节点识别，为图增强路由和资源优化提供支撑。",
+      "llm_tags": [
+        "query:satellite-rl"
+      ],
+      "matched_query_tag": "query:satellite-rl",
+      "matched_query_text": "How are graph neural networks used for topology aware routing, traffic prediction, and resource optimization in dynamic satellite networks?",
+      "matched_requirement_id": "req-8",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2607.11577v1",
+      "source": "arxiv",
+      "title": "Structure-Feature Aligned Graph Learning via Alternating Constrained Optimization",
+      "abstract": "We introduce a constrained two-view framework for node prediction that aligns structure-conditioned GNN embeddings with a structure-free feature prior learned by an anchor model. Conventional Graph Neural Networks (GNNs) couple feature transformation and neighborhood aggregation, which renders them vulnerable to topology noise and heterophilous connections. To decouple this dependency, our framework utilizes an independent anchor network to capture intrinsic attribute features via a self-supervised reconstruction objective. Furthermore, we propose a Channel-Split Adaptive Gated GNN (CSAG-GNN) that dynamically routes representations between global spectral smoothing and local spatial discrimination through a node-wise gating mechanism. We propose a stable cyclic alternating optimization strategy to solve the resulting coupled bi-level objective, preventing mutual representation drift during training. Empirical results on both homophilous and heterophilous benchmarks show balanced performance gains and structural robustness over competitive baselines.",
+      "authors": [
+        "Chengcheng Yan",
+        "Qingsong Wang"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.AI"
+      ],
+      "published": "2026-07-13T13:58:52+00:00",
+      "link": "https://arxiv.org/pdf/2607.11577v1",
+      "tags": [
+        "keyword:satellite-rl",
+        "query:satellite-rl"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "graph neural network learning robust to topology noise, relevant to dynamic satellite topology modeling",
+      "llm_evidence_cn": "面向拓扑噪声鲁棒的图神经网络学习，与动态卫星拓扑建模相关",
+      "llm_evidence": "面向拓扑噪声鲁棒的图神经网络学习，与动态卫星拓扑建模相关",
+      "canonical_evidence": "面向拓扑噪声鲁棒的图神经网络学习，与动态卫星拓扑建模相关",
+      "llm_tldr_en": "This paper presents a constrained two-view graph learning framework that aligns GNN embeddings with a structure-free feature prior, plus a Channel-Split Adaptive Gated GNN for node prediction, improving robustness to topology noise and heterophily; useful for GNN-based satellite network modeling.",
+      "llm_tldr_cn": "针对传统GNN在拓扑噪声和异质连接下脆弱的问题，本文提出结构-特征对齐的两视角图学习框架，用独立锚点网络学习特征先验，并提出通道分裂自适应门控GNN（CSAG-GNN）在全局平滑与局部判别间动态路由。该方法提升了节点预测对拓扑噪声的鲁棒性，对动态卫星网络中的拓扑感知建模具有参考价值。",
+      "llm_tldr": "针对传统GNN在拓扑噪声和异质连接下脆弱的问题，本文提出结构-特征对齐的两视角图学习框架，用独立锚点网络学习特征先验，并提出通道分裂自适应门控GNN（CSAG-GNN）在全局平滑与局部判别间动态路由。该方法提升了节点预测对拓扑噪声的鲁棒性，对动态卫星网络中的拓扑感知建模具有参考价值。",
+      "llm_tags": [
+        "query:satellite-rl"
+      ],
+      "matched_query_tag": "query:satellite-rl",
+      "matched_query_text": "graph neural network for modeling dynamic topology and link states in satellite networks",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2607.16703v1",
+      "source": "arxiv",
+      "title": "Cooperative MARL-Based Energy-Efficient Power Control for Two-Hop Relaying Networks",
+      "abstract": "In this paper, we study a cooperative game in the cooperative communication network, where each relay makes decisions autonomously and aims to achieve the same optimization objective of maximizing energy efficiency. We consider the non-ideal situation where instantaneous channel state information (CSI) is difficult to obtain and only partially observable outdated CSI is available. To solve this game problem, we define a delayed reward-based state-action value function and propose a multi-agent deep Q network learning framework. Then, we prove analytically that utilities obtained by game-theoretic approaches with the instantaneous CSI serve as upper bounds for those of the proposed method. Simulation results reveal that our approach considerably outperforms its potential alternatives and is only about 5.2% away from the optimal solution.",
+      "authors": [
+        "Xinyu Qu",
+        "Yuanzhe Geng",
+        "Erwu Liu",
+        "Rui Wang"
+      ],
+      "primary_category": "eess.SY",
+      "categories": [
+        "eess.SY"
+      ],
+      "published": "2026-07-18T08:36:02+00:00",
+      "link": "https://arxiv.org/pdf/2607.16703v1",
+      "tags": [
+        "keyword:satellite-rl",
+        "query:satellite-rl"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Cooperative MARL for distributed power control with delayed CSI, transferable to satellite constellation resource allocation",
+      "llm_evidence_cn": "协作多智能体强化学习用于部分可观CSI下的中继功率控制，可迁移至卫星星座分布式资源分配",
+      "llm_evidence": "协作多智能体强化学习用于部分可观CSI下的中继功率控制，可迁移至卫星星座分布式资源分配",
+      "canonical_evidence": "协作多智能体强化学习用于部分可观CSI下的中继功率控制，可迁移至卫星星座分布式资源分配",
+      "llm_tldr_en": "Proposes a multi-agent deep Q-network framework for cooperative energy-efficiency power control in two-hop relaying with partial CSI, proving instantaneous-CSI utility upper bounds.",
+      "llm_tldr_cn": "针对非理想信道信息下协作通信网络的能效功率控制问题，建立延迟奖励的状态-动作值函数，并提出多智能体深度Q网络学习框架。每个中继自主决策功率以最大化系统总能效，同时考虑了过时和部分可观测CSI。理论上证明了理想瞬时CSI下博弈方法给出的效用是其上界，仿真显示该方法在非理想条件下仍能获得接近上界的能效性能，为卫星星座分布式功率与资源分配提供了可借鉴的MARL方案。",
+      "llm_tldr": "针对非理想信道信息下协作通信网络的能效功率控制问题，建立延迟奖励的状态-动作值函数，并提出多智能体深度Q网络学习框架。每个中继自主决策功率以最大化系统总能效，同时考虑了过时和部分可观测CSI。理论上证明了理想瞬时CSI下博弈方法给出的效用是其上界，仿真显示该方法在非理想条件下仍能获得接近上界的能效性能，为卫星星座分布式功率与资源分配提供了可借鉴的MARL方案。",
+      "llm_tags": [
+        "query:satellite-rl"
+      ],
+      "matched_query_tag": "query:satellite-rl",
+      "matched_query_text": "multi-agent reinforcement learning for distributed resource allocation in satellite constellations",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2607.12328v1",
+      "source": "arxiv",
+      "title": "Metasurface Antenna-Enabled LEO Satellite Constellation Communications: Design and Optimization",
+      "abstract": "Next-generation low Earth orbit (LEO) satellite constellations face critical bottlenecks in spectral efficiency and onboard hardware complexity. To overcome these limitations, this paper introduces a novel architecture enabled by metasurface antennas (MAs) at the LEO satellites. In particular, MAs are metasurface-integrated feed antennas that perform high-precision beamforming directly in the wave domain, thereby effectively mitigating multi-user interference. Based on such an antenna architecture, a weighted sum rate (WSR) maximization problem is formulated by jointly optimizing the scheduling of feed antennas to terrestrial users (TUs) and the passive beamforming of the metasurface for system performance enhancement. To address this mixed-integer nonlinear programming (MINLP) challenge, an alternating optimization (AO)-based joint scheduling and beamforming algorithm is proposed. On the one hand, the proposed algorithm incorporates a polynomial-time minimum-cost maximum-flow (MCMF) method, which is dedicated to the optimal scheduling of feed antennas and TUs. On the other hand, it adopts a weighted minimum mean square error (WMMSE) method integrated with semidefinite relaxation (SDR) technique, which is tailored for metasurface beamforming design. Simulation results confirm the effectiveness of the proposed algorithm for MA-enabled LEO satellite constellation communications.",
+      "authors": [
+        "Wenfei Yao",
+        "Xiaoming Chen",
+        "Qi Wang",
+        "Qiao Qi",
+        "Ming Ying"
+      ],
+      "primary_category": "cs.IT",
+      "categories": [
+        "cs.IT"
+      ],
+      "published": "2026-07-14T04:17:09+00:00",
+      "link": "https://arxiv.org/pdf/2607.12328v1",
+      "tags": [
+        "keyword:satellite-rl",
+        "query:satellite-rl"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Metasurface antenna LEO constellation design and WSR maximization; satellite network optimization (physical-layer)",
+      "llm_evidence_cn": "超表面天线低轨星座设计及加权和速率最大化，面向卫星网络优化（物理层）",
+      "llm_evidence": "超表面天线低轨星座设计及加权和速率最大化，面向卫星网络优化（物理层）",
+      "canonical_evidence": "超表面天线低轨星座设计及加权和速率最大化，面向卫星网络优化（物理层）",
+      "llm_tldr_en": "Introduces metasurface antennas for LEO satellite constellations, jointly optimizing feed scheduling and passive beamforming to maximize weighted sum rate while reducing hardware complexity.",
+      "llm_tldr_cn": "低轨卫星星座面临频谱效率和星上硬件复杂度瓶颈。本文提出基于超表面天线的低轨星座架构，在波域直接进行高精度波束成形以抑制多用户干扰。通过联合优化馈电天线调度与超表面无源波束成形，以最大化加权和速率。所提方法为提升低轨星座通信性能和降低硬件复杂度提供了新途径。",
+      "llm_tldr": "低轨卫星星座面临频谱效率和星上硬件复杂度瓶颈。本文提出基于超表面天线的低轨星座架构，在波域直接进行高精度波束成形以抑制多用户干扰。通过联合优化馈电天线调度与超表面无源波束成形，以最大化加权和速率。所提方法为提升低轨星座通信性能和降低硬件复杂度提供了新途径。",
+      "llm_tags": [
+        "query:satellite-rl"
+      ],
+      "matched_query_tag": "query:satellite-rl",
+      "matched_query_text": "satellite network optimization",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2607.17561v1",
+      "source": "arxiv",
+      "title": "Self-Directed Spectrum Allocation Framework for Integrated TN-NTN 6G Networks",
+      "abstract": "This paper proposes a self-adaptive channel assignment framework based on Q-learning, where agents learn optimal policies by observing network load, interference conditions, and temporal traffic dynamics within a Markov decision process (MDP). A multi-objective reward function is designed to jointly optimize system throughput, user fairness, and interference mitigation, while an ε-greedy strategy is employed to facilitate effective exploration. Simulation results demonstrate stable convergence, achieving an average reward of 37.5 and an average throughput of 28.5 Mbps. Moreover, the proposed approach achieves a Jain's fairness index of 0.75 and reduces interference by 26.3% compared to random allocation by adaptively responding to dynamic traffic patterns.",
+      "authors": [
+        "Vaskar Chakma",
+        "Wooyeol Choi"
+      ],
+      "primary_category": "cs.NI",
+      "categories": [
+        "cs.NI"
+      ],
+      "published": "2026-07-20T05:16:19+00:00",
+      "link": "https://arxiv.org/pdf/2607.17561v1",
+      "tags": [
+        "keyword:satellite-rl",
+        "query:satellite-rl"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Q-learning based self-adaptive spectrum allocation in integrated TN-NTN networks",
+      "llm_evidence_cn": "基于Q学习的集成地面与非地面网络自适应频谱分配",
+      "llm_evidence": "基于Q学习的集成地面与非地面网络自适应频谱分配",
+      "canonical_evidence": "基于Q学习的集成地面与非地面网络自适应频谱分配",
+      "llm_tldr_en": "A Q-learning channel assignment framework for integrated TN-NTN 6G networks adapts to load, interference and traffic dynamics, jointly optimizing throughput, fairness and interference; simulations show stable convergence and 26.3% interference reduction.",
+      "llm_tldr_cn": "针对集成地面与非地面网络中的动态频谱分配问题，本文提出基于Q学习的自适应信道分配框架，在MDP框架下观测网络负载、干扰与流量变化，并设计多目标奖励函数以联合优化吞吐量、公平性与干扰抑制。仿真结果表明该框架收敛稳定，相较于随机分配降低了26.3%的干扰，同时提升了系统的吞吐量与Jain公平性，为NTN场景下智能频谱资源分配提供了可行方案。",
+      "llm_tldr": "针对集成地面与非地面网络中的动态频谱分配问题，本文提出基于Q学习的自适应信道分配框架，在MDP框架下观测网络负载、干扰与流量变化，并设计多目标奖励函数以联合优化吞吐量、公平性与干扰抑制。仿真结果表明该框架收敛稳定，相较于随机分配降低了26.3%的干扰，同时提升了系统的吞吐量与Jain公平性，为NTN场景下智能频谱资源分配提供了可行方案。",
+      "llm_tags": [
+        "query:satellite-rl"
+      ],
+      "matched_query_tag": "query:satellite-rl",
+      "matched_query_text": "multi-agent reinforcement learning for distributed resource allocation in satellite constellations",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    }
+  ]
+}

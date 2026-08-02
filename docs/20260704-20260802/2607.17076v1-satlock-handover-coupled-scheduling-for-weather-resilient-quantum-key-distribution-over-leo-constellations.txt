@@ -1,0 +1,288 @@
+Title: SATLOCK: Handover-Coupled Scheduling for Weather-Resilient Quantum Key Distribution over LEO Constellations
+
+URL Source: https://arxiv.org/pdf/2607.17076v1
+
+Published Time: Tue, 21 Jul 2026 00:56:40 GMT
+
+Number of Pages: 6
+
+Markdown Content:
+# SATLOCK: Handover-Coupled Scheduling for Weather-Resilient Quantum Key Distribution over LEO Constellations 
+
+# Mohammad Arif Hossain 
+
+Middle Tennessee State University Murfreesboro, TN, USA mohammadarif.hossain@mtsu.edu 
+
+# Md Jafrin Hossain 
+
+Florida International University Miami, FL, USA mhoss098@fiu.edu 
+
+ABSTRACT 
+
+Routing quantum keys over low-earth-orbit (LEO) satel-lite constellations is harder than classical routing: satel-lite handovers couple consecutive scheduling decisions, sto-chastic cloud cover can silently zero a ground link, and finite-key effects eliminate short, low-elevation passes en-tirely. We present SATLOCK, a handover-aware Quantum Key Distribution (QKD) routing framework that combines (i) a composite channel model incorporating atmospheric loss, pointing jitter, Markov cloud cover, decoy-state es-timation, and finite-key correction; (ii) an integer linear program (ILP) giving a provable handover-aware through-put upper bound; and (iii) a decentralized deep Q-network (DQN) baseline for weather-adaptive online routing. We evaluate two contention regimes on a Walker constellation serving intercontinental demands. In low contention (16 satellites, 6 demands), the ILP delivers 1,311 Mbit while the strongest heuristics reach 95–96% of ILP. In high contention (8 satellites, 12 demands), where handovers become bind-ing, heuristics drop to 89.5% of ILP. The DQN agent reaches 91.8% and 84.6% of ILP in the two regimes; it learns effective per-demand weather policies but is limited in aggregate by the lack of cross-demand coordination. 
+
+CCS CONCEPTS 
+
+• Security and privacy → Cryptography ; • Networks →
+
+Network resources allocation ; • Computing method-ologies → Reinforcement learning ;
+
+Permission to make digital or hard copies of all or part of this work for personal or classroom use is granted without fee provided that copies are not made or distributed for profit or commercial advantage and that copies bear this notice and the full citation on the first page. Copyrights for com-ponents of this work owned by others than the author(s) must be honored. Abstracting with credit is permitted. To copy otherwise, or republish, to post on servers or to redistribute to lists, requires prior specific permission and/or a fee. Request permissions from permissions@acm.org. 
+
+QuNet ’26, September 2026, Denver, CO, USA 
+
+© 2026 Copyright held by the owner/author(s). Publication rights licensed to the Association for Computing Machinery. 
+
+KEYWORDS 
+
+Quantum key distribution, LEO satellite constellations, finite-key analysis, integer linear programming, deep reinforce-ment learning, handover scheduling 
+
+ACM Reference Format: 
+
+Mohammad Arif Hossain and Md Jafrin Hossain. 2026. SATLOCK: Handover-Coupled Scheduling for Weather-Resilient Quantum Key Distribution over LEO Constellations. In Proceedings of The 3rd ACM SIGCOMM Workshop on Quantum Networks and Distributed Quantum Computing (QuNet ’26). ACM, New York, NY, USA, 6 pages. https://doi.org/ 
+
+1 INTRODUCTION 
+
+Routing cryptographic keys over low-earth-orbit (LEO) satellite constellations is qualitatively harder than classical traffic engineering. Quantum signals cannot be amplified or copied [17], so every lost photon is permanent. Each satel-lite pass lasts only a few minutes, stochastic cloud cover can silently zero a ground link mid-session, and finite-key overhead renders short low-elevation passes nearly use-less. Most critically, satellite handovers —reassigning a satel-lite to a different demand between consecutive time slots— incur a pointing-and-acquisition penalty that couples ad-jacent scheduling decisions in a way classical networks do not face. Ignoring this temporal coupling, as existing heuristics do [10], leads to measurable throughput loss that grows with constellation contention. Quantum key dis-tribution (QKD) exploits quantum no-cloning to generate information-theoretically secure shared keys [3]. LEO satel-lite links traverse the thin upper atmosphere, enabling in-tercontinental key exchange beyond the reach of terrestrial fiber—demonstrated by the Micius mission [8], and now con-sidered the most credible near-term path to a global quan-tum network [12]. Yet no prior routing work simultane-ously accounts for finite-key effects, stochastic weather, and handover-coupled scheduling. Three terms recur through-out the paper. Finite-key effects are the security penalty in-curred because a real pass yields only a finite number of detected signals, so the usable key rate falls below the as-ymptotic value and vanishes for very short passes. Cloud cover acts as an on/off mask: a clouded ground station re-ceives no photons, regardless of geometry. A handover is arXiv:2607.17076v1 [cs.CR] 19 Jul 2026 QuNet ’26, September 2026, Denver, CO, USA Hossain and Hossain 
+
+the reassignment of a satellite from one ground demand to another between consecutive slots, forcing the optical termi-nal to re-point and re-acquire and thus lose part of a slot— the effect that couples scheduling decisions across time and that prior routing work has not modeled. We present SAT-LOCK , a handover-coupled scheduling framework for LEO QKD networks. Its core insight is that handover penalties create temporal coupling between consecutive slot decisions: a globally optimal schedule avoids unnecessary satellite re-assignments, while myopic per-slot heuristics do not. We quantify this gap with a provable ILP upper bound and show it reaches 10.5% under high contention which is a difference that matters for a technology where every secure bit is ex-pensive. 
+
+Contributions: 
+
+(1) Physically grounded channel model. A composite link model combining Beer-Lambert absorption, diffrac-tion, pointing jitter, Markov cloud cover, decoy-state es-timation, and finite-key correction with satellite han-dover overhead, validated against a Qiskit BB84 simu-lation. (2) Handover-aware ILP upper bound. An exact binary ILP solved with CBC that explicitly models temporal coupling from satellite reassignment across slots, pro-viding a tight optimality certificate unavailable in prior work. (3) Weather-adaptive online routing agent. A per-demand DQN with progress-aware state and handover-penalized rewards, trained under Markov-correlated weather. It runs at inference in ∼50 𝜇 s per slot without re-solving an NP-hard program; its performance gap rel-ative to ILP under high contention exposes the cost of independent per-demand coordination. 
+
+2 RELATED WORK 
+
+Liao et al. [8] and Yin et al. [18] demonstrated satellite QKD and entanglement distribution at intercontinental range, establishing the physical link model we adopt. Beding-ton et al. [2] and Ribezzo et al. [14] identify pointing loss, cloud outages, and finite-key overhead as dominant im-pairments, with cloud-driven outages confirmed as the pri-mary bottleneck in a deployed two-node network, but none addresses multi-demand routing or handover scheduling. Mehic et al. [10], Cao et al. [5], and Aguado et al. [1] study trusted-node routing and SDN control for QKD over fiber, assuming deterministic links and asymptotic key rates. Cal-effi [4] and Pant et al. [11] propose fidelity- and success-probability-based routing for quantum repeater networks, assuming static link qualities without visibility windows or handover penalties; we reuse their criteria as baselines in Section 5, where both stay within a few percent of opti-mal under low contention but, scoring each slot indepen-dently, lose ground once handover coupling makes the best per-slot choice differ from the best schedule—precisely the regime this paper targets. SATLOCK is the first framework to jointly model finite-key correction, Markov cloud cover, and handover-coupled scheduling with a provable optimal-ity certificate. Classical LEO scheduling optimizes throughput under de-terministic or i.i.d. channel models and ignores quantum-specific handover irreversibility, since a handover penalty in a QKD slot cannot be recovered as classical retransmission allows; SATLOCK ’s ILP captures this via temporal coupling constraints absent in classical scheduling. DRL has been ap-plied to traffic engineering [16] and wireless resource man-agement [7], but without handover coupling or correlated quantum channels; our DQN agent instead trains under Markov-correlated weather, includes a handover flag to ex-pose coupling cost, and uses cumulative key progress for demand-aware reallocation, leaving the residual gap to ILP as motivation for centralized multi-agent DRL. 
+
+2.1 Satellite Constellation and Ground Network 
+
+We model a Walker 53 °:16/4/1 constellation (inclina-tion:total/planes/phasing notation): 4 orbital planes at 53 °
+
+inclination, 500 km altitude, 4 satellites per plane, 𝑁 𝑠 = 16 to-tal, with 90 ° inter-plane RAAN spacing. The ground network covers 10 stations across East Asia (Beijing, Tokyo, Seoul, Shanghai), South Asia (Mumbai), Southeast Asia (Singapore, Bangkok), and Europe (Vienna, London, Madrid). A satellite is visible above 10 ° elevation ( ≈2100 km footprint radius); time is discretized into 𝑇 = 60 slots of 2 min over a 2-hour orbital window. The LEO satellite layer serves as a quantum relay tier, forwarding key material between trusted ground nodes via direct or 1-hop relay paths. Each satellite is a 
+
+trusted-node relay rather than a quantum repeater: it termi-nates a downlink, measures the received key material, and re-transmits to the next hop, so no end-to-end entanglement is preserved across the relay. Each satellite also operates a single steerable downlink and therefore serves at most one ground station per slot—the physical origin of the exclusiv-ity constraint in Section 3, where multi-beam payloads that lift this restriction are discussed as a relaxation. 
+
+2.2 Composite Channel Model 
+
+The end-to-end transmittance on a satellite-to-ground link combines four multiplicative terms: 
+
+𝜂 total = 𝜂 atm 𝜂 diff 𝜂 jitter 𝜂 weather , (1) where 𝜂 atm = 𝑒 −𝜎 ext 𝑧 (𝜃 ) is Beer-Lambert extinction at slant angle 𝜃 ; 𝜂 diff = (𝐷 𝑟 /( 2𝜆𝐿 /𝐷 𝑡 )) 2 is far-field diffraction loss; 
+
+𝜂 jitter = exp (− 2(𝜎 𝑝 /𝑤 𝑏 )2) is Gaussian beam-wander loss (𝜎 𝑝 = 0.7 𝜇 rad, Micius-class [8], 𝑤 𝑏 the beam waist radius); and 𝜂 weather ∈ { 0, 1} is a Markov-chain cloud mask with per-sistence 𝜌 = 0.85 and per-station clear-sky probability 1−𝑝 𝑐 SATLOCK QuNet ’26, September 2026, Denver, CO, USA 
+
+Table 1: Ground station coordinates and cloud proba-bilities 𝑝 𝑐 (MODIS Terra C6.1; 𝜌 = 0.85 [12]).                                           
+
+> City Lat Lon 𝑝 𝑐 City Lat Lon 𝑝 𝑐
+> Beijing 39.9N 116.4E 0.30 Vienna 48.2N 16.4E 0.45 Shanghai 31.2N 121.5E 0.45 London 51.5N 0.1W 0.60 Tokyo 35.7N 139.7E 0.40 Madrid 40.4N 3.7W 0.30 Seoul 37.6N 127.0E 0.35 Mumbai 19.1N 72.9E 0.65 Singapore 1.3N 103.8E 0.70 Bangkok 13.8N 100.5E 0.60
+
+(𝑤 𝑡 = 0 blocked, 𝑤 𝑡 = 1 clear). The transition matrix is: 
+
+𝑃 (𝑤 𝑡 +1 | 𝑤 𝑡 ) =
+
+ 1 − 𝑝 𝑐 (1 − 𝜌 ) 𝑝 𝑐 (1 − 𝜌 )(1 − 𝑝 𝑐 )( 1 − 𝜌 ) 1 − ( 1 − 𝑝 𝑐 )( 1 − 𝜌 )
+
+
+
+,
+
+(2) with stationary distribution 𝑃 (𝑤 = 1) = 1 − 𝑝 𝑐 . The finite-key secret-key rate per slot is [15]: 
+
+𝑅 fk =
+
+
+
+max 0, 𝑅 ∞ − 7√︁ log (2/𝜀 𝑠 )√𝑛 sig 
+
+!
+
+if 𝑛 sig ≥ 10 4,
+
+0 otherwise, (3) where the prefactor 7 follows from the composable secu-rity analysis of [15] under collective attacks with 𝜀 𝑠 =
+
+10 −10 ; 𝑅 ∞ is the asymptotic BB84 decoy-state rate [9]; and 
+
+𝑛 sig = 𝑓 rep 𝜂 total 𝜂 det 𝑓 sift Δ𝑡 is the mean signal-photon count per pass. We use this form as a conservative, reproducible lower bound: it applies to collective attacks and inherits the asymptotic-equipartition-property (AEP) penalty, omitting both the finite sampling error in 𝑅 ∞ and the post-selection term needed for general (coherent) attacks. Tighter entropic-uncertainty bounds avoid the AEP loss and cover general at-tacks directly, raising the per-pass key volume; since every baseline in this paper consumes the same rate function, a tighter bound would shift all methods’ throughput together without changing the relative comparison or the handover-coupling conclusion. A full entropic-uncertainty treatment is left to future work. Table 1 lists ground-station locations and 𝑝 𝑐 values. Figure 1 illustrates the three channel effects. Pointing jit-ter 𝜎 𝑝 = 0.7 𝜇 rad is modeled as elevation-independent, fol-lowing the Micius system characterization in [8], where beam waist and slant range scale identically with the eleva-tion angle, leaving 𝜂 jitter constant; elevation-dependent jitter modeling is deferred to future work. The finite-key correc-tion becomes small relative to 𝑅 ∞ for passes exceeding 120 s, but eliminates sub-60 s links entirely. 
+
+2.3 Qiskit BB84 Validation 
+
+We validate the channel model using a prepare-and-measure BB84 simulation in Qiskit with depolarizing noise [13]. For each channel error rate in [0, 0.20 ], we simulate 500 qubit transmissions per trial over 5 independent trials. The mea-sured quantum bit error rate (QBER) tracks the theoretical relationship QBER ≈ 𝑒 channel within the expected sampling uncertainty of the finite-shot simulation: at QBER = 5% , the per-trial standard error is √︁ 0.05 × 0.95 /500 ≈ 1.0% , falling to ≈ 0.44% averaged over five trials. We therefore treat the Qiskit run as a protocol-level consistency check rather than a model of QKD hardware—a noisy intermediate-scale quantum (NISQ) device and a real photonic transmitter differ substantially, and the simulation only confirms that the prepare-and-measure protocol reproduces the expected QBER-versus-error relationship our channel model assumes. The finite-key rate (3) computed from simulated QBER re-mains within 1–2% of the analytical prediction for passes above 60 s, confirming end-to-end consistency between the protocol layer and the network-level channel model. 
+
+3 PROBLEM FORMULATION AND ILP BOUND 
+
+Let K be the demand set and P𝑘 the feasible paths for de-mand 𝑘 (direct and 1-hop relay). Binary variable 𝑥 𝑘,𝑡,𝑝 ∈{0, 1} indicates whether demand 𝑘 uses path 𝑝 at slot 𝑡 . To model pointing and acquisition overhead, a satellite incurs a handover loss when it serves different demands in consec-utive slots; we use 𝑦 𝑘,𝑠,𝑡 ∈ { 0, 1} to indicate that demand 𝑘 
+
+uses satellite 𝑠 in slot 𝑡 , and ℎ𝑠,𝑡 ∈ [ 0, 1] to indicate a han-dover on satellite 𝑠 between slots 𝑡 − 1 and 𝑡 .
+
+Objective. Maximize delivered secret-key bits after han-dover loss: 
+
+max 
+
+> x,y,h
+
+∑︁ 𝑘,𝑡,𝑝 
+
+𝑥 𝑘,𝑡,𝑝 𝑅 𝑘,𝑡,𝑝 − 𝛼 ∑︁ 
+
+> 𝑠,𝑡
+
+ℎ𝑠,𝑡 𝑅 max  
+
+> 𝑠,𝑡
+
+, (4) where 𝑅 𝑘,𝑡,𝑝 is the finite-key secret-key volume on path 𝑝 at slot 𝑡 , 𝑅 max  
+
+> 𝑠,𝑡
+
+is the maximum key volume involving satellite 
+
+𝑠 at slot 𝑡 , and 𝛼 = 0.5 models a 50% throughput loss during a handover slot. 
+
+Constraints. C1 : at most one path per demand per slot: Í𝑝 𝑥 𝑘,𝑡,𝑝 ≤ 1 ∀𝑘, 𝑡 . C2 : satellite exclusivity (no sharing per slot): Í𝑘,𝑝 ∋𝑠 𝑥 𝑘,𝑡,𝑝 ≤ 1 ∀𝑠, 𝑡 —this half-duplex constraint re-flects the operational mode of current Micius-class trans-mitters, which require dedicated optical alignment to a sin-gle ground station per time slot [8]; future multi-beam payloads would relax C2 to a per-satellite capacity bound Í𝑘,𝑝 ∋𝑠 𝑅 𝑘,𝑡,𝑝 𝑥 𝑘,𝑡,𝑝 ≤ 𝐶 max . C3 : handover detection: ℎ𝑠,𝑡 ≥
+
+𝑦 𝑘,𝑠,𝑡 + Í𝑘 ′≠𝑘 𝑦 𝑘 ′,𝑠,𝑡 −1 − 1 ∀𝑘, 𝑠, 𝑡 > 1. C4 : binary and domain constraints: 𝑥 𝑘,𝑡,𝑝 ∈ {0, 1}, 𝑦 𝑘,𝑠,𝑡 ∈ {0, 1}, 0 ≤
+
+ℎ𝑠,𝑡 ≤ 1. C5 : linking 𝑦 to 𝑥 : 𝑦 𝑘,𝑠,𝑡 = Í𝑝 ∋𝑠 𝑥 𝑘,𝑡,𝑝 ∀𝑘, 𝑠, 𝑡 . For our 16-satellite, 6-demand, 60-slot instance, the handover-aware ILP is solved in ∼0.8 s by CBC [6]. Complexity. 
+
+The ILP has 𝑂 (𝐾 · 𝑇 · ¯𝑃 + 𝐾𝑆𝑇 ) binary variables, where 
+
+¯𝑃 is the average number of feasible paths per demand-slot pair, plus 𝑂 (𝑆𝑇 ) continuous handover indicators, with con-straint count 𝑂 (𝑆𝑇 + 𝐾𝑇 + 𝐾𝑆𝑇 ). The aggregate 𝑦 𝑘,𝑠,𝑡 in-dicators avoid enumerating all cross-products of paths in adjacent slots, essential to keep the handover-aware formu-lation tractable. However, scaling to 100+ satellites would increase the variable count quadratically due to relay path QuNet ’26, September 2026, Denver, CO, USA Hossain and Hossain 
+
+Figure 1: Channel model effects. Left : pointing-jitter loss. Centre : finite-key vs. asymptotic rate vs. pass duration. 
+
+Right : Werner-state entanglement fidelity vs. transmittance. 
+
+enumeration, motivating online learning policies that run at inference in ∼50 𝜇 s per slot without re-solving. 
+
+4 LEARNING-BASED ONLINE ROUTING AGENT 4.1 Environment 
+
+We implement SatQKDEnv , a gym-style environment with Markov weather, in which the agent observes at each slot: 
+
+s𝑡 = 𝑡 /𝑇 , V𝑡 , w𝑡 , b𝑡 , 𝑔 𝑡 
+
+, (5) where V𝑡 ∈ R3 contains the best available finite-key rates for each path type (direct, 1-hop relay, no-path) adjusted for current weather; w𝑡 ∈ { 0, 1}2 is the source/destination weather state; b𝑡 ∈ R is the cumulative key volume deliv-ered for the demand (per-agent state dimension 1 + 3 + 2 +
+
+1 + 1 = 8); and 𝑔 𝑡 flags whether the currently available paths would reuse a satellite that served a different demand in the previous slot. 
+
+4.2 Action Space and Reward 
+
+Each per-demand agent independently selects one of 3 rout-ing options (skip / direct / 1-hop relay), yielding a combined action space of 3𝐾 across all 𝐾 agents. Per-slot reward: 
+
+𝑟 𝑡 =∑︁ 
+
+> 𝑘
+
+𝑅 𝑘,𝑡,𝜋 𝑘 (𝑎 ) − 𝜆 ℎ𝐻 (𝑎 ) − 𝜆 𝑔 𝐺 (𝑎 ), (6) where 𝐻 (𝑎 ) = Í𝑘 ℎ𝑘 (𝑎 ) is the total relay-hop count ( ℎ𝑘 (𝑎 ) ∈ {0, 1}, the relay hops used by demand 𝑘 under action 𝑎 ) and 
+
+𝐺 (𝑎 ) counts handovers caused by the selected actions; we set 𝜆 ℎ = 0.001 and 𝜆 𝑔 = 0.05 , keeping both penalties below typical per-slot key delivery while still exposing handover cost to the learner. 
+
+4.3 DQN Architecture 
+
+Each agent is a 3-layer multi-layer perceptron (MLP; two hidden layers of 128 units, ReLU activations) trained with experience replay (buffer 10 000, batch 64) and a target net-work synchronized every 50 episodes, using the Adam op-timizer (lr = 3 × 10 −4), discount factor 𝛾 = 0.95 , and 𝜀 -greedy exploration decaying from 1.0 to 0.05 over the first 3000 of 5000 training episodes. At inference, each agent se-lects an action in ∼50 𝜇 s— ∼16 ,000 × faster than re-solving 
+
+Algorithm 1 SATLOCK Online Routing per Orbital Win-dow 
+
+Require: Orbital data, weather model, trained agents {𝜋 𝑘 } 
+
+> 1:
+
+for each time slot 𝑡 = 1, . . . ,𝑇 do  
+
+> 2:
+
+Update satellite positions and visibility matrix V𝑡  
+
+> 3:
+
+Sample weather state via Markov chain (2)  
+
+> 4:
+
+for each demand pair (𝑠 𝑘 , 𝑑 𝑘 ) ∈ K do  
+
+> 5:
+
+Compute feasible paths: direct and 1-hop relay  
+
+> 6:
+
+Construct state s𝑘 𝑡 = [𝑡 /𝑇 , V𝑘 𝑡 , w𝑘 𝑡 , b𝑘 𝑡 , 𝑔 𝑘 𝑡 ] 
+
+> 7:
+
+𝑎 𝑘 𝑡 ← 𝜋 𝑘 (s𝑘 𝑡 ) ⊲ Agent selects path type  
+
+> 8:
+
+Tentatively assign 𝑅 𝑘,𝑡,𝑎 𝑘 𝑡 key bits to demand 𝑘  
+
+> 9:
+
+end for  
+
+> 10:
+
+Resolve conflicts: if satellite 𝑠 is claimed by multi-ple demands, retain the assignment with highest 𝑅 𝑘,𝑡,𝑎 𝑘 𝑡 ;others skip slot 𝑡  
+
+> 11:
+
+Accumulate delivered key bits: b𝑘 𝑡 +1 ← b𝑘 𝑡 + 𝑅 𝑘,𝑡,𝑎 𝑘 𝑡  
+
+> 12:
+
+end for 
+
+the ILP ( ∼0.8 s)—enabling real-time slot-by-slot deployment. Figure 2 shows convergence for all six demands. 
+
+5 EVALUATION 5.1 Experimental Setup 
+
+Table 2 lists all simulation parameters. We compare six al-gorithms: ILP (optimal upper bound), DRL (trained DQN), 
+
+Figure 2: DRL training curves for six demand pairs. All agents converge by episode 3000; the 𝜀 -greedy policy produces noisy early rewards that smooth into a stable plateau. SATLOCK QuNet ’26, September 2026, Denver, CO, USA 
+
+Table 2: Simulation Parameters                                           
+
+> Parameter Value Parameter Value
+> Ground stations 10 (Asia+Eur.) Pulse rate 𝑓 rep 100 MHz LEO satellites 4–16 Detector eff. 𝜂 det 0.20 [8] Planes / incl. 4, 53 ◦Dark count 𝑑 𝑐 300/s (InGaAs) Altitude ℎ500 km Basis sift 𝑓 sift 0.5 (BB84) Min. elev. 𝜃 min 10 ◦Handover loss 𝛼 0.5 Duration/slot Δ𝑡 120/2 min DRL episodes/hidden 5000/128 ×2Pointing jitter 𝜎 𝑝 0.7 𝜇 rad Replay buf./batch 10 000/64 Security 𝜀 𝑠 10 −10 Learning rate 3×10 −4
+> Weather persist. 𝜌 0.85
+
+Greedy (max-rate path per slot), Caleffi [4] (Werner-fidelity product), Pant [11] (transmittance product), and 
+
+Direct-only (no relay). All use the same stochastic channel; results are means over 30 held-out weather seeds. 
+
+5.2 Per-Demand and Algorithm Comparison 
+
+Under Markov-correlated weather and handover loss (30 held-out seeds), the algorithms separate clearly. In low contention (16 satellites, 6 demands), the strongest heuris-tics remain close to ILP since satellite exclusivity is only occasionally binding; even there, the handover-aware ILP delivers the largest aggregate key volume (1,311 Mbit, vs. 1,262 Mbit for Caleffi/Pant, 1,250 Mbit for Greedy, and 1,204 Mbit for DRL; Table 3). The per-demand break-down in Figure 3, computed under the same Markov weather and handover loss, also exposes a fairness behavior: since (4) maximizes total delivered key volume, it favors less-impaired demand pairs—visible in the large gap between high-volume pairs like Beijing–Seoul and the near-zero de-livery to Tokyo–Shanghai—and can leave the weakest un-derserved under high contention. We optimize aggregate throughput because delivered bits are the security-relevant resource and total throughput is a single well-defined cer-tifiable target; this trades per-demand fairness, and could in principle starve a persistently cloud-blocked station. A fairness-aware variant—e.g., max-min or proportionally fair objectives, or a per-demand minimum-key constraint—is a natural extension, likely trading some aggregate volume for more even delivery; we leave its evaluation to future work. The separation is larger under high contention (8 satellites, 12 demands), where satellite conflicts and handovers occur more frequently: as Figure 4 shows under the same 30-seed evaluation, the ILP delivers 980 Mbit, the myopic baselines drop to 877 Mbit (89.5% of ILP), and the decentralized DRL agent delivers 829 Mbit (84.6%; Table 3). Here, constraint C2 binds at nearly every slot, forcing all myopic algorithms to the same feasible assignment and identical throughput, vis-ible as matching bar heights across baselines for most de-mand pairs in the figure. This supports the main claim: once 
+
+Table 3: Algorithm Comparison: Total Key Delivery (Mbit, 30 seeds). Low: 16 satellites, 6 demands. High: 8 satellites, 12 demands. % computed as algorithm to-tal / ILP Optimal × 100.                              
+
+> Low Contention High Contention Algorithm Key %Key %
+> ILP Optimal 1,311 100.0% 980 100.0% Caleffi [4] 1,262 96.3% 877 89.5% Pant [11] 1,262 96.3% 877 89.5% Direct-only 1,251 95.4% 877 89.5% Greedy (max-rate) 1,250 95.3% 877 89.5% DRL Agent 1,204 91.8% 829 84.6%
+
+handover overhead creates temporal coupling, globally op-timized scheduling measurably beats per-slot myopic rout-ing. The DRL result is more nuanced—independent agents learn useful weather-sensitive policies on some pairs, but ag-gregate performance is limited by the lack of explicit multi-agent coordination under shared satellite constraints. 
+
+5.3 Global Routing Under Weather Uncertainty 
+
+Figure 5 shows aggregate key delivery across all six rout-ing algorithms on the 16-satellite constellation with sto-chastic Markov weather and handover loss (30 seeds). The handover-aware ILP benefits from planning across consec-utive slots instead of greedily reassigning satellites when-ever the instantaneous rate changes. The decentralized DRL agent discovers demand-specific allocation strategies, but its independent action selection cannot fully coordinate satellite conflicts across demands. 
+
+5.4 Discussion 
+
+The handover-aware ILP solves in ∼0.8 s at this scale (64+ satellites would need column-generation or Lagrangian de-composition [12]), and handover loss couples adjacent deci-sions, exposing the value of global scheduling over per-slot selection. The DRL agent infers in ∼50 𝜇 s per slot without re-solving an NP-hard program, but its independent-agent de-sign cannot fully resolve centralized satellite conflicts; per-demand agents avoid the combinatorial joint action space (3𝐾 ) and specialize to each pair’s conditions at this coor-dination cost, while precomputing the best path per type and choosing only among types reduces the action space to 3 discrete actions, enabling convergence within 3,000 episodes, and including cumulative key progress 𝑏 𝑡 and a handover flag 𝑔 𝑡 in the state enables demand-aware alloca-tion that redirects capacity to underserved pairs once oth-ers are satisfied—insights that may transfer to other quan-tum network problems with combinatorial path spaces and stochastic channels. The Markov weather model ( 𝜌 = 0.85 )matches typical ECMWF persistence statistics and can be replaced with real per-station climatologies directly, since QuNet ’26, September 2026, Denver, CO, USA Hossain and Hossain 
+
+Figure 3: Low-contention per-demand throughput (16 satellites, 6 demands, 30 seeds). 
+
+Figure 4: High-contention per-demand throughput (8 satellites, 12 demands, 30 seeds). 
+
+Figure 5: Aggregate key delivery, low-contention con-stellation (30 seeds). 
+
+the optimization and agent consume only the resulting per-slot rates; finite-key effects (Eq. 3) eliminate sub-60 s passes entirely, confirming the value of physically faithful chan-nel models [14]. Our evaluation remains simulation-based, with cloud cover drawn from a two-state Markov process using representative climatological parameters rather than measured traces—the study’s main limitation, and validat-ing against real meteorological traces and recorded pass geometries is our immediate next step, with centralized or communication-enabled multi-agent DRL as the natural next step for closing the gap to ILP. 
+
+6 CONCLUSION 
+
+We presented SATLOCK , a handover-coupled scheduling framework for LEO QKD networks combining a physi-cally grounded channel model (finite-key correction, decoy-state estimation, Markov weather, pointing jitter, and han-dover loss) with a provable ILP optimality certificate and a weather-adaptive online routing agent. The evaluation shows clear algorithm differentiation: the best heuristics reach 95–96% of ILP under low contention but drop to 89.5% under high contention, as satellite conflicts and handover penalties become binding; the decentralized DRL agent learns useful weather-sensitive demand policies, but its ag-gregate performance is limited by independent per-demand coordination. Future work includes centralized multi-agent DRL, multi-hop entanglement routing with quantum re-peaters, real ECMWF cloud-cover integration per station, and hardware-in-the-loop validation using SDR testbeds or emulated QKD devices. 
+
+REFERENCES 
+
+[1] Alejandro Aguado, Victor Lopez, Sergio Lopez-Buedo, Momtchil Peev, Herbert Brunner, Andreas Poppe, Anton Zeilinger, Antonio Pastor, Juan Matias, and Vi-cente Martin. 2019. The Engineering of Software-Defined Quantum Key Distri-bution Networks. IEEE Communications Magazine 57, 7 (2019), 20–26. [2] Robert Bedington, Juan Miguel Arrazola, and Alexander Ling. 2017. Progress in satellite quantum key distribution. npj Quantum Information 3, 1 (2017), 30. [3] Charles H. Bennett and Gilles Brassard. 1984. Quantum Cryptography: Public Key Distribution and Coin Tossing. In Proceedings of the IEEE International Con-ference on Computers, Systems and Signal Processing . Bangalore, India, 175–179. [4] Marcello Caleffi. 2017. Optimal Routing for Quantum Networks. IEEE Access 5(2017), 22299–22312. [5] Yuan Cao, Yu Zhao, Qi Wang, Jie Zhang, Soon Xin Ng, and Lajos Hanzo. 2022. The Evolution of Quantum Key Distribution Networks: On the Road to the Qin-ternet. IEEE Communications Surveys & Tutorials 24, 2 (2022), 839–894. [6] John Forrest and Robin Lougee-Heimer. 2005. CBC – COIN-OR Branch and Cut solver. (2005). Available at https://github.com/coin-or/Cbc. [7] Liang Huang, Xu Feng, Aoli Feng, Yuping Huang, and Li Ping Qian. 2022. Deep Reinforcement Learning for Online Resource Allocation in Heterogeneous Mo-bile Edge Computing. IEEE Transactions on Mobile Computing 21, 4 (2022), 1247– 1260. [8] Sheng-Kai Liao, Wen-Qi Cai, Wei-Yue Liu, Liang Zhang, Yang Li, Ji-Gang Ren, Juan Yin, Qi Shen, Yuan Cao, Zheng-Ping Li, et al. 2017. Satellite-to-ground quantum key distribution. Nature 549, 7670 (2017), 43–47. [9] Hoi-Kwong Lo, Xiongfeng Ma, and Kai Chen. 2005. Decoy State Quantum Key Distribution. Physical Review Letters 94, 23 (2005), 230504. [10] Miralem Mehic, Marcin Niemiec, Stefan Rass, Jing Ma, Momtchil Peev, Alejan-dro Aguado, Vicente Martin, Stefan Schauer, Christoph Pacher, Richard Pibernik, et al. 2020. Quantum Key Distribution: A Networking Perspective. Comput. Sur-veys 53, 5 (2020), 1–41. [11] Mihir Pant, Hari Krovi, Don Towsley, Leandros Tassiulas, Liang Jiang, Prithwish Bose, Dirk Englund, and Saikat Guha. 2019. Routing entanglement in the quan-tum internet. npj Quantum Information 5, 1 (2019), 25. [12] Stefano Pirandola, Ulrik Lund Andersen, Leonardo Banchi, Mario Berta, Darius Bunandar, Roger Colbeck, Dirk Englund, Tobias Gehring, Cosmo Lupo, Carlo Ottaviani, et al. 2020. Advances in quantum cryptography. Advances in Optics and Photonics 12, 4 (2020), 1012–1236. [13] Qiskit contributors. 2024. Qiskit: An Open-Source Framework for Quantum Computing. https://github.com/Qiskit/qiskit. (2024). Accessed: 2026-05-25. [14] Davide Ribezzo, Mujtaba Zahidy, Ilaria Vagniluca, Nicola Biagi, Stefano Francesconi, Tommaso Occhipinti, Leif K. Oxenløwe, Mirko Lovic, Ugo Zanfor-lin, and Davide Bacco. 2023. Deploying an Inter-European Quantum Network. 
+
+Advanced Quantum Technologies 6, 2 (2023), 2200061. [15] Marco Tomamichel, Charles Ci Wen Lim, Nicolas Gisin, and Renato Renner. 2012. Tight finite-key analysis for quantum cryptography. Nature Communications 3, 1 (2012), 634. [16] Asaf Valadarsky, Michael Schapira, Dafna Shahaf, and Aviv Tamar. 2017. Learn-ing to Route. In Proceedings of the 16th ACM Workshop on Hot Topics in Networks .185–191. [17] William K. Wootters and Wojciech H. Zurek. 1982. A single quantum cannot be cloned. Nature 299, 5886 (1982), 802–803. [18] Juan Yin, Yu-Huai Li, Sheng-Kai Liao, Meng Yang, Yuan Cao, Liang Zhang, Ji-Gang Ren, Wen-Qi Cai, Wei-Yue Liu, Shuang-Lin Li, et al. 2020. Entanglement-based secure quantum cryptography over 1,120 kilometres. Nature 582, 7813 (2020), 501–505.

@@ -1,0 +1,923 @@
+Title: Beam Hopping Low Earth Orbit Satellite Resource Allocation for Differentiated Services and Robustness Analysis under Model Attacks
+
+URL Source: https://arxiv.org/pdf/2607.03859v1
+
+Published Time: Tue, 07 Jul 2026 01:39:08 GMT
+
+Number of Pages: 16
+
+Markdown Content:
+> JOURNAL OF L ATEX CLASS FILES, VOL. 14, NO. 8, APRIL 2026 1
+
+# Beam Hopping Low Earth Orbit Satellite Resource Allocation for Differentiated Services and Robustness Analysis under Model Attacks 
+
+Shuang Zheng, Xing Zhang, Senior Member, IEEE, Quan Z. Sheng, Haixu Wang, and Wenbo Wang, Senior Member, IEEE 
+
+Abstract —Beam hopping (BH)-enabled Low Earth Orbit (LEO) satellites play a pivotal role in next-generation communi-cation networks, providing global coverage, improving spectrum efficiency, and supporting flexible adaptation to heterogeneous service demands. To fully exploit these capabilities, artificial in-telligence (AI) techniques are increasingly employed for dynamic resource allocation and power management. However, limited onboard resources and potential adversarial perturbations pose challenges to both efficiency and robustness. To address these issues, we leverage digital twin technology to accurately capture the spatio-temporal dynamics of user–satellite visibility, providing precise state information for decision-making. Building on this, we formulate a joint optimization framework for BH scheduling and power allocation as a Markov Decision Process and propose the BRIDGE—BH with Reinforcement learning incorporating Integrated Dirichlet and Gumbel-TopK Exploration—which in-tegrates a quality of service (QoS)-driven subchannel schedul-ing mechanism to ensure efficient and differentiated resource allocation. The model’s robustness is systematically evaluated under three classical adversarial attacks. Simulation results demonstrate that our approach achieves superior energy effi-ciency, service throughput, and fairness, while the robustness analysis shows stable performance under the considered bounded adversarial perturbations. 
+
+Index Terms —LEO satellite communications, deep reinforce-ment learning, digital twin, resource allocation, adversarial at-tack. 
+
+I. I NTRODUCTION 
+
+# WITH the gradual deployment of 5G, research on 6G technologies has accelerated worldwide to realize the vision of “global coverage, all spectra, full applications, all senses, all digital, and strong security” [1]. Satellite net-works represent a paradigm-shifting breakthrough in com-munications, overcoming the limitations of traditional terres-trial infrastructure and playing a critical role in supporting the development of 6G [2], [3]. Among various satellite technologies, Low Earth Orbit (LEO) systems have attracted particular attention from both academia and industry due to their low orbital altitude, reduced deployment costs, and broad coverage compared to Geosynchronous (GEO) and Medium 
+
+> This work is supported by the National Science Foundation of China under Grant 62271062. The work of Shuang Zheng is supported by China Schol-arship Council (CSC) under Grant 202406470029. (Corresponding authors: Xing Zhang.) Shuang Zheng, Xing Zhang, Haixu Wang and Wenbo Wang are with the School of Information and Communication Engineering, Beijing University of Posts and Telecommunications, Beijing 100876, China. Shuang Zheng is also with the School of Computing, Macquarie University, Sydney, NSW 2109, Australia. (e-mail: {zshuang; hszhang; wbwang }@bupt.edu.cn). Quan Z. Sheng is with the School of Computing, Macquarie University, Sydney, NSW 2109, Australia. (e-mail: michael.sheng@mq.edu.au).
+
+Earth Orbit (MEO) satellites [4]–[6]. For example, the SpaceX Starlink constellation already comprises over 8,000 in-orbit satellites [7]. LEO satellites provide low-latency, high-speed communications and efficiently support differentiated services, establishing a crucial foundation for next-generation commu-nications [8], [9]. Driven by rapidly expanding market demands—the global broadband satellite Internet market is projected to grow from approximately $8.1 billion in 2025 to $25.7 billion in 2032 [10]—efficient resource allocation in LEO satellite networks has become increasingly critical. Traditional multi-beam satel-lites rely on fixed beam directions, often resulting in resource under-utilization and congestion in high-demand regions. In contrast, Beam hopping (BH) technology enables dynamic allocation of onboard power and spectrum, supporting on-demand services while enhancing throughput, spectrum effi-ciency, and overall service quality [11], [12]. Traditional optimization and heuristic algorithms have been extensively investigated for beam scheduling in satellite com-munications [13]–[19], which achieve competitive perfor-mance. However, the operating environment of LEO satel-lite systems is inherently dynamic, featuring rapid satellite mobility, continuously evolving user–satellite visibility, and highly time-varying traffic demands. Under such conditions, traditional optimization and heuristic approaches typically require frequent iterative re-optimization to adapt to system states, which incurs substantial computational overhead. As a result, these methods exhibit fundamental limitations in track-ing time-varying dynamics and satisfying real-time decision-making requirements, particularly in light of the stringent onboard computational and energy constraints of LEO satel-lites [20]. To overcome these challenges, artificial intelligence (AI) and machine learning techniques, particularly deep rein-forcement learning (DRL), have emerged as promising tools for intelligent resource management [21]–[28]. Moreover, AI-driven scheduling models are susceptible to robustness and security challenges, including adversarial attacks and abnormal input perturbations. Thus, resource allocation in BH LEO satellites still faces the following core challenges:  
+
+> •
+
+Differentiated Service Transmission with Limited On-board Resources : LEO satellite networks support di-verse services with heterogeneous quality of service (QoS) requirements. Given the limited onboard power and spectrum, LEO satellites must implement efficient and fair resource allocation, while ensuring that high-priority services are served preferentially to maximize  
+
+> 0000–0000/00$00.00 © 2021 IEEE
+> arXiv:2607.03859v1 [cs.NI] 4 Jul 2026 JOURNAL OF L ATEX CLASS FILES, VOL. 14, NO. 8, APRIL 2026 2
+
+overall resource utilization and ensure reliable, high-quality communications.  
+
+> •
+
+Dynamic LEO User-Satellite Connections : The continu-ous motion of LEO satellites induces significant spatio-temporal variations in the communication links with ground users. Channel quality depends on relative po-sitions, propagation distances, and environmental factors, while satellite visibility is inherently time-varying. These dynamics increase the complexity of network manage-ment and BH scheduling, necessitating real-time link state awareness and adaptive beam and resource allo-cation strategies to maintain performance in dynamic network scenarios.  
+
+> •
+
+Robustness and Model Security in AI Architectures : AI-based resource allocation models are susceptible to ro-bustness and security challenges, including adversarial attacks and abnormal input perturbations. Systematic re-search on the robustness of DRL-based resource schedul-ing models for LEO satellite networks under such threats remains limited, highlighting the need for further stud-ies to ensure performance and trustworthiness in next-generation communication networks. To address these challenges, we propose a joint optimization framework that formulates the BH scheduling and power allocation problem in LEO satellite systems as a Markov decision process (MDP), explicitly accounting for the time-varying user–satellite dynamics and heterogeneous QoS re-quirements. Based on the formulation, we design an AI-enabled algorithm to efficiently manage the hybrid decision space, improve resource utilization, and analyze robustness under adversarial conditions. The main contributions of this work are summarized as follows:  
+
+> •
+
+We exploit the digital twin (DT) technology to accurately capture the spatio-temporal dynamics of user–satellite visibility, providing high-fidelity state information that supports adaptive and efficient BH scheduling.  
+
+> •
+
+We propose the BH with Reinforcement learning incor-porating Integrated Dirichlet and Gumbel-TopK Explo-ration (BRIDGE) algorithm, which jointly optimizes BH scheduling and power allocation in discrete–continuous action spaces, while embedding a QoS-driven subchannel mechanism to ensure differentiated service provisioning.  
+
+> •
+
+We systematically assess the vulnerability of DRL-based scheduling models to classical adversarial attacks, in-cluding the Fast Gradient Sign Method (FGSM), Itera-tive FGSM (I-FGSM), and Projected Gradient Descent (PGD), thereby providing a robustness evaluation for AI-enabled BH LEO satellite systems.  
+
+> •
+
+Extensive simulations demonstrate that the proposed framework outperforms baseline methods in energy ef-ficiency, service throughput, and fairness. The robustness analysis further shows that it maintains stable perfor-mance under the considered bounded adversarial pertur-bations. The remainder of this article is organized as follows. Section II reviews the related work. Section III presents the system model and problem formulation. Section IV introduces the proposed BRIDGE algorithm. Section V analyzes the adver-sarial attack model and the corresponding algorithm. Section VI evaluates the performance of the proposed algorithm in comparison to existing baseline methods. Finally, Section VII concludes the paper. II. R ELATED WORK 
+
+Research on BH resource allocation in LEO satellite net-works can be broadly classified into traditional optimization-based approaches and AI-enabled methods. With the increas-ing integration of AI into communication systems, concerns have also emerged regarding the robustness and security of intelligent scheduling models. This section reviews the related studies from these perspectives. 
+
+A. BH Scheduling and Resource Allocation based on Tradi-tional Optimization Algorithm 
+
+Traditional optimization-based approaches for BH schedul-ing typically rely on heuristic methods or mathematical pro-gramming to achieve multi-dimensional resource allocation under diverse traffic demands. For example, [13], [14] applied greedy strategies for beam scheduling, where [13] further incorporated isolation distance constraints to mitigate inter-beam interference, while [14] employed a quadratic trans-formation to optimize power allocation under a given BH pattern, thereby improving service satisfaction and through-put. Similarly, [15] decomposed the original mixed-integer non-convex problem into three subproblems—beam direc-tion control with timeslot allocation, subchannel assignment, and power allocation—which were solved iteratively via an externality-matching scheme combined with the successive convex approximation (SCA) method. Beyond these optimization frameworks, heuristic algorithms have also been widely explored [16]–[19]. For instance, [16] compared genetic algorithms, particle swarm optimization, and simulated annealing for coverage optimization and interference suppression. Meanwhile, [17]–[19] employed genetic algo-rithms for multi-objective optimization of resource allocation, targeting different performance metrics such as throughput, access success rate, latency, and fairness. These approaches demonstrated notable advantages, particularly in scenarios with uneven traffic demands. 
+
+B. AI-Enabled Beam Scheduling and Power Allocation Opti-mization 
+
+In BH-enabled LEO satellite networks, traditional optimiza-tion and heuristic methods face limitations under highly dy-namic traffic conditions. To address these challenges, DRL has been increasingly applied to resource allocation, with several approaches treating beam scheduling and power allocation as decoupled subproblems. The authors in [26] optimized discrete beam selection using DRL while handling power allocation independently to reduce computational complexity. In [25], beam scheduling was guided by traffic demands, with power adjusted separately to enhance responsiveness JOURNAL OF L ATEX CLASS FILES, VOL. 14, NO. 8, APRIL 2026 3                                                 
+
+> TABLE I COMPARISON OF AI-ENABLED BH RESOURCE ALLOCATION STUDIES AND THE PROPOSED BRIDGE FRAMEWORK .
+> Studies Method Type Beam Scheduling Power Allocation Hybrid Action Han-dling User–Satellite Visi-bility Differentiated Services Robustness
+> [21], [22] Hybrid-action DQN Discrete beam scheduling based on value-function approximation Continuous power al-location modeled as action parameters Parameterized value-based hybrid action representation Not explicitly mod-eled Limited consideration No [23], [27] PPO/multi-agent PPO Policy-gradient-based resource scheduling Power allocation by policy learning Hybrid policy learn-ing Not explicitly mod-eled Limited consideration No [24], [25] Multi-objective DRL DRL-based beam scheduling Decoupled or convex-transformed power al-location Not afully joint discrete–continuous policy Not explicitly mod-eled RT/NRT services con-sidered No
+> BRIDGE PPO-based hybrid-action DRL Gumbel-TopK Sam-pling Dirichlet Sampling Joint discrete-continuous policy DT-based user-satellite visibility windows QoS-aware subchan-nel allocation for RT/NRT services FGSM, I-FGSM, PGD
+
+under dynamic conditions. [28] considered multi-satellite non-orthogonal multiple access (NOMA) systems, where beam-forming and subchannel assignment were optimized prior to independent power control to improve overall system effi-ciency. Although these decoupled strategies simplify problem-solving, they do not fully exploit the coupling between beam scheduling and power allocation, limiting overall performance and service quality. To address these limitations, [21] and [22] introduced hybrid-action deep Q-network (DQN) frameworks that inte-grate discrete beam scheduling with continuous power allo-cation via a parameterized action space. Notably, [22] ex-tended this approach to jointly optimize multiple objectives, including transmission delay, packet loss, and power consump-tion, demonstrating the potential of hybrid-action learning in complex satellite communication scenarios. However, since P-DQN relies on value function approximation, its exploration capability is limited, and it may still converge to local optima in highly complex or dynamic scenarios. More recently, pol-icy gradient methods, such as Proximal Policy Optimization (PPO), have been introduced to improve exploration and learn-ing stability [23], [27]. A two-stage optimization framework combining multi-agent PPO was proposed in [23] to jointly optimize frequency planning and beam power allocation in high-throughput satellite systems. To support diverse service types in LEO satellites, [24] and [25] optimized multiple performance metrics for simultaneous real-time (RT) and non-real-time (NRT) transmissions. Specif-ically, [24] employed a multi-objective DRL scheme for BH scheduling in multi-beam satellites, while our previous work [25] introduced an action-masking multi-objective double deep Q-network (AMM-DDQN) to enable flexible beam scheduling and transform the power optimization problem into a convex form for dynamic traffic and channel conditions. 
+
+C. Security and Robustness of AI-Enabled Scheduling Model 
+
+Prior studies on general AI models have revealed their high vulnerability to adversarial attacks, which can lead to sub-stantial performance degradation [29]–[31]. In particular, DRL agents used for decision-making in complex environments are especially susceptible. For example, [32] compared the effects of random noise and adversarial samples generated by the Fast Gradient Sign Method (FGSM) on DRL agents, demonstrat-ing that FGSM samples are significantly more effective at misleading the agents than random perturbations. Similarly, [33] examined multiple DRL algorithms—including PPO, Deep Deterministic Policy Gradient (DDPG), and DQN—and reported pronounced performance drops under PGD attacks. Ergu et al. [34]–[36] conducted a series of studies on DRL-based open radio access network (O-RAN) resource allocation. The work in [34] revealed vulnerabilities of DRL-enabled resource management strategies to FGSM, PGD, and Policy-Induced Attacks (PIA). Subsequent studies [35], [36] extended this analysis to dynamic vehicle-to-everything (V2X) scenarios and proposed robust frameworks, such as targeted RADAR, to enhance the stability and reliability of DRL systems under adversarial conditions. Although existing studies have shown that DRL-based meth-ods can flexibly adapt to the spatio-temporal dynamics of traffic demands and perform dynamic beam scheduling, the modeling of onboard total power constraints remains rigid, and the dynamic connectivity between users and satellites is often overlooked. Besides, existing hybrid-action frame-works are fundamentally constrained in large-scale LEO BH scenarios, where scheduling requires selecting beam subsets from a large candidate set, leading to a high-dimensional combinatorial action space. In such cases, value-based meth-ods relying on discrete enumeration or parameterized actions face inherent scalability and exploration challenges, which significantly limits their applicability to practical large-scale beam scheduling. Furthermore, subchannel allocation among heterogeneous users within a beam has not been comprehen-sively addressed. Thus, we incorporate user–satellite visibility into a joint beam scheduling and power allocation optimization framework for LEO satellite systems, specifically targeting dif-ferentiated user requirements. In addition, the robustness of the proposed model is systematically evaluated under adversarial attack scenarios to ensure reliable and resilient performance in dynamic environments. To further clarify the distinctions between the proposed BRIDGE framework and existing AI-enabled studies, Table I provides a comparative summary from multiple perspectives. JOURNAL OF L ATEX CLASS FILES, VOL. 14, NO. 8, APRIL 2026 4 
+
+> Fig. 1. Downlink transmission in the BH LEO satellite system.
+
+III. S YSTEM MODEL AND PROBLEM FORMULATION 
+
+This section provides a comprehensive overview of the downlink operation in a BH LEO satellite network. We begin by describing the network architecture and the key components of the satellite–user communication links. Next, we present the traffic and communication models that capture the spatio-temporal dynamics of user demand and channel conditions. Finally, we formulate the joint beam scheduling and power allocation problem, which aims to optimize multiple perfor-mance metrics while accounting for system constraints and user differentiation. 
+
+A. Network Architecture 
+
+As illustrated in Fig. 1, we consider the downlink trans-mission scenario, where an LEO satellite serves a set of ground users U = {1, 2, . . . , N u}, and the corresponding beam positions within the coverage area are represented by 
+
+B = {1, 2, . . . , N b}. Over the discrete time slot set T =
+
+{1, 2, . . . , T }], the user-beam associations are denoted by 
+
+A = {atu,b |u ∈ U, b ∈ B, T ∈ T , a tu,b = {0, 1}} . The LEO satellite is equipped with a phased-array antenna that supports BH, allowing at most K co-channel beams to be simultaneously activated in each BH slot, covering a subset of beam positions Kt. A binary variable ytk,u indicates whether the u-th user is served by the k-th beam during time slot t,with ytk,u = 1 if served and ytk,u = 0 otherwise. Due to the continuous motion of LEO satellites, ground users maintain line-of-sight (LOS) connectivity with a satel-lite only within specific temporal intervals. Let lu,s (t) and 
+
+So denote the direct propagation path between user u and satellite s at time t and the set of geometric objects in the 3D environment, respectively. The LOS visibility indicator is defined as: 
+
+vu,s (t) = 
+
+(
+
+1, if ℓu,s (t) ∩ S = ∅,
+
+0, otherwise . (1) Accordingly, the visibility window of the u-th user is defined as Tu,s ⊆ T , which consists of the time slots when the satellite s satisfies vu,s (t) = 1. User–satellite visibil-ity windows are generated using NVIDIA Sionna, a GPU-accelerated, open-source link-level simulator that incorporates a physics-based ray tracer built on Mitsuba 3 and TensorFlow  
+
+> Fig. 2. Digital twin–based modeling of user–satellite visibility windows.
+
+[37]. In this work, Sionna is employed to determine the existence of a direct LOS path between users and satellites by evaluating whether the corresponding ray is blocked by environmental objects. The overall workflow, as illustrated in Fig. 2, comprises three stages:  
+
+> •
+
+Data construction : including satellite ephemeris genera-tion and user location initialization.  
+
+> •
+
+DT environment establishment : where realistic 3D scenes are constructed using Blender with geographic data im-ported from OpenStreetMap. The resulting environment explicitly includes building geometries, which are inte-grated into Sionna’s ray-tracing engine.  
+
+> •
+
+Visibility window computation : where ray tracing is per-formed to determine LOS/NLOS conditions between each user–satellite pair over time. If the direct path is ob-structed by terrain or buildings, the link is classified as NLOS; otherwise, it is considered visible. Compared with geometry-based visibility models relying solely on elevation-angle thresholds, the ray-tracing-based DT explicitly captures blockage effects caused by realistic obstacles. This enables more accurate visibility determination in realistic environments, thereby providing a more faithful representation of user–satellite LOS dynamics. By leveraging orbital parameters and environmental contexts, the gateway performs forward-looking predictions to update user-satellite visibility windows at a predefined periodic interval Ts. The mechanism effectively mitigates the cumulative drift arising from LEO and user dynamics, thereby ensuring high-precision real-time scheduling while maintaining signaling efficiency. 
+
+B. Traffic Model 
+
+For the u-th ground user, the corresponding service queue 
+
+Qtu is stored on the LEO satellite. Specifically, each service queue comprises multiple types of traffic, denoted as Qtu =
+
+{QtRT 1,u . . . QtRT C ,u , QtN RT,u }, where C is the number of RT service types. For the c-th class RT service queue QtRT c,u of user u at time slot t, the arrival traffic ΦtRT c,u follows a Poisson distribution with arrival rate λtRT c,u . Tttl,RT c is defined as the Time to Live (TTL), which means that a packet will be discarded if it remains in the queue QtRT c,u for more than Tttl,RT c .Accordingly, the amount of the c-th class RT service in QtRT c,u 
+
+is calculated as dtRT c,u = Ptl=t−Tttl,RTc +1 ΦlRT c,u , and the total traffic for user u in the satellite queue is then obtained as dtu = CP
+
+> c=1
+
+dtRT c,u + dtN RT,u .JOURNAL OF L ATEX CLASS FILES, VOL. 14, NO. 8, APRIL 2026 5
+
+C. Communication Model 
+
+It is assumed that each beam is consistently steered toward the center of its served beam position, and a widely adopted channel model is used for the BH LEO satellite downlink [38], [39]. The link gain between the k-th beam and the u-th user at time slot t can be expressed as: 
+
+htku  
+
+> 2
+
+= Gttx,ku Gtrx,ku 
+
+(4 πd tuf /c )2 , k ∈ K t, u ∈ U , (2) where dtu is the propagation distance from the satellite to the u-th user, c is the speed of light, and f is the downlink frequency. The transmit antenna gain of the beam serving the k-th beam position for the u-th user at time slot t is denoted by Gttx,ku ,while Gtrx,ku represents the corresponding receive antenna gain. The gains are determined by the radiation patterns of the satellite and the user terminal, respectively. Given that the user’s receiving antenna continuously tracks the satellite direction, we have Gtrx,ku = Grx,max .Considering the co-channel interference between intra-satellite beams, the signal-to-interference-noise ratio (SINR) of the u-th user served by the k-th beam in time slot t can be formulated as: 
+
+SIN R tku = |htku |2P tku 
+
+σtku  
+
+> 2
+
++ KP  
+
+> k′=1 ,k ′̸=k
+
+htk′ u
+
+> 2
+
+P tk′ u
+
+, (3) where σtku  
+
+> 2
+
+= κT noise Btku , κ is the Boltzmann constant, and Tnoise is the noise temperature. Furthermore, Btku =
+
+N tsub,ku B/N sub , where Nsub is the number of allocable subchannels within each beam, N tsub,ku is the number of subchannels allocated to the u-th user in the k-th beam in time slot t, and B is the beam bandwidth. With beam power evenly distributed among subchannels, we have P tku =
+
+P tk/N sub ∗ N tsub,ku .On this basis, according to Shannon’s theory, the achievable downlink transmission rate of the u-th user is 
+
+ctu =
+
+> K
+
+X
+
+> k=1
+
+I(ytku = 1) Btku log 2(1 + SIN R tku ). (4) In Eq. 4, I(•) denotes the indicator function, where I(ytku =1) = 1 if the u-th user is served by the k-th beam in time slot t,and I(ytku = 1) = 0 otherwise. Considering the service queue of the corresponding user on the satellite, the transmission throughput is T h tu = min {dtu, c tu∆t}.
+
+D. Problem Formulation 
+
+In a multi-user BH LEO satellite system supporting dif-ferentiated services, the limited onboard resources necessitate enhancing energy efficiency to reduce power consumption and prolong the satellite’s operational lifetime. To satisfy the QoS requirements of diverse services, the system seeks to max-imize the transmission of RT services while simultaneously ensuring fairness among users as a separate objective. These considerations motivate the formulation of a multi-objective optimization problem. 
+
+opt. P1 = max X
+
+> t∈T
+
+X
+
+> u∈U
+
+T h tu/
+
+> K
+
+X
+
+> k=1
+
+X
+
+> u∈U
+
+ytku P tku 
+
+P2 = max X
+
+> t∈T
+
+X
+
+> u∈U
+
+T h tRT,u 
+
+P3 = min X
+
+> t∈T
+
+std { ¯Rtu
+
+ˆRtu
+
+}
+
+> u∈U
+
+P = ω1P1 + ω2P2 + ω3P3, ω o ∈ [0 , 1] , and 
+
+> 3
+
+X
+
+> o=1
+
+ωo = 1 ,s.t.C 1 : X
+
+> b∈B
+
+xtb ≤ K,x tb ∈ { 0, 1},C2 : 
+
+> K
+
+X
+
+> k=1
+
+X
+
+> u∈U
+
+ytku P tku ≤ Pmax ,y tku ∈ { 0, 1}, P tku ≥ 0,C3 : 
+
+> K
+
+X
+
+> k=1
+
+X
+
+> u∈U
+
+ytku P tku ≥ ηP max ,C4 : X
+
+> u∈U
+
+N tsub,ku ≤ Nsub , k ∈ { 1, 2 . . . , K }.
+
+(5) In Eq. 5, P1 is formulated to optimize the energy effi-ciency of the LEO satellite, where Pmax denotes the total available onboard power. P2 aims to maximize the system’s RT service throughput, while P3 is designed to enhance user service fairness by minimizing the standard deviation of user satisfaction. The associated constraints are as follows: 
+
+C1 requires the number of beams serving users be at most 
+
+K; C2 ensures that the total power does not exceed the satellite’s maximum available power. To balance both energy and spectral efficiency, C3 enforces a minimum total power allocation ηP max for the serving beams, where η denotes the power control factor; and C4 restricts the number of subchannels allocated to users within each beam to the total number of available system subchannels. IV. J OINT BEAM SCHEDULING AND POWER 
+
+OPTIMIZATION FOR BH LEO S ATELLITE SYSTEMS WITH 
+
+DIFFERENTIATED USERS 
+
+Directly solving the mixed-integer joint optimization in Eq. 5 is hindered by the combinatorial explosion of the action space and the stringent real-time requirements of LEO satel-lites. To circumvent this intractability, we propose a hierarchi-cal decomposition that separates the problem into beam-level and intra-beam scheduling stages. Specifically, the intra-beam subchannel assignment is addressed through a computationally lean, QoS-driven greedy method [40] defined by the following JOURNAL OF L ATEX CLASS FILES, VOL. 14, NO. 8, APRIL 2026 6
+
+priority metric: 
+
+pttra,b,u b =
+
+
+
+− log δtra 
+
+τtra 
+
+dttra,b,u b HoL ttra,b,u b T h ttra,b,u b
+
+ˆRttra,b,u b
+
+,tra = {RT c}c=1 ,...,C ,dttra,b,u b T h ttra,b,u b
+
+ˆRttra,b,u b
+
+, tra = N RT, 
+
+(6) where δtra represents the packet loss rate (PLR), τtra is the delay budget, and notably, b ∈ K t, u b ∈ { u|au,b =1 }.With the subchannel allocation strategy established, the remainder of this section focuses on the beam-level scheduling problem. The problem is firstly modeled as an MDP to capture the time-varying characteristics of the LEO satellite environment and the dynamic demands of users. We then introduce BH with Reinforcement learning incorporating In-tegrated Dirichlet and Gumbel-TopK Exploration (BRIDGE) algorithm. The framework effectively manages the complex hybrid discrete-continuous decision space and achieves signif-icant improvements in system efficiency while ensuring the QoS requirements. 
+
+A. MDP Formulation 
+
+As described in Eq. 5, beam scheduling and power al-location in BH LEO satellite systems can be regarded as a typical decision-making problem, where the resource al-location strategy adopted in each time slot determines the subsequent environment state. Consequently, the problem is modeled as an MDP. Nevertheless, due to the complexity of the environment and the challenge of accurately characterizing the state transition dynamics, a model-free DRL approach is employed, which consists of triples (S, A, R ), where S, A and 
+
+R denote the state space, action space, and reward function, respectively. At time slot t, the agent observes the environment state st ∈ S and selects an action at according to its policy 
+
+π. The environment then transitions to a new state st+1 , and the agent receives a reward R(st, a t). The state space, action space, and reward function are defined as follows: 
+
+1) State Space S: The observed state st in each time slot is the state set of each user in the onboard queue, and stu is defined as: 
+
+stu = {Qtu, H tu, L tu, I tu, W tu}. (7) Specifically,  
+
+> •
+
+Qtu: 6( C + 1) -dimension queue state, including the amount of data, latency, data arrival rate, average through-put, as well as the head-of-line (HoL) status of RT services and the traffic demand in the initial time slot.  
+
+> •
+
+Htu: Link gain of the u-th user.  
+
+> •
+
+Ltu: The latitude and longitude coordinates of the u-th user’s beam position relative to the LEO sub-satellite point, denoted by Ltu = ( Lat tu, Lon tu). 
+
+> •
+
+Itu: Beam index of the u-th user.  
+
+> •
+
+W tu: The remaining service time of the LEO satellite. 
+
+2) Action Space A: Based on the observed state, the agent performs a joint action of beam scheduling and power allocation 
+
+at = {Xt, P t}, (8) where beam scheduling Xt = {xtb}b∈B is defined over a dis-crete action space, and power allocation P t = {P tk}k=1 ,...,K 
+
+is defined over a continuous action space. 
+
+3) Reward Function R: Considering the objective function of the optimization problem in (Eq. 5), a linear weighted multi-objective modeling approach is adopted to design the reward function for DRL training. Specifically, a reward function rt =
+
+ω1rt 
+
+> 1
+
++ ω2rt 
+
+> 2
+
++ ω3rt 
+
+> 3
+
+is given by 
+
+rt 
+
+> 1
+
+= X
+
+> u∈U
+
+T h tu/
+
+> K
+
+X
+
+> k=1
+
+X
+
+> u∈U
+
+ytku P tku 
+
+rt 
+
+> 2
+
+= X
+
+> u∈U
+
+T h tRT,u 
+
+rt 
+
+> 3
+
+= −std { ¯Rtu
+
+ˆRtu
+
+}
+
+> u∈U
+
+. (9) Notably, since P3 represents a minimization problem, a neg-ative sign is applied to its corresponding sub-reward function. The linear weighted formulation enables controllable trade-offs among multiple objectives by adjusting the weighting factors, thereby transforming the original multi-objective op-timization problem into a standard single-objective problem, which is widely adopted in DRL-based optimization [41]. 
+
+B. Algorithm Design 
+
+To address the hybrid discrete-continuous action space, we develop BRIDGE, a DRL framework built upon PPO. The selection of beam subsets leads to an exponential expansion of the discrete action space as the number of beam posi-tions increases, posing significant challenges to the search efficiency and convergence of conventional DRL schemes. To mitigate the curse of dimensionality, BRIDGE incor-porates a Gumbel-TopK sampling mechanism for discrete beam decision-making, enabling efficient and differentiable exploration within a vast combinatorial space. Concurrently, the Dirichlet distribution is employed to model continuous power allocation actions, which internalizes non-negativity and total power budget constraints through probabilistic mapping. This architecture significantly enhances the capability for re-source allocation in extreme high-dimensional scenarios while ensuring learning stability and convergence under complex constraints. The overall network architecture and training procedure are summarized below. 
+
+1) Network Architecture: The proposed network architec-ture is shown in Fig. 3, which adopts the actor-critic PPO framework. The actor network receives the input state, which first passes through a shared representation layer—a multi-layer fully connected network designed to extract common features from the high-dimensional state. The resulting shared encoding is then forwarded to two separate branches:  
+
+> •
+
+Discrete Action Branch : This branch is responsible for beam scheduling. It generates a candidate action distri-bution via several fully connected layers and employs JOURNAL OF L ATEX CLASS FILES, VOL. 14, NO. 8, APRIL 2026 7 
+
+> Fig. 3. Network Architecture of the proposed BRIDGE algorithm.
+
+Gumbel-TopK sampling to enable structured exploration over the large combinatorial beam selection space, allow-ing multiple beams to be activated simultaneously at each decision step. The independent Gumbel noise gi is added to the outputs of the Ndis -dimensional discrete action branch network, specifically: 
+
+gi = − log( − log( ni)) , n i ∼ U nif orm (0 , 1) . (10) The TopK largest values are then selected, and their cor-responding indices are used as the served beam positions: 
+
+Bts = arg topk i={1,...,N dis }(oi,dis + gi). (11)  
+
+> •
+
+Continuous Action Branch : The branch is responsible for power allocation. Conditioned on the selected beam set, the Dirichlet-sampled power allocation dynamically distributes the available onboard power across the ac-tive beams at each time step, ensuring feasibility while enabling continuous control. This branch produces an 
+
+Ncon = K + 1 -dimensional parameterized vector via fully connected layers, from which continuous actions P tD
+
+are sampled using the Dirichlet distribution to inherently satisfy non-negativity and the total power constraint. In this work, power allocation is further refined based on an equal-power baseline, thereby 
+
+P t = Pmax (η/ |K t| + (1 − η)P tD ). (12) Additionally, the critic network is employed to learn the state-value function. After processing through the hidden and output layers, it directly produces the corresponding state value 
+
+V (st).
+
+2) Training Procedure: The proposed algorithm observes state st at time slot t and interacts with the environment based on the actor network’s policy πθ . It obtains the reward rt and the next state st+1 and stores them to form a trajectory data 
+
+(st, a t, r t, s t+1 ). The policy πθ (at|st) can be expressed as: 
+
+πθ (at|st) = πθdis (Bts|st) ∗ πθcon (P t|st). (13) Furthermore, as described in the network structure, 
+
+πθcon (P t|st) is obtained by sampling the Dirichlet distri-bution [42], whereas πθdis (Bts|st) is generated by sampling the Gumbel-TopK distribution, with its probability calculated according to the Plackett–Luce distribution [43]. Specifically, 
+
+πθdis (Bts|st) = 
+
+> k
+
+Y
+
+> i=1
+
+exp (oσi,dis )
+
+PNdis  
+
+> j=i
+
+exp (oσj ,dis ) , (14) where σ = ( σ1, σ 2, . . . , σ Ndis ) denotes the sorting indices of the discrete outputs of the action network after adding noise. To ensure that the actor network updates not only maximize the expected return but also maintain training stability, a clipped objective function is employed to prevent excessive gradient updates: 
+
+Lclip (θ) = 
+
+Et[min( ratio t(θ)At, clip (ratio t(θ), 1 − ϵ, 1 + ϵ)At)] . (15) In the above formula, ratio t(θ) = πθ (at|st)/π θold (at|st),and the advantage function At is calculated by the generalized advantage estimation (GAE) function: 
+
+At = 
+
+> T−1−t
+
+X
+
+> l=0
+
+(γλ )lδt+l, (16) JOURNAL OF L ATEX CLASS FILES, VOL. 14, NO. 8, APRIL 2026 8
+
+where γ denotes the discount factor, and λ is the GAE smoothing coefficient, which balances the bias and variance of the advantage estimation, with δt = rt +γV (st+1 )−V (st).To enhance policy exploration and prevent premature conver-gence, an entropy regularization term is also included in the loss function 
+
+LActor (θ) = −(Lclip (θ) + ceEt[H(πθ (·| st))] . (17) The update goal of the critic network is to minimize the mean square error between the predicted value function and the actual return, that is, 
+
+LCritic (ϕ) = Et[Vϕ(st) − (Vϕold (st) + At)] 2. (18) Algorithm 1 presents the pseudocode of the proposed BRIDGE algorithm. Initially, the parameters θ and ϕ of the actor and critic networks are initialized. At each time step 
+
+t within an episode, given the current state st, the agent produces an action distribution by the actor network. The beam scheduling vector Bts is sampled from the discrete action branch, while the beam power vector P t is obtained from the continuous action branch. Based on the selected beam schedule, the served beam positions Kt at time slot 
+
+t are determined. For each beam, the scheduling priority of individual user services pttra,b,ub is computed, services are greedily allocated, and the remaining subchannels Nsub,res 
+
+are updated until all beams are processed. After each time step, the immediate reward rt is obtained, and the environment transitions to the next state st+1 . Upon episode completion, the critic network estimates the value of each state V (st),and the advantage function At at each time step is computed using the discounted reward combined with GAE. Finally, the calculated advantage function is used to update the actor network parameters, achieving joint optimization of both actor and critic networks. Dirichlet sampling and Gumbel-TopK exploration are ap-plied only at the action sampling stage and do not modify the underlying policy gradient update mechanism, thereby preserving the theoretical structure and convergence of PPO. In addition, the proposed BRIDGE algorithm is trained offline on ground-based servers with high computational capability. After training, the learned network parameters are updated to the satellite via the feeder link. During operation, the trained resource management model performs online inference to support resource allocation decisions for LEO satellites, which is considered feasible for practical deployment. 
+
+C. Complexity Analysis 
+
+We focus on the inference phase of the proposed algorithm, as this stage determines its real-time performance during deployment. The dominant cost arises from the forward prop-agation through the actor network. The network architecture can be divided into three computational components: a shared feature extraction module with Ls layers, a beam selection branch containing Lb layers, and a power allocation branch 
+
+Algorithm 1 BH with Reinforcement learning incorporating Integrated Dirichlet and Gumbel-TopK Exploration (BRIDGE) Algorithm.  
+
+> 1:
+
+Initialize actor and critic networks with random parame-ters θ = θ− and ϕ = ϕ−. 
+
+> 2:
+
+Initialize the trajectory buffer and environment state.  
+
+> 3:
+
+for each episode do  
+
+> 4:
+
+Reset environment and obtain initial state s0. 
+
+> 5:
+
+for each time step t do  
+
+> 6:
+
+Observe current state st, and select Bts ∼ πθdis (st)
+
+and P t ∼ πθcon (st). 
+
+> 7:
+
+Determine served beam positions Kt based on Bts. 
+
+> 8:
+
+for each beam do do  
+
+> 9:
+
+Nsub,res ← Nsub . 
+
+> 10:
+
+while Nsub,res > 0 and P 
+
+> ub∈{ u|cu,b =1 }
+
+dtu > 0
+
+do  
+
+> 11:
+
+Establish scheduling priority of each user served 
+
+pttra,b,u b according to Eq.(6).  
+
+> 12:
+
+tra 0, u b, 0 ← arg max 
+
+> tra,u b
+
+ptra,b,u b . 
+
+> 13:
+
+Nsub,res ← Nsub,res − Nsub,ku b . 
+
+> 14:
+
+end while  
+
+> 15:
+
+end for  
+
+> 16:
+
+Obtain immediate reward rt. 
+
+> 17:
+
+Update environment state st+1 . 
+
+> 18:
+
+end for  
+
+> 19:
+
+Estimate state value V (st) using critic network.  
+
+> 20:
+
+Compute advantage function At using GAE.  
+
+> 21:
+
+Update actor network parameter θ and critic network ϕ. 
+
+> 22:
+
+end for 
+
+with Lp layers. The overall inference complexity is expressed as: 
+
+O(dids1 +
+
+> Ls−1
+
+X
+
+> i=1
+
+dsi ds(i+1) + dsL s (db1 + dp1)+
+
+> Lb−1
+
+X
+
+> j=1
+
+dbj db(j+1) +
+
+> Lp−1
+
+X
+
+> k=1
+
+dpk dp(k+1) )
+
+, (19) where di denotes the input layer dimension, while dsi , dbj , and 
+
+dpk correspond to the layer dimensions of the shared feature extractor, beam selection branch, and power allocation branch, respectively. Additional operations, such as Gumbel-TopK sampling and Dirichlet sampling, incur negligible complexity compared to the dominant matrix multiplications. The computational complexity of the subchannel alloca-tion algorithm for differentiated QoS requirements, where Ub
+
+denotes the maximum number of users per beam, can be approximated as: 
+
+O(KU b min {(C + 1) Ub, N sub }). (20) Compared to the DRL inference complexity in Eq. 19, the computational cost of this step remains lower under typical system configurations with a moderate number of users per beam. However, when the user density per beam becomes large, this cost may no longer be negligible. JOURNAL OF L ATEX CLASS FILES, VOL. 14, NO. 8, APRIL 2026 9 
+
+> Fig. 4. Illustration of adversarial attack against the proposed AI-enabled resource allocation model.
+
+V. A DVERSARIAL ATTACKS AGAINST BRIDGE-B ASED 
+
+BEAM SCHEDULING AND POWER ALLOCATION IN LEO SATELLITE SYSTEMS 
+
+This section presents the adversarial attack models and al-gorithms considered for evaluating the vulnerability of the pro-posed BRIDGE algorithm. Specifically, widely used gradient-based attack methods, including FGSM, I-FGSM, and PGD, are applied to quantitatively assess the robustness of the model under adversarial environments. The resulting analysis provides a foundation for performance evaluation and offers insights for enhancing the resilience of intelligent scheduling in LEO satellite systems. 
+
+A. Attack Model 
+
+The BRIDGE algorithm dynamically allocates satellite re-sources within a hybrid action space according to link con-ditions and traffic demands, ensuring QoS requirements for heterogeneous services under normal operation. To evaluate robustness under abnormal or malicious conditions, we design an adversarial attack scenario targeting the scheduling model. As illustrated in Fig. 4, the attacker perturbs the perceived link gain state at the satellite, inducing the agent to make sub-optimal or unstable resource allocation decisions and thereby revealing potential vulnerabilities under perturbed inputs. It should be clarified that the assumed perturbation of link gain does not imply any direct physical manipulation of the satellite payload or the propagation channel. Rather, the adopted attack model serves as an abstraction of potential corruption or uncertainty in the channel state information (CSI) available at the satellite. Such distortions may arise from falsified uplink CSI feedback, misleading or noisy measurements, estimation errors at the gateway or network control plane, as well as inac-curacies in Digital Twin–based channel or visibility prediction. From the perspective of the scheduling agent, these factors manifest as perturbations in the perceived link gain state and can therefore be equivalently modeled as input disturbances. To maintain both stealthiness and analytical tractability, the perturbations are strictly constrained within acceptable bounds. While practical deployment of such attacks may be challenging, their theoretical formulation provides a rig-orous framework for assessing the robustness of learning-based scheduling models. This analysis allows evaluation of performance degradation under adversarial conditions and offers guidance for designing defense strategies to enhance the security and reliability of BH LEO satellite resource allocation systems. 
+
+B. Adversarial Attack Methods 
+
+Considering BH LEO satellite resource allocation, adver-sarial attacks involve introducing carefully crafted, small per-turbations into the observed link states to systematically bias the BRIDGE algorithm’s decisions, primarily because such imperceptible deviations bypass standard threshold-based de-tectors that would otherwise intercept large-magnitude statis-tical outliers. Such perturbations can lead to suboptimal beam scheduling and power allocation, thereby degrading overall system performance. While conventional attacks typically use additive perturbations, x + ϵadv , multiplicative perturbations, 
+
+x(1 + ϵadv ), scale the input proportionally, allowing the perturbation strength to adapt to the input amplitude and improving both attack effectiveness and stability. While more sophisticated adaptive attack strategies are of interest, their modeling typically requires additional assumptions on attacker observability and interaction dynamics, which are beyond the scope of the work. Common adversarial attack algorithms ap-plied in this context include FGSM, I-FGSM, and PGD, each employing specific strategies for generating perturbations. These methods are selected to evaluate fixed-budget robustness under bounded link gain perturbations. Together, they provide a progressive evaluation from single-step attacks to stronger iterative attacks under the same bounded perturbation model, which is different from minimal-distortion attacks such as C&W-style attacks. Table II summarizes the differences among these methods, with detailed implementations provided below.                
+
+> TABLE II COMPARISON OF FGSM, I-FGSM, AND PGD M ETHODS
+> Method Initial Point Iterative Attack Strength
+> FGSM Original Point No Weak I-FGSM Original Point Yes Medium PGD Random Point Yes Strong
+
+1) FGSM Method: FGSM is a fundamental technique in adversarial attack research, enabling the efficient generation of adversarial examples. It calculates the gradient of the model’s loss function with respect to the input and applies a single-step perturbation in the direction that maximally increases the loss, thereby causing the model to produce incorrect predictions. Accordingly, the link gain states Htu observed by the satellite are perturbed as follows: 
+
+Hadv,t u = Htu ∗ (1 + ϵadv · sign (∇Htu J(θ, s t, a t))) , (21) where ϵadv is a hyperparameter that controls the magnitude of the perturbation, constraining the deviation between the adversarial sample and the original input. The symbol sign (·)JOURNAL OF L ATEX CLASS FILES, VOL. 14, NO. 8, APRIL 2026 10 
+
+denotes the sign function, which determines the direction of the perturbation. Accordingly, the adversarial example is generated by maximizing the objective J as follows: 
+
+J(θ, s t, a t) = −(log( πθdis (Bts|st))+log( πθcon (P t|st)) . (22) Intuitively, FGSM perturbation aligns with the direction of steepest ascent of the loss function. Thus, even perturbations of minimal magnitude can shift the input across the model’s decision boundary, resulting in bad policy outputs. 
+
+2) I-FGSM Method: I-FGSM represents an extension of FGSM, designed to generate stronger adversarial examples by incrementally approaching the locally optimal adversarial di-rection through multiple small perturbation steps. Specifically, the adversarial sample is initialized as Hadv ,t  
+
+> 0,u
+
+= Htu, and at each iteration, it is updated by taking a small step αadv along the direction of the gradient sign: 
+
+Hadv,t l+1 ,u =
+
+clip Htu,ϵ adv (Hadv,t l,u (1 + αadv sign (∇Hadv,t l,u 
+
+J(θ, s adv,t l , a t)))) .
+
+(23) In Eq. 23, the clipping operation constrains the cumulative perturbation within the range [1 − ϵadv , 1 + ϵadv ]. In contrast to FGSM, I-FGSM iteratively applies perturbations along the most sensitive gradient direction, enabling more precise alignment with the loss surface and thereby improving the attack success rate. 
+
+3) PGD Method: PGD builds on I-FGSM by introducing random initialization, enabling exploration of multiple starting points within the input space. The method increases the likeli-hood of crossing the model’s decision boundaries, generating more effective adversarial examples. The initial adversarial sample is created within a proportional neighborhood defined by ϵadv around the original input Htu:
+
+Hadv,t  
+
+> 0,u
+
+= Htu(1 + U (−ϵadv , ϵ adv )) , (24) where U (−ϵadv , ϵ adv ) denotes a value sampled uniformly from the interval [−ϵadv , ϵ adv ]. Starting from this random initialization, the adversarial sample is iteratively updated along the gradient sign direction, with each step projected back into the permissible perturbation range. In contrast to I-FGSM, PGD employs multiple random initializations and selects the sample yielding the maximal loss after each iteration, thereby enhancing the attack’s effectiveness. VI. S IMULATION RESULTS AND PERFORMANCE ANALYSIS 
+
+A. Simulation Parameters 
+
+In this work, a Ka-band BH LEO satellite communication system is simulated. Table III summarizes the main simulation parameters, partially based on [17], [21]. The satellite orbital configuration is designed with reference to the GW satellite constellation, providing a realistic representation of large-scale LEO constellation. The system considers 60 ground users, with each satellite supporting up to 8 beams. A total bandwidth of 200 MHz is considered, equally divided into 20 subchannels. The power control factor η is set to 0.8, and the maximum transmit power per satellite is limited to 250 W. Each user’s aggregate traffic demand follows a Poisson process, with the                                              
+
+> TABLE III SIMULATION PARAMETERS
+> Parameters Values Scenario parameters
+> Altitude of the LEO satellite 508 km Ka band f20 GHz Total bandwidth B200 MHz Number of subchannels Nsub 20 Number of users Nu60 Number of beams K8Noise temperature Tnoise 290 K Power control factor η0.8 Maximum transmit power Pmax 250 W Maximum transmit antenna gain 36.2 dBi 3dB bandwidth of transmit antenna 2.5◦
+> Maximum receive antenna gain 20 dBi Video service (RT) 242 kbps with delay budget 300 ms and PLR budget 10 −6
+> Voice service (RT) 8.4 kbps with delay budget 100 ms and PLR budget 10 −3
+> BE service (NRT) 100 kbps with delay budget 1,000 ms Time slot duration ∆t10 ms Satellite location update interval Ts2 s
+> Algorithm parameters
+> Learning rate of Actor Network 3×10 −5
+> Learning rate of Critic Network 3×10 −5
+> Discount factor γ0.99 GAE smoothing coefficient λ0.95 Entropy regularization coefficient ce0.1 Clipping parameter ϵ0.2
+
+arrival rate determined by economic, population, and other factors [44]. Three types of services are considered: two categories of RT services and one NRT service. The onboard queue is updated once per time slot, which lasts 10 ms. Maximum transmit and receive antenna gains are 36.2 and 20 dBi, respectively, and the orbital altitude of the LEO satellite is fixed at 508 km. To model individual beam positions within the coverage area, the open-source spatial indexing algorithm H3 developed by Uber is employed [19]. The training parameters are also listed in Table III, with learning rates of 3 × 10 −5 for both the actor and critic networks. Generalized Advantage Estimation (GAE) is applied using λ = 0 .95 and γ = 0 .99 , while a clipping parameter ϵ =0.2 and entropy regularization coefficient ce = 0 .1 are adopted to stabilize policy updates and encourage exploration. The network architectures are detailed in Table IV. Specifically, the actor network comprises 782,321 parameters and involves a computational complexity of 1.56 MFLOPs per inference. While the theoretical raw computation time on a 275 TOPS platform [45] is only approximately 5.67 ns, the empirical latency remains on the millisecond scale even after accounting for memory access and system overheads, thereby guaran-teeing the real-time execution of beam management policies. Furthermore, the lightweight memory footprint of 2.98 MB is vital for resource-constrained LEO satellite payloads. A brief description of the comparison algorithms follows:  
+
+> •
+
+Queue Length Prioritized with Distance Limit Beam Hopping (QLPDL-BH) : Beam positions with the highest queue lengths are greedily scheduled, while ensuring that the distance between selected beams does not exceed the beam diameter [13]. JOURNAL OF L ATEX CLASS FILES, VOL. 14, NO. 8, APRIL 2026 11 0 2 4
+
+Episode 10 4
+
+0.3 0.4 0.5 0.6 
+
+> Reward
+
+BRIDGE(0.6,0.2,0.2) 
+
+BRIDGE(0.2,0.6,0.2) 
+
+Discrete PPO(0.4,0.4,0.2) 
+
+PPO with Gaussian Sampling(0.4,0.4,0.2) 
+
+BRIDGE(0.4,0.4,0.2) 
+
+10-step average 
+
+0 2 4
+
+Episode 10 4
+
+0.5 0.6 0.7 
+
+> Reward1
+
+0 2 4
+
+Episode 10 4
+
+0.6 0.7 0.8 
+
+> Reward2
+
+0 2 4
+
+Episode 10 4
+
+-0.35 -0.3 -0.25 
+
+> Reward3
+
+(b) (a) (c) (d)   
+
+> Fig. 5. Convergence analysis of the proposed BRIDGE algorithm: (a) total reward, (b) sub-reward 1, (c) sub-reward 2, and (d) sub-reward 3 under different optimization weight settings, compared to the discrete-only PPO and PPO with Gaussian sampling baseline.
+> •
+
+Periodic Beam Hopping (P-BH) : The P-BH method em-ploys periodic BH, whereby all beam positions are served in a fixed, repeating sequence.  
+
+> •
+
+Genetic Algorithm Beam Hopping (GA-BH) : Beam scheduling is optimized using a genetic algorithm with a population size of 50 individuals evolving over 50 generations [46].  
+
+> •
+
+TopK DQN : The LEO satellite BH controller selects and serves the top K beam positions based on their estimated Q-values [22].  
+
+> •
+
+Soft Actor-Critic method-based Beam Hopping (SAC-BH) : At each time slot, the LEO satellite selects K beam positions based on the SAC method to serve, with the total onboard power equally allocated among the active beams.  
+
+> •
+
+Discrete PPO : Beam scheduling decisions are determined by the proposed discrete action branch of the PPO-based BH controller.                         
+
+> TABLE IV NETWORK ARCHITECTURE OF ACTOR AND CRITIC NETWORK .
+> Layer Input Size Output Size Actor Network
+> Shared Representation Layer Layer1 1,200 512 Layer2 512 256 Discrete Action Branch Layer1 256 64 Layer2 64 40 Continuous Action Branch Layer1 256 64 Layer2 64 9
+> Critic Network
+> Layer1 1,200 512 Layer2 512 128 Layer3 128 1
+
+B. Convergence Analysis 
+
+The proposed BRIDGE algorithm is trained offline. Fig. 5(a)-(d) depict the convergence of the total reward and its three subcomponents under different optimization weight set-tings—(0.4,0.4,0.2), (0.6,0.2,0.2) and (0.2,0.6,0.2). In addition, two baseline curves are included for comparison: a discrete-only optimization (denoted as “Discrete PPO”) and a PPO with Gaussian Sampling baseline, where continuous power allocation is modeled using Gaussian exploration while beam selection is handled by Gumbel-TopK trick. The total reward gradually increases and stabilizes across all weight configura-tions, demonstrating the reliable convergence of the proposed algorithm. The sub-reward curves converge consistently as well, indicating that the agents effectively balance multiple objectives. The “Discrete PPO” curve serves as a baseline, highlighting the performance gains achieved through joint beam scheduling and power allocation. While the PPO with Gaussian sampling baseline reaches a similar final reward level, it suffers from significantly larger convergence fluctua-tions, reflecting reduced stability compared with the proposed BRIDGE method. Overall, these results demonstrate that the BRIDGE algorithm achieves stable convergence while deliv-ering superior performance under continuous–discrete cooper-ative optimization. 
+
+C. Performance Analysis 1) Performance of Energy Efficiency: Fig. 6 illustrates the energy efficiency performance of different algorithms under varying on-board total power and traffic demand. The total on-board power ranges from 150 W to 350 W, and the overall traffic demand varies from 1.5 Gbps to 4 Gbps. For Fig. 6 - Fig. 10, each algorithm (except P-BH and QLPDL-BH) was evaluated over 50 independent runs using a converged model, and the results reported correspond to the averaged performance across these runs. The results show that as the total power increases, the energy efficiency of all algorithms generally decreases. This is because higher power input does not yield proportional performance gains, leading to reduced throughput efficiency per unit of power consumption. In con-trast, when traffic demand increases, overall energy efficiency improves, as higher traffic loads can more fully exploit the available power resources and enhance energy utilization. JOURNAL OF L ATEX CLASS FILES, VOL. 14, NO. 8, APRIL 2026 12 150 200 250 300 350 Total Power (W) 
+
+246810 12 14 Energy Efficiency (Mbps/W) 
+
+> (a)
+> QLPDL-BH
+> P-BH
+> GA-BH
+> TopK DQN
+> SAC-BH
+> Discrete PPO
+> BRIDGE (Proposed)
+
+1.5 2 2.5 3 3.5 4Traffic Demands (Gbps) 
+
+345678910 Energy Efficiency (Mbps/W)  QLPDL-BH 
+
+> P-BH
+> GA-BH
+> TopK DQN
+> SAC-BH
+> Discrete PPO
+> BRIDGE (Proposed)
+> (b)
+
+Fig. 6. Energy Efficiency of different algorithms. (a) Energy Efficiency versus Total Power (Traffic Demand = 3 Gbps), (b) Energy efficiency versus Traffic Demands ( Pmax = 250 W). 150 200 250 300 350 Total Power (W) 
+
+0.7 0.8 0.9 11.1 1.2 1.3 RT Service Throughput (Gbps) 
+
+> (a)
+> QLPDL-BH
+> P-BH
+> GA-BH
+> TopK DQN
+> SAC-BH
+> Discrete PPO
+> BRIDGE (Proposed)
+
+1.5 2 2.5 3 3.5 4Traffic Demands (Gbps) 
+
+0.4 0.6 0.8 11.2 1.4 1.6 RT Service Throughput (Gbps) 
+
+> (b)
+> QLPDL-BH
+> P-BH
+> GA-BH
+> TopK DQN
+> SAC-BH
+> Discrete PPO
+> BRIDGE (Proposed)
+
+Fig. 7. RT service throughput of different algorithms. (a) RT Service Throughput versus Total Power (Traffic Demand = 3 Gbps), (b) RT Service Throughput versus Traffic Demands ( Pmax = 250 W). 
+
+Among the algorithms compared, BRIDGE and discrete PPO consistently rank among the top two in terms of energy efficiency. In particular, BRIDGE benefits from its flexible power allocation and scheduling mechanism, enabling adap-tive optimization under varying traffic demands and power constraints. Specifically, compared with QLPDL-BH, P-BH, GA-BH, Top-K DQN, SAC-BH and discrete PPO, the pro-posed method improves energy efficiency by 16.62%, 98.68%, 11.68%, 34.5%, 15.41%, and 6.32%, respectively. Although Top-K DQN and SAC-BH can adapt to dynamic changes due to its learning-based framework, they are prone to being trapped in local optima and therefore struggles to achieve satisfactory convergence. GA-BH, as a heuristic algorithm with global optimization capability, outperforms other base-lines, but its solutions require extensive search and iterative computations, limiting its real-time applicability. QLPDL-BH, by considering distance isolation among service beams, can mitigate interference to some extent and thus performs better than P-BH. 
+
+2) Performance of RT Service Throughput: Fig. 7–Fig. 8 present comparisons of RT service throughput and over-all system throughput under the different conditions. The proposed BRIDGE method and its discrete variant, Discrete PPO, exhibit similar performance and consistently outperform the baseline algorithms, with their advantage becoming more pronounced in high-power and high-traffic scenarios. As total power increases, both RT service throughput and overall system throughput improve, although the growth gradually saturates for most algorithms. Meanwhile, due to on-board re-source limitations and inter-beam frequency reuse constraints, QLPDL-BH stabilizes at approximately 1.78 Gbps when total traffic demand exceeds 3.5 Gbps. As illustrated in Fig. 8, the performance gap between GA-BH and QLPDL-BH in overall system throughput remains below 0.1 Gbps, while in RT service throughput, the difference rises to nearly 0.2 Gbps, as shown in Fig. 7. These results indicate that, although some algorithms can partially maintain system throughput, they often fail to prioritize RT services. In contrast, BRIDGE and Discrete PPO not only preserve RT service performance but also enhance overall system throughput, thereby achieving a superior balance between the two. As shown in Fig. 9, the QoS performance of the proportional JOURNAL OF L ATEX CLASS FILES, VOL. 14, NO. 8, APRIL 2026 13  
+
+> Fig. 8. Throughput of different algorithms. (a) Throughput versus Total Power (Traffic Demand = 3 Gbps), (b) Throughput versus Traffic Demands ( Pmax
+> = 250 W).
+
+Video Voice BE Service 
+
+00.2 0.4 0.6 0.8 11.2 Throughput (Gbps) 
+
+> PF
+> QoS-aware
+
+Video Voice BE Service 
+
+0100 200 300 400 500 Delay (ms) 
+
+> PF
+> QoS-aware
+
+Video Voice BE Service 
+
+010 20 30 40 50 PLR (%) 
+
+> PF
+> QoS-aware
+
+(a) (b) (c)  
+
+> Fig. 9. Comparison of QoS performance between PF-based and QoS-aware subchannel allocation. (a) Throughput, (b) Delay, and (c) PLR.
+
+fair (PF)-based and QoS-aware subchannel allocation schemes, which are both built upon the BRIDGE framework for beam scheduling and power allocation, is evaluated under different service types. The results show that the QoS-aware scheme achieves higher throughput for Video and Voice services, whereas the PF-based scheme provides better performance for BE service. In terms of delay, the QoS-aware scheme effectively reduces the transmission delay of RT services. Moreover, the PLR of Video and Voice services are reduced by approximately 49% and 10%, respectively, at the expense of degraded BE performance. These results demonstrate that the proposed QoS-aware subchannel allocation scheme satisfies heterogeneous QoS requirements more effectively in multi-service scenarios. 
+
+3) Performance of Fairness: Fairness under varying total power and traffic demand is illustrated in Fig. 10. The re-sults show that the proposed BRIDGE method consistently achieves a relatively low fairness, indicating a more balanced allocation of system resources. In contrast, the fairness of the P-BH algorithm improves with increasing traffic demand: it performs poorly under low-demand conditions (e.g., approxi-mately 0.325 at 1.5 Gbps), but in high-demand scenarios (e.g., decreasing to around 0.225 at 4 Gbps), it can even surpass some learning-based algorithms. The trend occurs because, as overall user service satisfaction declines, the system-level fairness metric tends to increase. By comparison, QLPDL-BH maintains relatively high fairness indices (typically above 0.3), reflecting weaker fairness performance. Meanwhile, GA-BH, Top-K DQN, and SAC-BH achieve better fairness, as their optimization objectives explicitly include the minimization of the standard deviation of user satisfaction. 
+
+4) Performance Under Adversarial Attack: Fig. 11-13 com-pare the performance of different adversarial attack methods. At low perturbation strengths, all three attacks exhibit only minor influence on the model. As the perturbation strength increases (see Fig. 11(a)), the impact becomes more evident, with larger deviations in the cost function indicating stronger model disruption. Additional analysis under varying power JOURNAL OF L ATEX CLASS FILES, VOL. 14, NO. 8, APRIL 2026 14               
+
+> Fig. 10. Fairness of different algorithms. (a) Fairness versus Total Power (Traffic Demand = 3 Gbps), (b) Fairness versus Traffic Demands ( Pmax =250 W).
+> (a)
+> (b) Fig. 11. Gradient deviation under adversarial attacks. (a) Perturbation Magnitude (Traffic Demand = 3 Gbps and Pmax = 250 W); (b) Total Power (Traffic Demand = 3 Gbps and ϵadv = 0.1).
+
+conditions (see Fig. 11(b)) shows that the absolute perturbation values across the three methods remain around 0.12 and exhibit similar trends: PGD and IFGSM produce stronger effects, whereas FGSM is consistently the weakest. Fig. 12 illustrates the reward performance of the model under different adversarial attacks with perturbation strength 
+
+ϵadv = 0 .1. The results indicate that, regardless of whether the model is subjected to FGSM, IFGSM, or the stronger PGD attack, its performance remains almost indistinguishable from the no-attack case. In other words, the rewards obtained during inference are nearly unaffected by adversarial pertur-bations. This suggests that, across different power settings,      
+
+    
+
+                 
+
+>  #  !# ##  "#
+>     ## #
+> ## #
+> ## #
+>     # 
+>   
+>   
+> 
+> 
+> # ##
+
+     
+
+> 
+> 
+>  
+>  
+> Fig. 12. Reward under adversarial attacks (Traffic Demand = 3 Gbps and
+> ϵadv = 0.1).
+
+the considered adversarial attacks fail to substantially degrade model performance, confirming their limited effectiveness. Furthermore, as shown in Fig. 13, when the total service demand is relatively low (1.5 Gbps), most users’ demands are nearly fully satisfied except for a few high-demand users. This highlights the capability of the proposed BRIDGE algorithm to effectively manage diverse traffic demands. Notably, even under PGD attacks, the model’s performance remains virtually unaffected. In summary, the results show that BRIDGE maintains stable resource allocation performance under the bounded link gain perturbations generated by FGSM, I-FGSM, and PGD. This is mainly because the adopted attack model is restricted to a fixed perturbation budget and only perturbs the perceived link-gain component of the state. Since the policy also uses queue states, user positions, beam indices, and the remaining service time, the final scheduling decision is not determined by the link-gain information alone. The design of BRIDGE also helps reduce the impact of such input disturbances. In particular, the Gumbel-TopK branch selects multiple beams according to their relative ranking, so a bounded perturbation changes the selected beam set only when it is large enough to alter the Top-K order of candidate beams. These results suggest that, although adversarial sam-ples can affect AI-based scheduling models, their impact is limited under the fixed-budget perturbation setting considered in this work. As a result, BRIDGE maintains effective resource scheduling performance under the tested attacks. VII. C ONCLUSION 
+
+This paper presents a joint optimization framework for beam scheduling and power allocation in BH-enabled LEO satel-lite systems by integrating the digital twin technology with deep reinforcement learning. More specifically, the proposed BH with reinforcement learning incorporating the integrated Dirichlet and Gumbel-TopK Exploration (BRIDGE) algorithm effectively handles hybrid discrete–continuous action spaces, incorporates QoS-driven subchannel scheduling, and achieves superior performance in terms of energy efficiency, through-put, and fairness. The robustness analysis shows that the AI-enabled scheduling policy maintains stable performance JOURNAL OF L ATEX CLASS FILES, VOL. 14, NO. 8, APRIL 2026 15 
+
+Fig. 13. The throughput of each user by the proposed BRIDGE algorithm with no attack and PGD attack ( ϵadv = 0 .1) under Traffic Demand = 1.5 Gbps and Pmax = 250 W. 
+
+under the considered bounded perturbations, supporting its applicability to future LEO satellite networks. Future research will focus on validating the proposed frame-work using real-world satellite network data and more so-phisticated channel models, as well as extending the proposed optimization mechanisms to large-scale satellite constellations. In particular, incorporating uncertainty-aware or probabilis-tic DT models to capture orbital prediction errors, environ-mental dynamics, and sensing uncertainties is an important direction. Such extensions would enable a more systematic investigation of uncertainty propagation and its impact on RL policy robustness. Furthermore, cross-layer security strategies will be explored to mitigate systemic cyber-physical threats. Ultimately, these efforts aim to support secure, resilient, and high-performance 6G space–air–ground integrated networks. REFERENCES [1] C.-X. Wang, X. You, X. Gao, X. Zhu, Z. Li, C. Zhang, H. Wang, Y. Huang, Y. Chen, H. Haas et al. , “On the road to 6g: Visions, requirements, key technologies, and testbeds,” IEEE Communications Surveys & Tutorials , vol. 25, no. 2, pp. 905–974, 2023. [2] Y. He, Y. Xiao, S. Zhang, M. Jia, and Z. Li, “Direct-to-smartphone for 6g ntn: Technical routes, challenges, and key technologies,” IEEE Network , vol. 38, no. 4, pp. 128–135, 2024. [3] L. Zhi, N. Hehao, H. Yuanzhi, A. Kang, Z. Xudong, C. Zheng, and X. Pei, “Self-powered absorptive reconfigurable intelligent surfaces for securing satellite-terrestrial integrated networks,” China Communica-tions , vol. 21, no. 9, pp. 276–291, 2024. [4] J. Zhang, K. Wang, R. Li, Z. Chang, X. Zhang, and W. Wang, “Macro: Mega-constellations routing systems with multi-edge cross-domain features,” IEEE Wireless Communications , vol. 30, no. 6, pp. 69–76, 2023. [5] H. He, D. Zhou, M. Sheng, J. Li, and C. Yuen, “Intelligent collaborative scheduling enabled communication-computing integration in multi-layer satellite networks,” IEEE Transactions on Communications , pp. 1–1, 2025. [6] P. Wang, J. Zhang, X. Zhang, Z. Yan, B. G. Evans, and W. Wang, “Convergence of satellite and terrestrial networks: A comprehensive survey,” IEEE Access , vol. 8, pp. 5550–5588, 2019. [7] SatelliteMap.space, “Starlink constellation - 8447 satellites,” 2025, accessed: 2025-09-15. [Online]. Available: https://satellitemap.space/ constellation/starlink# [8] K. Yang, Y. Wang, X. Gao, C. Shi, Y. Huang, H. Yuan, and M. Shi, “Communications in space–air–ground integrated networks: An overview,” Space: Science & Technology , vol. 5, p. 0199, 2025. [9] C. T. Nguyen, Y. M. Saputra, N. Van Huynh, T. N. Nguyen, D. T. Hoang, D. N. Nguyen, V.-Q. Pham, M. Voznak, S. Chatzinotas, and D.-H. Tran, “Emerging technologies for 6g non-terrestrial-networks: From academia to industrial applications,” IEEE Open Journal of the Communications Society , vol. 5, pp. 3852–3885, 2024. [10] O. Isreal, “Potential of low-earth orbit satellites,” 2025, accessed: 2025-09-15. [Online]. Available: https://www.researchgate.net/publication/ 392571894 Potential of Low-Earth Orbit Satellites [11] H. Jia, Y. Wang, H. Peng, and W. Li, “Dynamic beam hopping and resource allocation for non-uniform traffic demand in ngso satellite communication systems,” IEEE Transactions on Vehicular Technology ,vol. 74, no. 1, pp. 816–830, 2025. [12] Z. Lv, W. Jing, Z. Zheng, Z. Lu, C. Liu, and X. Wen, “Dynamic beam hopping and resource management optimization based on deep reinforcement learning for interference avoidance,” in 2024 IEEE 35th International Symposium on Personal, Indoor and Mobile Radio Com-munications (PIMRC) . IEEE, 2024, pp. 1–6. [13] J. Zhang, D. Qin, C. Kong, F. Zhao, R. Li, J. Wang, and Y. Wang, “System-level evaluation of beam hopping in nr-based leo satellite communication system,” in 2023 IEEE Wireless Communications and Networking Conference (WCNC) . IEEE, 2023, pp. 1–6. [14] R. Gao, K. Wang, W. Lin, and H. Kang, “Joint beam-hopping pattern scheduling and power allocation for leo satellite network,” in 2024 IEEE Wireless Communications and Networking Conference (WCNC) . IEEE, 2024, pp. 1–6. [15] S. Yuan, Y. Sun, M. Peng, and R. Yuan, “Joint beam direction control and radio resource allocation in dynamic multi-beam leo satellite networks,” 
+
+IEEE Transactions on Vehicular Technology , vol. 73, no. 6, pp. 8222– 8237, 2024. [16] Y. Zhang, D. Jiang, F. Shao, T. Wu, X. Liang, and J. Chen, “Metaheuristic-based beam scheduling strategies for leo multibeam satellite: A comparison,” IEEE Communications Letters , vol. 29, no. 6, pp. 1166–1170, 2025. [17] S. Guo, K. Han, W. Gong, L. Li, F. Tian, and X. Jiang, “An efficient multi-dimensional resource allocation mechanism for beam-hopping in leo satellite network,” Sensors , vol. 22, no. 23, p. 9304, 2022. [18] C. Zhang, J. Yang, Y. Zhang, Z. Liu, and G. Zhang, “Dynamic beam hopping time slots allocation based on genetic algorithm of satellite com-munication under time-varying rain attenuation,” Electronics , vol. 10, no. 23, p. 2909, 2021. [19] P. Zhang, J. Chang, C. Zou, and G. Li, “Beam hopping scheduling strategy of leo communication satellite based on improved genetic algorithm,” Journal of University of Chinese Academy of Sciences ,vol. 42, no. 3, pp. 382–391, 2025. [20] Z. Lin, Z. Feng, K. Guo, A. Nauman, D. Niyato, and J. Wang, “Ai-driven seamless and massive access in space-air-ground integrated networks,” 
+
+IEEE Wireless Communications , vol. 32, no. 3, pp. 72–79, 2025. [21] Y. Ran, F. Tan, S. Chen, J. Lei, and J. Luo, “Towards beam hopping and power allocation in multi-beam satellite systems with parameterized reinforcement learning,” IEEE Transactions on Vehicular Technology ,vol. 73, no. 9, pp. 14 050–14 055, 2024. [22] Y. Huang, W. Shufan, Z. Zhankui, K. Zeyu, M. Zhongcheng, and H. Huang, “Sequential dynamic resource allocation in multi-beam satel-lite systems: A learning-based optimization method,” Chinese Journal of Aeronautics , vol. 36, no. 6, pp. 288–301, 2023. [23] M. Wang, K. Liu, Z. Dong, Y. Zhou, C. Wu, and S. Han, “Frequency plan design and beam power allocation for flexible high throughput satellite systems: A two-stage optimization framework,” IEEE Transactions on Communications , pp. 1–1, 2025. [24] X. Hu, Y. Zhang, X. Liao, Z. Liu, W. Wang, and F. M. Ghannouchi, “Dynamic beam hopping method based on multi-objective deep rein-forcement learning for next generation satellite broadband systems,” 
+
+IEEE Transactions on Broadcasting , vol. 66, no. 3, pp. 630–646, 2020. [25] S. Zheng, X. Zhang, J. Zhang, P. Wang, and W. Wang, “Traffic-aware resource management of beam hopping in satellite-enabled internet of things,” IEEE Internet of Things Journal , vol. 11, no. 21, pp. 34 504– 34 518, 2024. [26] D. Kim, H. Jung, and I.-H. Lee, “Dqn-based scheduling algorithm for beam-hopping leo satellite communication systems,” IEEE Wireless Communications Letters , vol. 14, no. 8, pp. 2401–2405, 2025. [27] S. Zhang, R. Chai, C. Liang, and Q. Chen, “Dynamic resource alloca-tion for multibeam satellite communication systems,” IEEE Internet of Things Journal , vol. 11, no. 22, pp. 36 907–36 921, 2024. [28] F. Ding, S. Fu, H. Yu, Y. Tang, B. Di, and F. R. Yu, “Joint optimization of beamforming, subchannel, and power allocation in multi-satellite bh-noma communication system,” IEEE Transactions on Vehicular Tech-nology , pp. 1–5, 2025. JOURNAL OF L ATEX CLASS FILES, VOL. 14, NO. 8, APRIL 2026 16 
+
+[29] I. J. Goodfellow, J. Shlens, and C. Szegedy, “Explaining and harnessing adversarial examples,” arXiv preprint arXiv:1412.6572 , 2014. [30] A. Kurakin, I. J. Goodfellow, and S. Bengio, “Adversarial examples in the physical world,” in Artificial intelligence safety and security .Chapman and Hall/CRC, 2018, pp. 99–112. [31] A. Madry, A. Makelov, L. Schmidt, D. Tsipras, and A. Vladu, “Towards deep learning models resistant to adversarial attacks,” arXiv preprint arXiv:1706.06083 , 2017. [32] J. Kos and D. Song, “Delving into adversarial attacks on deep policies,” 
+
+arXiv preprint arXiv:1705.06452 , 2017. [33] H. Zhang, H. Chen, C. Xiao, B. Li, M. Liu, D. Boning, and C.-J. Hsieh, “Robust deep reinforcement learning against adversarial perturbations on state observations,” Advances in Neural Information Processing Systems ,vol. 33, pp. 21 024–21 037, 2020. [34] Y. A. Ergu, V.-L. Nguyen, R.-H. Hwang, Y.-D. Lin, C.-Y. Cho, and H.-K. Yang, “Unmasking vulnerabilities: Adversarial attacks against drl-based resource allocation in o-ran,” in ICC 2024-IEEE International Conference on Communications . IEEE, 2024, pp. 2378–2383. [35] Y. A. Ergu, V.-L. Nguyen, R.-H. Hwang, Y.-D. Lin, C.-Y. Cho, H.-K. Yang, H. Shin, and T. Q. Duong, “Efficient adversarial attacks against drl-based resource allocation in intelligent o-ran for v2x,” IEEE Transactions on Vehicular Technology , vol. 74, no. 1, pp. 1674–1686, 2025. [36] Y. A. Ergu and V.-L. Nguyen, “Radar: Robust drl-based resource alloca-tion against adversarial attacks in intelligent o-ran,” IEEE Transactions on Green Communications and Networking , pp. 1–1, 2025. [37] P. Tarafder, I. Ahmed, D. B. Rawat, M. Z. Hassan, and K. Hasan, “Digital-twin empowered site-specific radio resource management in 5g aerial corridor,” arXiv preprint arXiv:2507.04566 , 2025. [38] L. Chen, V. N. Ha, E. Lagunas, L. Wu, S. Chatzinotas, and B. Ottersten, “The next generation of beam hopping satellite systems: Dynamic beam illumination with selective precoding,” IEEE Transactions on Wireless Communications , vol. 22, no. 4, pp. 2666–2682, 2022. [39] Z. Lin, Z. Ni, L. Kuang, C. Jiang, and Z. Huang, “Satellite-terrestrial coordinated multi-satellite beam hopping scheduling based on multi-agent deep reinforcement learning,” IEEE Transactions on Wireless Communications , vol. 23, no. 8, pp. 10 091–10 103, 2024. [40] M. M. Nasralla, “A hybrid downlink scheduling approach for multi-traffic classes in lte wireless systems,” IEEE access , vol. 8, pp. 82 173– 82 186, 2020. [41] Y. He, B. Sheng, H. Yin, D. Yan, and Y. Zhang, “Multi-objective deep reinforcement learning based time-frequency resource allocation for multi-beam satellite communications,” China Communications , vol. 19, no. 1, pp. 77–91, 2022. [42] L. Ale, S. A. King, N. Zhang, A. R. Sattar, and J. Skandaraniyam, “D3pg: Dirichlet ddpg for task partitioning and offloading with con-strained hybrid action space in mobile-edge computing,” IEEE Internet of Things Journal , vol. 9, no. 19, pp. 19 260–19 272, 2022. [43] A. Gadetsky, K. Struminsky, C. Robinson, N. Quadrianto, and D. Vetrov, “Low-variance black-box gradient estimates for the plackett-luce distri-bution,” in Proceedings of the AAAI Conference on Artificial Intelli-gence , vol. 34, no. 06, 2020, pp. 10 126–10 135. [44] M. Kummu, M. Taka, and J. H. Guillaume, “Gridded global datasets for gross domestic product and human development index over 1990–2015,” 
+
+Scientific data , vol. 5, no. 1, pp. 1–15, 2018. [45] R. Briggs, D. Landauer, and T. M. Lovelly, “Cross-examining the computational performance of radiation-tolerant nvidia and amd socs,” in 2025 IEEE Aerospace Conference . IEEE, 2025, pp. 1–9. [46] P. Angeletti, D. Fernandez Prim, and R. Rinaldo, “Beam hopping in multi-beam broadband satellite systems: System performance and pay-load architecture analysis,” in 24th AIAA International Communications Satellite Systems Conference , 2006, p. 5376.

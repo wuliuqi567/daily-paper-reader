@@ -1,0 +1,1650 @@
+Title: Metasurface Antenna-Enabled LEO Satellite Constellation Communications: Design and Optimization
+
+URL Source: https://arxiv.org/pdf/2607.12328v1
+
+Published Time: Wed, 15 Jul 2026 11:57:19 GMT
+
+Number of Pages: 14
+
+Markdown Content:
+> 1
+
+# Metasurface Antenna-Enabled LEO Satellite Constellation Communications: Design and Optimization 
+
+Wenfei Yao, Xiaoming Chen, Qi Wang, Qiao Qi, and Ming Ying 
+
+Abstract —Next-generation low Earth orbit (LEO) satellite constellations face critical bottlenecks in spectral efficiency and onboard hardware complexity. To overcome these limitations, this paper introduces a novel architecture enabled by metasur-face antennas (MAs) at the LEO satellites. In particular, MAs are metasurface-integrated feed antennas that perform high-precision beamforming directly in the wave domain, thereby effectively mitigating multi-user interference. Based on such an antenna architecture, a weighted sum rate (WSR) maximization problem is formulated by jointly optimizing the scheduling of feed antennas to terrestrial users (TUs) and the passive beamforming of the metasurface for system performance enhancement. To address this mixed-integer nonlinear programming (MINLP) challenge, an alternating optimization (AO)-based joint schedul-ing and beamforming algorithm is proposed. On the one hand, the proposed algorithm incorporates a polynomial-time minimum-cost maximum-flow (MCMF) method, which is dedicated to the optimal scheduling of feed antennas and TUs. On the other hand, it adopts a weighted minimum mean square error (WMMSE) method integrated with semidefinite relaxation (SDR) technique, which is tailored for metasurface beamforming design. Simula-tion results confirm the effectiveness of the proposed algorithm for MA-enabled LEO satellite constellation communications. 
+
+Index Terms —6G, metasurface, LEO satellite constellation, user scheduling, beamforming design 
+
+I. I NTRODUCTION 
+
+Satellite communication (SATCOM) has emerged as a piv-otal part in the envisioned sixth-generation wireless networks, providing the essential infrastructure for ubiquitous connectiv-ity. Among the satellites operate in different types of orbits, low Earth orbit (LEO) satellites have lower costs, shorter transmission delays, and higher signal power [1]. Driven by the significant reduction in rocket launch costs and breakthroughs in communication technologies, LEO satellite constellations have entered a phase of prosperous development, with industry leaders including Starlink, OneWeb, Kuiper, and Telesat mak-ing significant progress in deploying their respective networks [2]. By leveraging densely interconnected satellite networks, the LEO constellations are poised to achieve truly seamless global coverage and robust, high-performance interconnection services [3]. To satisfy the escalating requirements for both increased data traffic and higher quality of service (QoS), multi-beam 
+
+Wenfei Yao, Xiaoming Chen, Qi Wang, and Ming Ying are with the College of Information Science and Electronic Engineering, Zhejiang University, Hangzhou 310027, China (e-mails: {yaowenfei, chen xiaoming, wang-qi, ming ying }@zju.edu.cn). Qiao Qi is with the School of Information Science and Technology, Hangzhou Normal University, Hangzhou 311121, China (e-mails: qiqiao@hznu.edu.cn). 
+
+satellite system (MBSS) has been extensively studied in SATCOMs [4]–[6]. A key challenge in MBSS operation is severe inter-beam interference, which acts as a major factor degrading system throughput and QoS performance. To mit-igate this issue, digital beamforming techniques are widely adopted in MBSSs. Moreover, multi-satellite cooperation with distributed beamforming have been studied for LEO satellite constellations to mitigate significant co-channel interference [7]. This approach enables adjacent satellites to share channel state information (CSI) and collaboratively serve terrestrial users (TUs) through cooperative beamforming and dynamic user scheduling. This hierarchical coordination paradigm is conceptually aligned with software-defined networking prin-ciples, which enable scalable and energy-efficient resource management in complex networks, including emerging 5G/6G multimedia internet of vehicles (IoV) systems [9]. For exam-ple, the authors in [8] introduced a hierarchical coordination framework for satellite clusters, where a designated leader satellite orchestrates cluster operations through inter-satellite links (ISLs), including information exchange and control signaling with follower satellites. The work [10] proposed a computationally efficient cooperative framework for LEO constellation networks, achieving improved spectral efficiency via coordinated beamforming and optimized user scheduling. Moreover, the study [11] investigated dynamic link scheduling in LEO satellite networks, accounting for spatio-temporal correlations arising from orbital motion patterns. The above studies have all proven the effectiveness of MBSS in satellite constellations. Nevertheless, implementing digital precoding necessitates deploying high performance baseband processing units onboard the satellite, leading to elevated power demands [12]. In particular, MBSS relys on digital beamforming with high-resolution digital-to-analog converters and radio frequency (RF) chains, incurring pro-hibitive hardware expenses. While hybrid beamforming tech-niques offer a potential reduction in hardware overhead, the constrained waveform design flexibility may compromise sys-tem performance. Fortunately, metasurface, also known as reconfigurable intelligent surface (RIS), have demonstrated remarkable potential for both spectral and energy efficiency enhancement in next-generation wireless systems. Specifically, metasurface is a two-dimensional planar array that can employ programmable meta-atom elements to precisely control wave propagation characteristics with low hardware overhead [13]. Since they operate without conventional RF amplification chains and mainly rely on low-power tuning elements to arXiv:2607.12328v1 [cs.IT] 14 Jul 2026 2
+
+adjust their phase responses, their power consumption and heat dissipation are typically much lower than those of fully digital or hybrid beamforming architectures employing mul-tiple active RF chains [14], [15]. Existing studies indicate that the overall power consumption and thermal footprint of metasurface-based systems are dominated by lightweight control and biasing circuitry, which remain modest even for large surface sizes [16]. Typically, metasurface is employed to intelligently circumvent signal blockages by dynamically redirecting incident waves toward intended receivers. This inherent capabilities of metasurface make them especially valuable in SATCOM, where they can mitigate propagation loss and improve link quality by precisely directing signals to TUs [17]. Furthermore, emerging metasurface antenna (MA)-enabled architectures demonstrate improved energy efficiency and hardware efficiency, positioning them as viable successors to digital beamforming technologies in future communication systems. In particular, a MA generally consists of a feed antenna array structure coupled with a metasurface layer composed of meta-atoms embedded with active tuning com-ponents, enabling software-defined beamforming and adaptive radiation patterns [18], [19]. By joint optimizing scheduling of feed antenna and user and metasurface phase shifts, the MA enables native wave-domain signal processing through precise meta-atom transmission coefficient adjustments [20]. This architecture effectively circumvents conventional digital signal processing chains, offering a more efficient and adaptive beamforming solution [21]. The distinctive beamforming and wavefrom manipulation abilities of MA have motivated nu-merous studies investigating their practical implementations. In [22], Dai et al. presented the first wireless communica-tion prototype employing a 256-element RIS, demonstrating significant power savings over phased arrays while achieving comparable gain. Experiments at 2.3 GHz and 28.5 GHz vali-dated its real-time beamforming capability for high-definition video transmission. The authors in [23] derived physics-based free-space path-loss models for RIS-assisted links and verified them with anechoic-chamber measurements. The work [24] proposed a RIS-integrated base station that deploys RIS close to the feed antenna of base station, enabling low-complexity, passive beamforming for uplink MIMO. A beam-search plus path-antenna pairing algorithm is devised and experimentally verified to maximize sum-rate while avoiding per-element channel estimation. In addition, the authers in [26] demon-strated that mounting MA on LEO satellites enabled wave-domain multiuser beamforming, replacing digital precoding and achieving near-optimal sum rate performance using only statistical CSI. The work in [27] presented a MA-equipped LEO satellite and evaluated its path-loss performance for extreme satellite-to-ground links under dynamic elevation an-gles. It is worth noting that practical reconfigurable intelligent surface (RIS) or metasurface-assisted wireless systems are inevitably affected by hardware impairments, such as phase noise, finite phase resolution, nonlinear response of tuning ele-ments, and channel estimation errors. These non-idealities may degrade the achievable performance if not properly accounted for. Recent studies [28]-[31] have investigated the impact of hardware impairments on RIS-aided systems and proposed robust transmission and channel estimation techniques to mit-igate their effects. Although existing studies have explored MA in SATCOM, they are predominantly limited to single-satellite scenarios [26], [27]. Furthermore, much of this existing research [20]-[27] adopts a decoupled approach to system design, focusing solely on addressing metasurface beamforming in isolation while overlooking the vital need for joint optimization of user scheduling and feed antenna allocation. Yet scheduling plays a critical role in maximizing the value of beamforming. A well-designed scheduling strategy can intelligently match feed antennas to TUs based on channel conditions, ensuring the enhanced signal gains from metasurface beamforming are effectively allocated to TUs. This not only avoids wasting beamforming gains on poorly matched feed antenna-TU pairs but also further boosts overall system performance. To the best of our knowledge, a holistic framework that integrates these coupled design aspects for the LEO satellite constellation sys-tem remains unexplored. In this context, this paper addresses this critical research gap by proposing a MA-enabled LEO satellite constellation communication system, with the major contributions being summarized as follows: 1) We put forward a MA-enabled LEO satellite constellation communication system that leverages inter-satellite co-operation and employs metasurfaces to perform low-cost beamforming in the wave-domain, effectively suppressing multi-user interference. 2) We formulate a mixed-integer nonlinear programming (MINLP) problem in order to maximize the system’s weighted sum rate (WSR). Then, an alternating op-timization (AO)-based algorithm is proposed, wherein the scheduling of feed antenna and TUs is addressed by a minimum-cost maximum-flow (MCMF) method, while the metasurface beamforming is optimized via the weighted minimum mean square error (WMMSE) method integrated with semidefinite relaxation (SDR) technique. 3) We explore the convergence and complexity properties of the proposed algorithm. Extensive numerical experiments further validate the effectiveness of the proposed algo-rithm, demonstrating substantial performance improve-ments over existing benchmarks. 
+
+Organization: The subsequent sections of this paper are structured as follows. Section II introduces the system model of MA-enabled LEO satellite constellation communication and formulates the optimization problem. Then, Section III proposes a joint scheduling and beamforming design algorithm for MA-enabled LEO satellite constellation communication. Section IV validates the effectiveness of the proposed algo-rithm through simulation results. Lastly, Section V concludes the paper. 
+
+Notations : Bold lower-case and upper-case letters denote column vectors and matrices, respectively. CM×N denotes a complex matrix of size M × N . ⊙ represents the Hadamard product. ⊗ denotes the Kronecker product. (·)∗ denotes the complex conjugate operation. (·)T and (·)H denote the trans-3
+
+pose and conjugate transpose, respectively. CN (μ, σ 2) denotes the circularly symmetric complex Gaussian distribution with 
+
+μ being the mean and σ2 being the variance. | · | and ‖ · ‖ 
+
+denote the absolute value of scalar and the L2-norm of vector, respectively. diag (·) and vec (·) denote the process of diagonalization and vectorization, respectively. [A]l,l denotes the l-th diagonal elements of the matrix A.II. S YSTEM MODEL   
+
+> LEO satellite constellation TU
+> RF chains Metasurface
+> TU
+> x
+> y
+> Oz
+> Fig. 1. System model of the MA-enabled LEO satellite constellation com-munication
+
+Consider a MA-enabled LEO satellite constellation com-munication system where S satellites provide communication services to K single-antenna TUs, as shown in Fig. 1. Let 
+
+Us denote the set of TUs located within the coverage area of the s-th satellite and let Sk denote the set of visible satellites for the k-th TU. Each LEO satellite is equipped with an autonomous control MA and adopts full frequency multiplexing to maximize frequency utilization. Specifically, the MA consists of Nt feed antennas each powered by an RF chain and a metasurface composed of a uniform planar array (UPA) with L = Lx × Ly meta-atom elements, where 
+
+Lx and Ly denote the number of elements along the column and row direction, respectively. In the considered MA-enabled LEO satellite constellation communication system, each TU is solely served by one feed antenna of a LEO satellite selected from its visible satellite set Sk . Specifically, the signal stream required by a TU is transmitted exclusively through its assigned feed antenna, whereupon the metasurface dynamically shapes the signal. In particular, a leader satellite is designated, and the remaining S − 1 satellites connect to it via ISLs to share real-time information and necessary CSI 1. Additionally, the leader satellite leverages its onboard processing capabilities to support the dynamic optimization of feed antenna-TU scheduling and metasurface beamforming parameters.           
+
+> 1It is noted that the coordination between the leader and follower satellites relies on high-capacity ISLs, e.g., optical or millimeter-wave/terahertz ISLs, over which CSI and optimized parameters are exchanged. Therefore, the associated signaling overhead and latency are negligible relative to the optimization time scale.
+
+A. Channel Model 
+
+In the signal transmission process, the signal emitted by each feed antenna first propagates through a near-field channel to the metasurface, undergoes wave-domain beamforming via metasurface, and is then transmitted to TUs through the satellite-terrestrial channel. Accounting for these cascaded propagation and beamforming stages, the equivalent channel coefficient from the n-th feed antenna of the s-th satellite to the k-th TU is formulated as 
+
+hequ 
+
+> s,n,k
+
+(t) = hH
+
+> s,k
+
+(t)Θsgs,n ∈ C1×1, (1) where gs,n ∈ CL×1 represents the near-field channel vector between the n-th feed antenna and the metasurface of the s-th satellite, hs,k (t) ∈ CL×1 denotes the satellite-terrestrial chan-nel vector between the metasurface of the s-th satellite and the 
+
+k-th TU, and Θs ∈ CL×L denotes the beamforming matrix of the metasurface of the s-th satellite. In particular, Θs =
+
+diag {ϕs}, where ϕs = [ejθ s,l , e jθ s, 2 , · · · , e jθ s,L ] ∈ C1×L
+
+with θs,l denoting the adjustable phase shift of the l-th element of the s-th satellite. It is noted that the metasurface considered in this work operates in a phase-only reconfiguration mode, where each meta-atom adjusts only the phase of the impinging signal without introducing active RF amplification. As a result, the metasurface does not generate additional transmit power, and its energy consumption is primarily associated with low-power control circuitry used for phase tuning [32], [33]. In general, for the near-field channel vector gs,n , it aggre-gates the transmission coefficients from the n-th feed antenna to each of the L meta-atoms on metasurface, which can be formulated as gs,n = [g1
+
+> s,n
+
+; · · · ; gLs,n ] ∈ CL×1 with gls,n 
+
+denoting the element-wise transmission coefficient. Accord-ing to the physical propagation characteristics of the near-field channel, gls,n can be modeled based on the Rayleigh-Sommerfeld diffraction theory [34]. Specifically, gls,n is given by 
+
+gls,n = At cos τ ls,n 
+
+rls,n 
+
+( 1
+
+2πr ls,n 
+
+− j 1
+
+λ
+
+)
+
+ej2πr ls,n /λ , (2) where At denotes the area of each meta-atom, rls,n denotes the Euclidean distance of signal propagation, τ ls,n denotes the angle bewteen the signal propagation direction and the normal direction of the metasurface, and λ denotes the wave-length 2.Moreover, for the satellite-terrestrial channel vector hs,k (t)
+
+at time slot t, it is formulated as 
+
+hs,k (t) = 
+
+> Ns,k −1
+
+∑
+
+> p=0
+
+ηs,k,p · exp {j2π(tν s,k,p − fcτs,k,p )}· a(θs,k,p , ψ s,k,p ), (3) where Ns,k represents the number of paths from the s-th satellite to the k-th TU, fc represents the carrier frequency, 
+
+> 2It should be noted that realistic hardware implementations may introduce discrepancies in the transmission parameters between feed antennas and the metasurface due to manufacturing tolerances. Nevertheless, such deviations can be effectively compensated through calibration procedures employing conventional error back-propagation techniques [35]. Therefore, the near-field channel between the feed antennas and the metasurface is assumed to be perfectly known in this work, serving as a deterministic and calibrated system component for the subsequent communication-level optimization. 4
+
+and ηs,k,p , νs,k,p , and τs,k,p represent the complex channel gain, Doppler shift, and propagation delay with respect to the 
+
+p-th path, respectively. Moreover, a(θs,k,p , ψ s,k,p ) represents the UPA response of the p-th path of the s-th satellite’s meta-surface. The satellite-terrestrial channel consists of a dominant line of sight (LoS) component (index p = 0 ) and multiple non-line of sight (NLoS) components (index p = 1 , · · · , N s,k − 1). The NLoS component consists of multiple scattered paths originating from ground reflections and local scatterers. Due to the large altitude of the satellite relative to terrestrial objects, these multipath components are observed within a narrow angular spread at the satellite side. Consequently, their angles of arrival are modeled as small perturbations around the nominal LoS direction. Specifically, the array response of each NLoS path can be expressed as a(θs,k, 0+δs,k,p , ψ s,k, 0+ξs,k,p ),where δs,k,p and ξs,k,p denote small angular deviations. In particular, the UPA response vertor a(θ, ψ ) can be formulated as 
+
+a(θ, ψ ) = 1
+
+√Lx
+
+[1; ej̟ cos( θ) sin( ψ); · · · ; ej̟ (Lx−1) cos( θ) sin( ψ)]
+
+⊗ 1
+
+√Ly
+
+[1; ej̟ cos( ψ); · · · ; ej̟ (Ly −1) cos( ψ)], (4) where ̟ = 2 πf c d 
+
+> c
+
+with c being the light velocity and d being the inter-element spacing of metasurface. Due to fast mobility, LEO satellite networks experience significantly larger Doppler shifts. For the Doppler shift 
+
+νs,k,p , it includes two independent components, i.e., νs,k,p =
+
+νsat  
+
+> s,k,p
+
++ νtu 
+
+> s,k,p
+
+, where νsat  
+
+> s,k,p
+
+and νtu  
+
+> s,k,p
+
+denote the Doppler shift caused by the motion of satellite and TU, respectively. Considering the high altitude of the satellite orbit, the Doppler shift νsat  
+
+> s,k,p
+
+caused by satellite motion are assumed to be path-independent, i.e., νsat  
+
+> s,k,p
+
+= νsat 
+
+> s,k
+
+, ∀p. Whereas, the com-ponent νtu  
+
+> s,k,p
+
+arising from motion of the TU typically varies in different propagation paths and are much smaller than that brought by satellite motion, contributing to the Doppler spread ∆ν = max p νtu  
+
+> s,k,p
+
+− min p νtu 
+
+> s,k,p
+
+. In addition, the propagation delay bewteen the s-th LEO satellite and the 
+
+k-th TU relative to the l-th path mainly composed of two components, i.e., τs,k,p = τ sat  
+
+> s,k
+
++ τ tu 
+
+> s,k,p
+
+, where τ sat  
+
+> s,k
+
+is the deterministic free-space delay component, determined by the line-of-sight (LoS) distance between the s-th satellite and k-th TU. The second component τ tu  
+
+> s,k,p
+
+represents the stochastic scattering-induced delay caused by local multipath around the TU, which does contribute to delay spread effect through 
+
+∆τ = max p τ tu  
+
+> s,k,p
+
+− min p τ tu 
+
+> s,k,p
+
+. Since the delay spread ∆τ is significantly smaller than the bulk delay, as demonstrated in [37] and [38], we assume the delay remains constant across all paths and omit the path index p, i.e., τs,k,p = τs,k , ∀p [39]. 
+
+B. Signal Model 
+
+The MA architecture avoids the use of digital precoding, resulting in each feed antenna serving a single TU with one dedicated data stream. This operational constraint necessitates careful scheduling between feed antennas and TUs to max-imize the system performance. For the scheduling bewteen TUs and feed antennas of LEO satellites, we introduce αs,n,k 
+
+to represent the scheduling bewteen the feed antenna and TU, where αs,n,k = 1 denotes the k-th TU scheduled with the n-th feed antenna of the s-th satellite, and αs,n,k = 0 otherwise. In this case, the time-domain signal transmitted by the n-th feed antenna of the s-th satellite can be formulated as 
+
+es,n (t) = ps,n 
+
+∑
+
+> k∈U s
+
+αs,n,k xk (t), (5) where ps,n represents the transmit power allocated to the n-th feed antenna of the s-th satellite, xk represents the data symbol intended for the k-th TU, which is assumed to be independent and satisfies E(|xk x∗ 
+
+> k
+
+|) = 1 and E(|xk x∗ 
+
+> k′
+
+|) = 0 , k 6 = k′.Due to the full frequency multiplexing, each TU experiences inter-satellite interference originating from all visible satellites within its LoS visible range 3. Under this context, the singal received by the k-th TU can be represented as 
+
+yk(t) = ∑
+
+> s∈S k
+> Nt
+
+∑
+
+> n=1
+
+hequ 
+
+> s,n,k
+
+(t)ps,n 
+
+∑
+
+> i∈U s
+
+αs,n,i xi(t) + nk(t)= ∑
+
+> s∈S k
+> Nt
+
+∑
+
+> n=1
+
+αs,n,k ps,n hequ 
+
+> s,n,k
+
+(t)xk (t)
+
+︸ ︷︷ ︸
+
+> desired signal
+
++ ∑
+
+> s∈S k
+> Nt
+
+∑
+
+> n=1
+
+∑  
+
+> k′6=k
+
+αs,n,k ′ ps,n hequ 
+
+> s,n,k
+
+(t)xk′ (t)
+
+︸ ︷︷ ︸
+
+> interfrence
+
++ nk(t)
+
+︸ ︷︷ ︸
+
+> AWGN
+
+, (6) where nk is additive white Gaussian noise (AWGN) with zero mean and variance σ2
+
+> k
+
+. In particular, σ2 
+
+> k
+
+= Bζκ with B,
+
+ζ, and κ denoting the channel bandwidth, noise temperature and Boltzmann constant, respectively. Given the characteristics of satellite-terrestrial channels under high-speed movement, Doppler shift and propagation delay compensation are imple-mented at the TU side. The Doppler shift and propagation delay are derived from the satellite and TU positions, which is obtained through satellite ephemeris data and global navigation satellite system measurements, respectively [36]. Since the channel is dominanted by the LoS link, the received signal is compensated using the LoS path-specific Doppler shift and time delay. For the k-th TU, considering its Doppler shift and propagation delay compensation coefficients relative to the scheduling αs,n,k , the compensation coefficients are given by 
+
+νcom  
+
+> k
+
+= ∑
+
+> s∈S k
+> Nt
+
+∑
+
+> n=1
+
+αs,n,k (νsat  
+
+> s,k
+
++ νtu 
+
+> s,k, 1
+
+), (7) and 
+
+τ com  
+
+> k
+
+= ∑
+
+> s∈S k
+> Nt
+
+∑
+
+> n=1
+
+αs,n,k τs,k . (8)     
+
+> 3The interference from non-visible satellites of TUs is considered negli-gible due to combined effects of strong NLOS signal attenuation, inherent beamforming isolation, and frequency reuse constraints in LEO satellite constellations [40], [41]. 5
+
+In this context, the compensated signal can be formulated as 
+
+ycom  
+
+> k
+
+(t) = yk(t + τ com  
+
+> k
+
+) · exp {− j2π(t + τ com  
+
+> k
+
+)νcom  
+
+> k
+
+}
+
+= ∑
+
+> s∈S k
+> Nt
+
+∑
+
+> n=1
+
+αs,n,k ps,n ˆhequ 
+
+> s,n,k
+
+(t)xk (t)+ ∑
+
+> s∈S k
+> Nt
+
+∑
+
+> n=1
+
+∑  
+
+> k′6=k
+
+αs,n,k ′ ps,n ˆhequ 
+
+> s,n,k
+
+(t)xk′ (t)+ nk(t), (9) where ˆhequ 
+
+> s,n,k
+
+(t) = ˆhH
+
+> s,k
+
+(t)Θg s,n represents the compensated equivalent channel. In particular, ˆhs,k (t) is the compensated satellite-terrestrial channel, which is given by 
+
+ˆhs,k (t) =  
+
+> Ns,k −1
+
+∑
+
+> p=0
+
+ˆηs,k,p · exp {j2π(tν com  
+
+> s,k,p
+
+− fcτ com  
+
+> s,k
+
+)}· a(θs,k , ψ s,k ), (10) where ˆηs,k,p = ηs,k,p · exp {j2πτ com  
+
+> k
+
+νtu 
+
+> s,k,p
+
+}, νcom  
+
+> s,k,p
+
+= νs,k,p −
+
+νcom  
+
+> k
+
+and τ com  
+
+> s,k
+
+= τs,k − τ com  
+
+> k
+
+represents the compensated frequency shift and propagation delay, respectively. In practical LEO SATCOM systems, perfect CSI is difficult to obtain due to channel estimation inaccuracies, residual scattering dynamics, and hardware imperfections. In this work, Doppler shift and propagation delay are assumed to be deter-ministically compensated using satellite ephemeris data and global navigation satellite system (GNSS) measurements prior to channel estimation. As a result, the remaining CSI uncer-tainty primarily affects the Doppler/delay compensated chan-nel. Accordingly, the compensated satellite–terrestrial channel is modeled as 
+
+ˆhs,k (t) = ˜hs,k (t) + es,k (t), (11) where ˜hs,k (t) ∈ CL×1 denotes the estimated compensated channel available at the satellite, and es,k (t) represents the residual channel estimation error. The error vector is modeled as a circularly symmetric complex Gaussian random vector 
+
+es,k (t) ∼ CN (0, σ 2 
+
+> e
+
+I) , (12) where σ2 
+
+> e
+
+characterizes the error variance. The channel error variance is modeled as inversely proportional to the singal to noise ratio (SNR), i.e., σ2 
+
+> e
+
+= 1 /SNR , which captures the dependence of estimation accuracy on the received signal qual-ity [42]. Under this model, the equivalent cascaded channel between the n-th feed antenna of the s-th satellite and the 
+
+k-th TU becomes 
+
+ˆhequ 
+
+> s,n,k
+
+(t) = 
+
+(˜hs,k (t) + es,k (t)
+
+)H
+
+Θsgs,n . (13) For the link from the scheduled s-th satellite and the k-th TU, i.e., αs,n,k = 1 , the residenual Doppler shift νcom  
+
+> s,k,p
+
+=
+
+νtu  
+
+> s,k,p
+
+and delay τ com  
+
+> s,k
+
+= τ tu  
+
+> s,k
+
+are negligible and are acceptable for the reliable transmission [43]. Nevertheless, the signal from the other satellites are still asynchronous at the k-th TU with a significant Doppler shift and delay. In addition, the compensated channel is affected by estimation errors, which introduces uncertainty in the received signal power. Under this context, the signal to interference plus noise ratio (SINR) at the k-th TU is characterized in an average sense and can be expressed as [44] 
+
+SINR k =
+
+∑
+
+> s∈S k
+> Nt
+
+∑
+
+> n=1
+
+αs,n,k ps,n E
+
+[∣∣∣ˆhequ 
+
+> s,n,k
+
+∣∣∣2]
+
+∑
+
+> s∈S k
+> Nt
+
+∑
+
+> n=1
+
+∑  
+
+> k′6=k
+
+αs,n,k ′ ps,n ρs,k E
+
+[∣∣∣ˆhequ 
+
+> s,n,k
+
+∣∣∣2]
+
++ σ2
+
+> k
+
+,
+
+(14) where 
+
+E
+
+[∣∣∣ˆhequ 
+
+> s,n,k
+
+∣∣∣2]
+
+=
+
+∣∣∣˜hHs,k Θsgs,n 
+
+∣∣∣2
+
++ σ2 
+
+> e
+
+‖Θsgs,n ‖2 (15) and ρs,k represents the asynchronous interference signal power coefficient of the s-th satellite to the k-th TU, which is formulated as [45] 
+
+ρs,k =
+
+(
+
+1 − β
+
+4 + β
+
+4 · cos(2 πτ com  
+
+> s,k
+
+)
+
+)
+
+, (16) where β represents the roll-off factor of the normalized root raised consine function. Thus, the achievable rate Rk evaluated based on the expected SINR under channel estimation errors, which is given by 
+
+Rk = log 2(1 + SINR k). (17) It is evident that the k-th TU’s achievable rate is jointly impacted by the scheduling and metasurface beamforming from the expression of SINR (14). Specifically, the scheduling determines which satellite feed antennas serve each TU, it optimizes the use of strong combined channel gains, thereby boosting the desired signal power. In addition, metasurface directly shapes equivalent channel ˆhequ 
+
+> s,n,k
+
+(t, f c). By concen-trating desired signals onto target TU to enhance signal power and attenuating channel gain for non-target TU to suppress interference, the SINR of TUs are elevated. Given this coor-dinated effect, joint design of scheduling and beamforming is anticipated to effectively enhance the LEO satellite constella-tion communication quality. 
+
+C. Problem Formulation 
+
+In this paper, our target is to maximize the WSR of the TUs by optimizing the beamforming of metasurface and scheduling bewteen the feed antenna and TUs. Therefore, the optimization problem is mathematically formulated as (P1): max 
+
+> Θ,α
+> K
+
+∑
+
+> k=1
+
+βkRk (18a) s.t. | [Θs,s ]l,l | = 1 , ∀s, ∀l, (18b) 
+
+∑
+
+> k
+
+αs,n,k ≤ 1, ∀s, ∀n, (18c) 
+
+∑
+
+> s∈S k
+> Nt
+
+∑
+
+> n=1
+
+αs,n,k = 1 , ∀k, (18d) 
+
+αs,n,k ∈ { 0, 1}, (18e) where βk ∈ [0 , 1] represents the weight coefficient of the 
+
+k-th TU, α = {αs,n,k |∀ s, ∀n, ∀k} represents the set of the scheduling factor, and Θ = {Θs|∀ s} represents the set of 6
+
+the metasurface beamforming. The objective function (18a) denotes the WSR of the TUs. Constraint (18b) denotes the modulus constraint on the reflection coefficients of the meta-surfaces. Constraint (18c) denotes that there is no more than one TU served by each feed antenna. Constraint (18d) denotes that each TU must be served by a feed antenna belonging to one of its visible satellite Sk. Constraint (18e) denotes the 0-1 constraint of the scheduling factor. The problem (P1) constitutes a MINLP problem, which presents significant com-putational challenges due to the non-convex objective function and constraints. To this end, we develop an efficient AO algorithm that yields a feasible suboptimal solution, ultimately improving the communication quality. III. J OINT DESIGN OF SCHEDULING AND BEAMFORMING 
+
+In this section, we focus on the design of a joint scheduling and beamforming algorithm for MA-enabled LEO satellite constellation communications by solving the optimization problem (P1). Firstly, problem (P1) is decomposed into two subproblems, i.e., the scheduling of feed antennas and TUs subproblem and the metasurface beamforming optimization subproblem. Then, the subproblems are solved iteratively until convergence. In particular, the mixed-integer nonlinear scheduling subproblem is solved using a novel MCMF-based algorithm, while the beamforming optimization subproblem is handled through the SDR technique plus penalty-function. In the following, we introduce the detailed algorithms for these two subproblems, respectively. 
+
+A. Scheduling of Feed Antenna and TUs 
+
+With a fixed metasurface beamforming Θ, the scheduling of feed antenna and TUs subproblem can be expressed as (P2): max 
+
+> α
+> K
+
+∑
+
+> k=1
+
+βkRk (19a) s.t. (18c)-(18e) . (19b) The optimal scheduling between feed antennas and TUs con-stitutes a complex combinatorial optimization problem. While exhaustive search could theoretically evaluate all AKSN t possi-ble assignments to identify the global optimum, the factorial growth of solution space renders this brute-force approach computationally intractable for practical system dimensions. Fortunately, it is worth noting that the scheduling problem inherently features a one-to-one matching constraint, where each feed antenna can serve at most one TU at a time, and each TU requires only one feed antenna to meet its communication needs. This constraint aligns well with the core logic of the MCMF problem, which excels at allocating flow between two node sets under strict capacity limits. Further, the scheduling objective of maximizing the WSR can be seamlessly adapted to MCMF by mapping the rate contribution of each feed antenna-TU pair to the negative cost of the corresponding edge in the flow network. Therefore, we develop an efficient polynomial-time solution based on the MCMF algorithm to address scheduling of feed antenna and TUs subproblem. 
+
+1) MCMF Problem: Given a directed flow network G =(V, E, c, w ) where V represents the node set and E denotes the arc set. Each directed edge (vi, v j ) ∈ E has an associated capacity cij ≥ 0 and cost coefficient wij . The MCMF problem aims to find a flow f that maximizes the total flow while minimizing the transportation cost. The mathematical formulation is expressed as: 
+
+min 
+
+> f
+
+∑  
+
+> (vi,v j)∈E
+
+wij f (vi, v j ) (20a) s.t. 0 ≤ f (vi, v j ) ≤ cij , (20b) 
+
+∑  
+
+> vi∈V−vj
+
+f (vi, v j ) = ∑ 
+
+> vj∈E−vi
+
+f (vj , v i), (20c) 
+
+|f | = ∑  
+
+> vi∈V−vs
+
+f (vs, v i) = ∑  
+
+> vj∈V−vt
+
+f (vj , v t). (20d) The above constraints describe the necessary conditions that the feasible flow f must satisfy. The objective function (20a) represents the minimum cost of the flow f , where f (vi, v j )
+
+denotes the traffic passing through edge (vi, v j ). Constraint (20b) states that the flow must respect the capacity of the edge. Constraint (20c) represents the limit of zero traffic storage capacity for any intermediate node within the network. Constraint (20d) denotes that the total outgoing flow from the source vs equals the incoming flow at the sink vt.Based on this, we construct a flow network G(U, V, E ) to model the scheduling problem between feed antennas and TUs, as illustrated in Fig. 2. In this network, each TU is represented by a node uk ∈ U and each feed antenna is denoted by a node 
+
+vj ∈ V . The source node vs is connected to every TU node 
+
+uk with an edge with capacity 1, while all antenna nodes vj
+
+are linked to the sink node vt through edges with capacity 1. For the bipartite connections, directed edges with capacity 1 are established between each TU node uk and its visible feed antenna nodes vj (where vj belongs to the satellites visible to the k-th TU). The resulting flow network directly corresponds to a standard maximum flow problem.   
+
+> Source vs
+> Sink vt
+> Set of TUs Set of feed antenna
+> Fig. 2. Constructed flow network for the scheduling problem
+
+However, it is difficult to define the cost of the directed edges between the TU nodes and the feed antenna nodes 7
+
+and thus translate it into a MCMF problem. The inherent difficulty stems from the interdependent nature of the SINR expression of TUs, where the SINR of the k-th TU depends nonlinearly on both its serving feed antenna and interference from other active feed antennas. In other words, the set of active feed antennas itself is not pre-fixed, this means the sources and magnitudes of interference affecting the k-th TU’s SINR cannot be determined independently of the overall feed antenna selection. To address this, we establish a theoretically rigorous lower bound on the achievable rate, corresponding to the worst-case that all other feed antennas are active and contribute to interference, which is given by 
+
+Rk ≥ ¯Rk = log 2
+
+(
+
+1 + ˜Γk
+
+)
+
+= log 2
+
+
+
+1 + 
+
+∑
+
+> s∈S k
+> Nt
+
+∑
+
+> n=1
+
+αs,n,k ps,n E
+
+[∣∣∣ˆhequ 
+
+> s,n,k
+
+(t)
+
+∣∣∣2]
+
+∑
+
+> s∈S k
+> Nt
+
+∑  
+
+> n=1
+> αs,n,k 6=1
+
+ps,n ρs,k E
+
+[∣∣∣ˆhequ 
+
+> s,n,k
+
+(t)
+
+∣∣∣2]
+
++ σ2
+
+> k
+
+
+
+.
+
+(21) In (21), the lower bound of achievable rate of the k-th TU is solely depends on the scheduling factor αs,n,k of the k-th TU and n-th feed antenna. Thus, we define the edge cost between TU node uk and feed antenna node vj (with j = ( s−1) Nt +n)as −βk ¯Rj,k . Due to channel estimation errors in the com-pensated channel, the achievable rate is lower bounded using the expected SINR, which yields a deterministic metric for scheduling. Accordingly, the scheduling problem is reformu-lated as (P2-1): min 
+
+> α
+> K
+
+∑
+
+> k=1
+
+−βk ¯Rk (22a) s.t. (18c)-(18e) . (22b) Eventually, by solving the MCMF problem in the constructed flow network, we obtain an optimal solution to the optimiza-tion problem (P2-1), which is proved in Theorem 1. The detailed of the MCMF-based scheduling algorithm is provided in Algorithm 1. 
+
+Theorem 1. The MCMF-based scheduling algorithm produces an optimal scheduling of TUs to feed antennas that maximizes the lower bound of the WSR while satisfying all system constraints. Proof. The proof consists of two parts: 1) Equivalence to MCMF Problem: The integral capacities ensure f (uk, v j ) ∈ { 0, 1}, yielding an integral solution. Since the capacity between the source node vs to the TU node uk is 1, we have ∑ 
+
+> j
+
+f (uk, v j ) = 1 , which is equal to the constraint (18c). Additional, the capacity bewteen the feed antenna node vj to the sink node is 1, we have ∑ 
+
+> i
+
+f (uk, v j ) ≤ 1, which is equal to the constraint (18d). Hence, a maximum flow f in the constructed graph corresponds to a feasible solution in problem (P1-1). 2) Optimality Guarantee: The problem (P2-1) necessarily has an optimal solution, corresponding to the MCMF in the constructed network. Suppose there exists a better 
+
+Algorithm 1 MCMF-based Algorithm for Scheduling of feed antenna and TUs 
+
+Input: Flow network G = ( U, V, E, c, w ) with:  
+
+> 1:
+
+U : Set of TUs;  
+
+> 2:
+
+V : Set of feed antennas;  
+
+> 3:
+
+c(u, v ): Edge capacities;  
+
+> 4:
+
+w(u, v ): Edge costs ( −βk ¯Rl,k );  
+
+> 5:
+
+Source vs, sink vt;
+
+Output: Optimal scheduling matrix α; 
+
+> 6:
+
+Initialize:  
+
+> 7:
+
+α ← 0|U|×| V |, f ← 0|E|, total cost ← 0 
+
+> 8:
+
+while true do  
+
+> 9:
+
+Step 1: Build Residual Network Gf : 
+
+> 10:
+
+for (u, v ) ∈ E do  
+
+> 11:
+
+if f (u, v ) < c (u, v ) then  
+
+> 12:
+
+Ef ← Ef ∪ { (u, v )} with wf (u, v ) = w(u, v ); 
+
+> 13:
+
+end if  
+
+> 14:
+
+if f (u, v ) > 0 then  
+
+> 15:
+
+Ef ← Ef ∪ { (v, u )} with wf (v, u ) = −w(u, v ); 
+
+> 16:
+
+end if  
+
+> 17:
+
+end for  
+
+> 18:
+
+Step 2: Find Min-Cost Path via shortest path faster algorithm (SPFA):  
+
+> 19:
+
+p, dist ← SPFA (Gf , v s, v t); {Using shortest path faster algorithm (SPFA) [46] } 
+
+> 20:
+
+if p = ∅ then  
+
+> 21:
+
+Break; {No augmenting path exists. } 
+
+> 22:
+
+end if  
+
+> 23:
+
+Step3: Compute Bottleneck Capacity on path p: 
+
+> 24:
+
+δ ← min {cf (u, v )|(u, v ) ∈ p}; 
+
+> 25:
+
+Step 4: Augment Flow:  
+
+> 26:
+
+for (u, v ) ∈ p do  
+
+> 27:
+
+f (u, v ) ← f (u, v ) + δ; 
+
+> 28:
+
+f (v, u ) ← f (v, u ) − δ; 
+
+> 29:
+
+total cost ← total cost + δ · wf (u, v ); 
+
+> 30:
+
+end for  
+
+> 31:
+
+end while  
+
+> 32:
+
+Step 5: Derive Assignment:  
+
+> 33:
+
+for uk ∈ U, v j ∈ V do  
+
+> 34:
+
+αs,n,k ← I[f (uk, v j ) = 1] , j = ( s − 1) Nt + n; 
+
+> 35:
+
+end for  
+
+> 36:
+
+return α.
+
+solution α∗ with higher lower bound of WSR than the MCMF solution α◦. Then, we can construct a flow f ∗
+
+with f (uk, v j ) = α∗
+
+> s,n,k
+
+, ∀j = ( s − 1) Nt + n. According to the constraint (18c), it would maintian equal total flow 
+
+|f ∗| = K and have lower cost ∑ wk,j f ∗(uk, v j ) <∑ wk,j f ◦(uk, v j ). This contradicts the minimality of α◦
+
+in the MCMF solution. Therefore, the MCMF solution must be optimal for problem (P2-1). 
+
+B. Beamforming Design of Metasurface 
+
+With the obtained scheduling of feed antennas and TUs, we consider the beamforming design of metasurface. In order to 8
+
+maintain consistency in the optimization problem and ensure convergence, the lower bound of WSR is optimized, leading to the following optimization subproblem 
+
+(P3 ) : max 
+
+> Θ
+> K
+
+∑
+
+> k=1
+
+βk ¯Rk (23a) s.t. | [Θs,s ]l,l | = 1 , ∀s, ∀l. (23b) To reduce complexity and transform it into a more tractable form, we adopt a linear receive beamforming strategy by introducing receiver γk for the k-th TU. Then, the mean square error (MSE) of the received signal at the k-th TU can be expressed as 
+
+MSE k = E
+
+[
+
+|γkycom  
+
+> k
+
+− xk|2]
+
+= |γk|2
+
+(
+
+Λk + σ2
+
+> e
+
+∑
+
+> s∈S k
+> Nt
+
+∑
+
+> n=1
+
+p2
+
+> s,n
+
+ρs,k ‖Θsgs,n ‖2
+
+)
+
++ |γkμk − 1|2, (24) where 
+
+μk = ∑
+
+> s∈S k
+> Nt
+
+∑
+
+> n=1
+
+αs,n,k ps,n ˜hHs,k Θsgs,n , (25) and 
+
+Λk = ∑
+
+> s∈S k
+> Nt
+
+∑
+
+> n=1
+
+p2
+
+> s,n
+
+ρs,k 
+
+∣∣∣˜hHs,k Θsgs,n 
+
+∣∣∣2
+
++ σ2
+
+> k
+
+. (26) By computing the derivative of MSE k with respect to γk,we can obtain the optimal MSE when γk = μ∗
+
+> k
+
+(Λ k +
+
+σ2
+
+> e
+
+∑
+
+> s∈S k
+
+∑Nt 
+
+> n=1
+
+p2
+
+> s,n
+
+ρs,k ‖Θsgs,n ‖2)−1, yielding the mini-mum MSE (MMSE) as MMSE k = (1 + ˜Γk)−1 [47]. Con-sequently, the original lower bound of WSR maximization problem (P3) can be equivalently transformed into (P3-1) : min 
+
+> Θ,γ
+> K
+
+∑
+
+> k=1
+
+βk log 2(MSE k) (27) s.t. (23b) .
+
+To further simplify the problem, we introduce auxiliary vari-ables ϑ = [ ϑ1, · · · , ϑ K ] following the WMMSE approach [48], reformulating the problem as (P3-2) : min 
+
+> Θ,ϑ,γ
+> K
+
+∑
+
+> k=1
+
+βk (ϑkMSE k − log 2(ϑk)) (28a) s.t. |ϕs,m | = 1 , ∀s, ∀m. 
+
+The optimal solution for ϑk is obtained by setting the first derivative of (28a) to zero, yielding the closed-form expression 
+
+ϑopt  
+
+> k
+
+= MSE −1 
+
+> k
+
+. Given that the optimization variable Θs takes a matrix form and is coupled within the channel expression, it becomes challenging to handle under the unit modulus constraint. We expand MSE k in terms of ϕs = vec {Θs},which has a form of 
+
+MSE k = |γk|2 ∑
+
+> s∈S k
+> Nt
+
+∑
+
+> n=1
+
+p2
+
+> s,n
+
+ρ2
+
+> s,k
+
+ϕs
+
+(˜fs,n,k ˜f H
+
+> s,n,k
+
++ σ2 
+
+> e
+
+diag (gs,n gH
+
+> s,n
+
+) )
+
+ϕH
+
+> s
+
+− 2ℜ
+
+{
+
+γk
+
+∑
+
+> s∈S k
+> Nt
+
+∑
+
+> n=1
+
+αs,n,k ps,n ρs,k ϕs˜fs,n,k 
+
+}
+
++ |γk|2σ2 
+
+> k
+
++ 1 , (29) where ˜fs,n,k = diag( gs,n )˜hs,k . After obtaining the optimal ϑ
+
+and γ, the problem can be reduced as (P3-3) : min 
+
+> ϕs
+> S
+
+∑
+
+> s=1
+
+ϕsΞsϕH 
+
+> s
+
++ 2 ℜ
+
+{ S∑
+
+> s=1
+
+ϕsηs
+
+}
+
++
+
+> K
+
+∑
+
+> k=1
+
+βkϑk |γk|2 σ2 
+
+> k
+
++ 1 (30a) s.t. |ϕs,l | = 1 , ∀s, ∀l, (30b) where 
+
+Ξs = ∑
+
+> k∈U s
+
+βkϑk|γk|2
+
+> Nt
+
+∑
+
+> n=1
+
+p2
+
+> s,n
+
+ρ2
+
+> s,k
+
+(˜fs,n,k ˜f Hs,n,k 
+
++ σ2 
+
+> e
+
+diag (gs,n gHs,n 
+
+) )
+
+, (31) and 
+
+ηs = ∑
+
+> k∈U s
+
+βkϑkγkNt∑
+
+> n=1
+
+αs,n,k ps,n ρs,k ˜fs,n,k . (32) However, the problem is still not convex due to the non-convex unit-modulus constraints. To address it, we employ the SDR technique with penalty function methods [49]. First, we introduce the augmented vector ¯ϕs = [ ϕs, 1] ∈ C(L+1) ×1
+
+and construct the extended matrix 
+
+Ψs =
+
+[Ξs ηs
+
+ηH 
+
+> s
+
+0
+
+]
+
+. (33) By this way, the objective function (30a) can be rewritten as 
+
+min 
+
+> ¯ϕs
+> S
+
+∑
+
+> s=1
+
+¯ϕsΨs ¯ϕH 
+
+> s
+
+. (34) Through SDR technique, we define the rank-one positive semidefinite matrix Φs = ¯ϕH 
+
+> s
+
+¯ϕs, transforming the problem (P3-2) into (P3-4) : min 
+
+> Φs
+> S
+
+∑
+
+> s=1
+
+tr {ΦsΨs} (35a) s.t. [Φs]l,l = 1 , ∀s, l, (35b) Rank (Φs) = 1 , ∀s, (35c) 
+
+Φs  0, ∀s. (35d) Usually, after removing the rank-one constraint, this probelm can be efficiently solved using standard convex optimization tools, followed by a Gauss randomization procedure to extract feasible solutions satisfying the unit-modulus constraints [49]. However, this approach may lead to performance degradation, as the relaxation of the rank-one constraint and subsequent randomization procedure do not guarantee optimality. There-fore, we employ a penalty-based iterative approach to address 9
+
+the rank-one constraint [50], leading to the final relaxed formulation (P3-5) : min 
+
+> Φs
+> S
+
+∑
+
+> s=1
+
+tr {ΦisΨs} + ρi ∣∣(ϕ′
+
+> s
+
+)iΦis(ϕ′
+
+> s
+
+)i − L∣∣ (36) s.t. (35b ), (35d ), (37) where ρi > 0 is the penalty coefficient and ¯ϕ′is denotes the eigenvector corresponding to the largest eigenvalue of 
+
+Φi−1 
+
+> s
+
+obtained after the (i − 1) -th iteration. In particular, an appropriate penalty factor must be selected to balance convergence speed and constraint adherence. To address this, we employ a residual-based adaptive penalty function as 
+
+ρi = ρi−1 + C × |ϕ′
+
+> s
+
+Φsϕ′ 
+
+> s
+
+− L − 1|
+
+ǫ , (38) where ǫ and C are tolerance threshold and weighting co-efficient, respectively. By iteratively solving the penalized problem and adaptively updating the penalty factor until con-vergence, we can obtain the optimal metasurface beamforming 
+
+Θ under the given receiver γ and auxiliary variables ϑ. Then, by further alternately updating the optimal receiver γ, auxiliary variables ϑ, and Θ, we can ultimately obtain the optimal metasurface beamforming solution under the given scheduling. Finally, by alternatingly optimizing scheduling α and beam-forming Θ, fixing one and optimizing the other, we can obtain the joint scheduling and beamforming results for LEO satellite constellation communication. The detailed steps are shown in Algorithm 2. 
+
+C. Algorithm Analysis 
+
+Herein, we analyze the proposed algorithm from the per-spectives of convergence behavior and computational com-plexity. 
+
+1) Convergence Analysis: In Algorithm 2, the optimal solutions of scheduling and beamforming are achieved by iteratively optimizing α and Θ. Let f (αj , Θj ) denote the lower bound of WSR with the obtained αj and Θj after the 
+
+j-th iteration. After obtaining αj+1 by conducting Algorithm 1, we have 
+
+f (αj+1 , Θj ) ≥ f (αj , Θj ). (39) Similarly, after obtaining Θj+1 by conducting steps 5-20 in Algorithm 2, we have 
+
+f (αj+1 , Θj+1 ) ≥ f (αj+1 , Θj ). (40) Finally, with the inequalities (39) and (40), we can get 
+
+f (αj+1 , Θj+1 ) ≥ f (αj , Θj ). (41) The inequality (41) establishes that the lower bound of WSR exhibits a non-decreasing property across successive iterations. Furthermore, the WSR is inherently bounded above due to the finite transmit power constraints. Consequently, the algorithm is guaranteed to converge to a fixed point of the surrogate problem [51]. It is note that this convergence guarantee does not extend to a stationary point of the original MINLP, which is consistent with standard AO-based approaches for mixed-integer non-convex optimization. 
+
+Algorithm 2 Joint Scheduling and Beamforming Design 
+
+Input: ˆhs,k , gs,n , Nt, L, K, σ 2
+
+> k
+
+, Sk;
+
+Output: Θ, α; 
+
+> 1:
+
+Initialization: Randomly generate Θ0 = diag (ϕ(0) ). 
+
+> 2:
+
+repeat  
+
+> 3:
+
+Update scheduling of feed antenna and TUs αj using Algorithm 1;  
+
+> 4:
+
+Set iteration counter l = 0 and OBJ 0 = 0 for the beamforming optimization of metasurface;  
+
+> 5:
+
+repeat  
+
+> 6:
+
+Compute μ(l) 
+
+> k
+
+and Λ(l) 
+
+> k
+
+using (25) and (26);  
+
+> 7:
+
+Update γ(l) 
+
+> k
+
+= ( μ(l) 
+
+> k
+
+)/(Λ (l) 
+
+> k
+
+); 
+
+> 8:
+
+Update ϑ(l) 
+
+> k
+
+= 1 /MSE (l) 
+
+> k
+
+; 
+
+> 9:
+
+Compute Ξ(l) 
+
+> s
+
+and η(l) 
+
+> s
+
+using (31) and (32);  
+
+> 10:
+
+Construct extended matrix Ψ(l) 
+
+> s
+
+as (33);  
+
+> 11:
+
+repeat  
+
+> 12:
+
+Solve penalized SDP problem (36) for Φ(i) 
+
+> s
+
+; 
+
+> 13:
+
+Perform eigen decomposition on Φ(i) 
+
+> s
+
+, extract prin-cipal eigenvector ¯ϕ′(i) 
+
+> s
+
+; 
+
+> 14:
+
+Update penalty coefficient ρi+1 according to (38);  
+
+> 15:
+
+until convergence.  
+
+> 16:
+
+Extract ϕ(l+1)  
+
+> s
+
+as first L elements of √L + 1 ¯ϕ′(i) 
+
+> s
+
+; 
+
+> 17:
+
+Calculate OBJ l+1 = ∑Kk=1 βk ¯Rk and calculate ∆ = 
+
+OBJ l+1 − OBJ l; 
+
+> 18:
+
+l = l + 1 ; 
+
+> 19:
+
+until ∆ < ǫ or l > L . 
+
+> 20:
+
+Updata Θj with ϕ(l+1)  
+
+> s
+
+from the step 17;  
+
+> 21:
+
+until convergence. 
+
+2) Complexity Analysis: Further, we analyze the com-plexity of the proposed Algorithm 2, which includes the MCMF-based Algorithm 1 and the beamforming design. For the MCMF-based Algorithm 1, it exhibits polynomial-time complexity. As illustrated in Fig. 2, the network contains 
+
+K + SN t nodes and ∑Kk=1 |S k|Nt directed edges connecting TUs to their visible feed antennas. Each flow augmentation saturates at least one unit of capacity, and the maximum 
+
+K augmentations are required. The dominant complexity comes from the shortest path faster algorithm (SPFA) used in Step 2 of the Algorithm 1 to find the shortest path is 
+
+O(( K +SN t)( ∑Kk=1 |S k|Nt)) per minimum-cost path compu-tation. So the overall complexity of Algorithm 1 is O(K(K +
+
+SN t)( ∑Kk=1 |S k |Nt)) [46]. The complexity of beamforming design primarily arises from solving the problem (P3-4), which is imposed by S(L + 1) LMI constraints of size 1 and S LMI constraints of size L + 1 . Based on the complexity analysis in [52] for the SDP by the interior-point method, the complex-ity of beamforming per iteration is O(√3S(L + 1)( S(L +1) 2(L + 2) + S(L + 1)) ln(1 /ǫ )) , where the ǫ > 0 is the desired convergence accuracy. Overall, the complexity of the proposed Algorithm 2 is O(IO (( √3S(L + 1)( S(L + 1) 2(L +2)+ S(L+1)) ln(1 /ǫ ))+( K +SN t)( ∑Kk=1 |S k|Nt))) with IO
+
+denotes the outer loop times of the alternating optimization of scheduling and beamforming. It is worth noting that the SDR-based metasurface beamforming subproblem, which exhibits 10                
+
+> TABLE I PARAMETERS OF LEO S ATELLITE CONSTELLATION
+> Parameter Value
+> Orbital altitude hO550km
+> Number of orbital planes N#36
+> Number of LEO satellites per orbital plane P#22
+> Orbital inclination 53 ◦
+> Minimum elevation angle of TUs θmin 10 ◦
+> Phase factor 1
+
+cubic complexity O(L3), is not intended for real-time onboard execution. Instead, this optimization is performed offline or on a slow time scale corresponding to satellite geometry updates or significant changes in user distribution. In contrast, the online onboard processing is limited to the polynomial-complexity MCMF-based scheduling and lightweight phase selection operations, which are well suited for space-grade processors. IV. S IMULATION RESULT 
+
+In this section, we evaluate the performance of the pro-posed joing scheduling and beamforming design algorithm for metasurface antenna enabled LEO satellite constellation communication. Without loss of generatity, we adopt the Walker delta constellation for simulation, the detailed con-figuration of which is listed in Table I [53]. Then, we select three adjacent satellites to form a group providing services for the ground TUs. It is assumed that the relative geometry and ISL connectivity within the satellite cluster remain quasi-static over each optimization window, since orbital motion is smooth and predictable [54]. As a result, topology changes and handovers occur on a slower time scale than resource allocation and beamforming optimization, which enables the proposed framework to operate under a locally stable cluster topology during each optimization period. In particular, the initial position of the LEO satel-lites are given by qsat  
+
+> 1
+
+= 10 5 × [−4.0426 , 60 .887 , 5.5235] ,
+
+qsat  
+
+> 2
+
+= 10 5 × [−1.5338 , 64 .153 , 2.0957] and qsat  
+
+> 3
+
+= 10 5 ×
+
+[−1.6248 , 68 .527 , 5.9641] within the Earth-centered Earth-fixed (ECEF) coordinate system, respectively. The coverage angle of satellite can be computed as η = arccos( Re/(Re +
+
+hO) cos θmin − θmin ) with hO and θmin being the altitude of satellite orbit and minimum elevation angle of TUs, respec-tively. The total number of TUs is set to K = 30 , which are divided into three equal groups. Each group of 10 TUs is randomly and uniformly distributed within the coverage area of one of the three satellites. Then, the relative angle bewteen the k-th TU position angle and the s-th satellite position angle can be computed as ϕs,k = arccos( quk ·qsat    
+
+> s
+> ‖quk‖·‖ qsat
+> s‖
+
+) where qu
+
+> k
+
+represents the coordinate of the k-th TU. By this way, it is easy to obtain the set of covering TUs Us of the s-th satellite, i.e., ϕs,k ≤ η for the TUs belong to set Us. Unless other stated, the parameters of LEO SATCOM system are listed in Table II. First, Fig. 3 demonstrates the convergence behaviour of the proposed Algorithm 2. It can be observed that the optimized WSR lower bound closely matches the actual WSR, and both curves exhibit nearly identical convergence behavior,                                                    
+
+> TABLE II PARAMETER SETUP OF LEO S ATELLITE CONSTELLATION SYSTEM
+> Parameter Value
+> Carrier frequency fc30 GHz
+> Spectrum bandwidth B25 MHz
+> Number of LEO satellites in a group S3
+> Number of feed antennas Nt13
+> Transmit power budget of feed antenna Ps,n 30 dBm
+> Total number of TUs s K s30
+> Number of elements of metasurface Lx×Ly20 ×20
+> Area of each meta-atom At25 mm 2
+> Inter element spacing of metasurface 5 mm
+> Noise temperature T290 K
+> Boltzmann constant κ1.38 ×10 −23 J/m
+> Rain attenuation mean μr-2.6 dB
+> Rain attenuation variance σ2
+> r1.63 dB
+> Angular deviations δs,k,p , ξ s,k,p N(0 ,0.01) ◦
+> Maximum iteration number Tmax 30
+> Channel error variance σ2
+> e1/SNR
+> 0510 15 20 25 30
+> Iteration number
+> 020 40 60 80 100 120
+> WSR (bps/Hz)
+> Real value (40 dB)
+> Lower bound (40 dB)
+> Real value (30 dB)
+> Lower bound (30 dB)
+> Real value (20 dB)
+> Lower bound (20 dB)
+> Fig. 3. Convergence behaviour of the proposed Algorithm 2.
+
+converging within 30 iterations under different feed antenna transmit power settings. In particular, due to the slow variation of large-scale channel characteristics in LEO systems and the robustness provided by the CSI error model, the proposed optimization is executed on a coarse time scale and does not require per-slot real-time updates. The results confirm the rapid convergence of the proposed joint scheduling and beamforming algorithm, demonstrating its applicability in real-world LEO satellite communications. Next, we evaluate the WSR performance versus the total transmit power of the feed antenna, comparing our proposed Algorithm 2 against three benchmark schemes: (i) random scheduling of feed antennas and TUs, (ii) metasurface op-timization using Gaussian randomization to handle rank-one constraints, and (iii) hybrid precoding system with Nt = 13 
+
+RF chains and 10 × 10 uniform planar array (UPA) anten-nas. The results demonstrate that the proposed scheduling algorithm achieves substantial gains over random scheduling, while significantly outperforming the Gaussian randomization scheme for metasurface optimization. This improvement is expected because, unlike the Gauss randomization scheme, the proposed algorithm optimizes the metasurface without relaxing 11       
+
+> 20 24 28 32 36 40
+> Total transmit power (dBm)
+> 020 40 60 80 100 120
+> WSR (bps/Hz)
+> Real WSR
+> Proposed Algorithm 2
+> Random scheduling
+> Gauss randomization
+> Hybrid precoding
+> Fig. 4. WSR versus the transmit power of antenna.
+
+the constraints. Notably, the proposed algorithm consistently outperforms the hybrid beamforming benchmark under iden-tical channel and power constraints, and its performance advantage stems from the additional spatial degrees of freedom introduced by the metasurface architecture. Furthermore, this gain can be progressively enhanced by increasing the number of low-cost passive meta-atoms, enabling scalable performance improvement without the need for additional RF chains or active transceiver hardware.        
+
+> 21 24 27 30 33 36 39
+> Number of TUs
+> 20 30 40 50 60 70
+> WSR (bps/Hz)
+> Real WSR
+> Proposed Algorithm 2
+> Random scheduling
+> Gauss randomization
+> Hybrid precoding
+> Fig. 5. WSR versus the number of TUs.
+
+In Fig. 5, we show the WSR performance under different numbers of TUs. The results reveal that as the number of TUs increases, the gap between the optimized lower bound of WSR and the real WSR gradually narrows, eventually converging to identical values. This convergence phenomenon occurs because a larger number of active TUs leads to full utilization of the available feed antennas, making the interference pattern in the optimized lower bound approximation increasingly representative of the real system conditions. Consequently, the theoretical lower bound becomes an accurate predictor of the achievable WSR when all feed antennas are actively engaged in transmission. Additionally, the proposed algorithm consistently demonstrates performance gains over benchmark schemes across various numbers of TUs. Notably, it maintains superior spectral efficiency even in fully loaded scenarios where the number of TUs equals the number of feed antennas, outperforming conventional hybrid precoding. This advantage stems from the algorithm’s joint optimization of scheduling and beamforming, which more effectively mitigates inter-user interference. Furthermore, the interference suppression en-abled by the metasurface architecture contributes to its robust performance, particularly in interference-dominated regimes.        
+
+> 100 121 144 169 196 225 256
+> Number of elements in metasurface
+> 30 50 70 90 110 130 150 170 190
+> WSR (bps/Hz)
+> Real WSR
+> Proposed Algorithm 2
+> Random scheduling
+> Gauss randomization
+> Hybrid precoding
+> Fig. 6. WSR versus the number of elements in metasurface.
+
+Fig. 6 illustrates the WSR performance versus the number of metasurface elements. The results demonstrate that all schemes exhibit improved WSR as the number of elements increases, while the rate of improvement slows down gradually. This nonlinear growth pattern occurs because when the metasurface contains few elements, adding more elements provides dual benefits. The enhanced signal power stems from improved beamforming gain, while superior interference suppression is achieved through more precise spatial filtering. However, once the number of elements reaches a sufficient level, typically around the spatial degrees of freedom required by the system, the marginal improvement primarily comes from additional power gain, while the interference management capability approaches its theoretical limit. This explains why the WSR growth rate gradually slows as the metasurface size increases beyond this critical point. For the considered user density and channel conditions, the results in Fig. 6 indicate that the performance saturation appears when the number of metasur-face elements becomes sufficiently larger than the number of simultaneously active TUs. This provides a practical design guideline for hardware deployment, suggesting that excessive over-provisioning of metasurface elements may lead to limited performance benefits while significantly increasing hardware complexity and system cost. Then, Fig. 7 illustrates the impact of the number of co-operating satellites on the achievable WSR under different maximum transmit power constraints. As the cooperative cluster expands, the WSR increases in a quasi-linear manner. 12             
+
+> 123456789
+> Number of cooperating satellites (S)
+> 050 100 150 200 250 300
+> WSR (bps/Hz)
+> Pmax n= 40 dBm
+> Pmax n= 30 dBm
+> Pmax n= 20 dBm
+> Fig. 7. WSR versus the number of cooperating satellites.
+
+This behavior reflects the combined effect of enhanced spatial degrees of freedom and distributed transmission capability enabled by multi-satellite cooperation. By leveraging coor-dinated beamforming across multiple satellites, co-channel interference is progressively suppressed, leading to more efficient spatial resource utilization and improved spectral efficiency. Meanwhile, the distributed nature of the cooperative architecture enables performance gains through both power aggregation and spatial diversity rather than relying solely on power scaling. Moreover, the results confirm the scalability of the proposed framework for large cooperative clusters. Even when the number of cooperating satellites increases to nine, the system maintains stable and consistent performance improvements.        
+
+> 500 750 1000 1250 1500 1750 2000
+> Satellite altitude (km)
+> 40 50 60 70 80 90
+> WSR (bps/Hz)
+> S = 4
+> S = 3
+> S = 2
+> Fig. 8. WSR versus the altitude of satellites.
+
+Fig. 8 illustrates the impact of satellite orbit altitude on WSR performance under varying numbers of cooperating satellites. As observed, the WSR deteriorates with increasing orbital altitude, primarily due to higher propagation path loss. This finding aligns with existing research advocating for very low Earth orbit (VLEO) satellite constellations, which mitigate path loss by operating at significantly reduced altitudes [55]. Furthermore, the results demonstrate that a greater number of cooperating satellites enhances the overall system perfor-mance, highlighting the benefits of multi-satellite collaboration in mitigating channel impairments.               
+
+> 12 14 16 18 20 22 24 26 28 30 32
+> Number of satellites per orbit (P #)
+> 64 68 72 76 80 84
+> WSR (bps/Hz)
+> P#= 24
+> P#= 36
+> P#= 48
+> Fig. 9. WSR versus the density of the LEO satellite constellation.
+
+Finally, Fig. 9 demonstrates the variation in system perfor-mance in terms of WSR with different satellite densities. It can be observed that when the number of orbits is N # = 24 ,the WSR initially increases but then decreases as the number of satellites per orbit grows. For a larger number of satellite orbits ( N # = 36 and N # = 48 ), the WSR shows amore significant decline with increasing satellite density. This behavior stems from competing effects that additional satellites improve user access to the nearest visible satellite, and thus enhance link quality at lower densities. However, beyond a certain point, further increment in satellite density leads to stronger inter-satellite interference. In addition, higher density increases deployment costs and collision risks. These results highlight the critical need to balance spectral efficiency with practical considerations of cost and operational safety in LEO constellation design. V. C ONCLUSION 
+
+This paper established a novel MA-enabled LEO satellite constellations communication framework. By shifting beam-forming operations from the digital domain to EM wavefront manipulation, we realized hardware-efficient signal process-ing while mitigating interference in satellite constellation networks. The proposed joint scheduling and beamforming algorithm, which synthesizes graph-based scheduling design and convex-relaxed phase shift design, resolved the com-plex optimization design problem with tractable computa-tional overhead. Extensive simulations confirmed substantial improvements compared with the existing benchmarks. Fu-ture extensions of this framework may incorporate learning-based surrogate models to enable ultra-low-latency metasur-face beamforming. Furthermore, the proposed metasurface-enabled LEO satellite framework exhibits strong potential for integration with energy-efficient software-defined 5G/6G 13 
+
+multimedia IoV systems, facilitating its incorporation into integrated space–air–ground networks and further enhancing scalability, real-time adaptability, and practical applicabil-ity. In particular, LEO satellite constellations can provide seamless coverage extension and high-throughput connectiv-ity for vehicular services in remote or infrastructure-scarce environments, while the leader-satellite architecture naturally aligns with software-defined networking paradigms for cross-layer resource orchestration. The inherent energy efficiency of metasurface-based beamforming further supports sustainable and reliable multimedia vehicular communications, enabling the development of future integrated space–air–ground IoV networks. REFERENCES [1] J. Chu and X. Chen, “Robust design for integrated satellite-terrestrial internet of things,” IEEE Internet Things J. , vol. 8, no. 11, pp. 9072-9083, Jun. 2021. [2] O. Kodheli, E. Lagunas, N. Maturo, S. K. Sharma, B. Shankar, J. F. M. Montoya, J. C. M. Duncan, D. Spano, S. Chatzinotas, S. Kisseleff, J. Querol, L. Lei, T. X. Vu, and G. Goussetis, “Satellite communications in the new space era: A survey and future challenges,” IEEE Commun. Surveys Tuts. , vol. 23, no. 1, pp. 70-109, Oct. 2021. [3] Z. M. Kassas, S. Kozhaya, H. Kanj, J. Saroufim, S. W. Hayek, M. Neinavaie, N. Khairallah, and J. Khalife, “Navigation with multi-constellation LEO satellite signals of opportunity: Starlink, OneWeb, Orbcomm, and Iridium,” in Proc. IEEE/ION Position, Locat. Navig. Symp. , 2023, pp. 338-343. [4] K. Xiong, X. Chen, and M. Ying, “Robust beamforming design for integrated satellite-terrestrial maritime communications in the presence of wave fluctuation,” IEEE Internet Things J. , vol. 11, no. 21, pp. 35568-35579, Nov. 2024. [5] M. Ying, X. Chen, and X. Shao, “Exploiting tensor-based Bayesian learning for massive grant-Free random access in LEO satellite Internet of Things,” IEEE Trans. Commun. , vol. 71, no. 2, pp. 1141-1152, Feb. 2023. [6] W. Yao, X. Chen, and Q. Wang, “Joint beamforming design for reconfigurable intelligent surface-assisted LEO satellite constellation communication,” J. Commun. Inf. Networks , vol. 10, no. 3, pp. 254-267, Sept. 2025. [7] Z. Xiang, X. Gao, K. -X. Li, and X. -G. Xia, “Massive MIMO downlink transmission for multiple LEO satellite communication,” IEEE Trans. Commun. , vol. 72, no. 6, pp. 3352-3364, June 2024. [8] D. -H. Jung, G. Im, J. -G. Ryu, S. Park, H. Yu, and J. Choi, “Satellite clustering for non-terrestrial networks: Concept, architectures, and applications,” IEEE Veh. Technol. Mag. , vol. 18, no. 3, pp. 29-37, Sept. 2023. [9] A. Montazerolghaem, “Energy-efficient software-defined 5G/6G multi-media IoV: PID controller-based approach,” IEEE Trans. Veh. Technol. ,early access, doi: 10.1109/TVT.2025. 3649936, 2025. [10] X. Zhang, S. Sun, M. Tao, Q. Huang, and X. Tang, “Multi-satellite cooperative networks: Joint hybrid beamforming and user scheduling design,” IEEE Trans. Wireless Commun. , vol. 23, no. 7, pp. 7938-7952, Jul. 2024. [11] J. J. Sadique, I. Nasim, and A. S. Ibrahim, “Link scheduling in satellite networks via machine learning over Riemannian manifolds,” IEEE Open J. Commun. Soc. , vol. 6, pp. 972-985, Jan. 2025. [12] M. Ying, X. Chen, Q. Qi, and W. Gerstacker, “Deep learning-based joint channel prediction and multibeam precoding for LEO satellite internet of things,” IEEE Trans. Wireless Commun. , vol. 23, no. 10, pp. 13946-13960, Oct. 2024. [13] J. An, C. Xu, L. Gan, and L. Hanzo, “Low-complexity channel estimation and passive beamforming for RIS-assisted MIMO systems relying on discrete phase shifts,” IEEE Trans. Commun. , vol. 70, no. 2, pp. 1245-1260, Feb. 2022. [14] W. Yao, X. Chen, Q. Wang, and X. Peng, “Design of RIS-UAV-assisted LEO satellite constellation communication,” IEEE Trans. Commun. ,vol. 73, no. 12, pp. 15656-15671, Dec. 2025. [15] M. Ying, X. Chen, Q. Qi, and Z. Zhang, “QoS-driven satellite con-stellation design for LEO satellite Internet of Things,” IEEE Trans. Wireless Commun. , vol. 25, pp. 3610-3625, 2026. [16] M. Di Renzo, A. Zappone, M. Debbah, M. -S. Alouini, C. Yuen, J. de Rosny, and S. Tretyakov, “Smart radio environments empowered by reconfigurable intelligent surfaces: How it Works, state of research, and the road ahead”, IEEE J. Sel. Areas Commun. vol. 38, no. 11, pp. 2450-2525, Nov. 2020. [17] C. Kim, W. Saad, and M. Jung, “Performance analysis of RIS-Aided multibeam satellite communication systems,” IEEE Trans. Aerosp. Electron. Syst. , vol. 60, no. 6, pp. 9383-9393, Dec. 2024. [18] G. Kim, H. Kim, N. Ha, J. Cho, K. Park, and S. Kim, “Theoretical analysis and design of metasurface antennas for wide beamwidth and dual circularly polarized high gain,” IEEE Trans. Antennas Propag. ,vol. 73, no. 8, pp. 5154-5165, Aug. 2025. [19] Z. Patel, A. Saravaiya, and V. Dwivedi, “Novel design of metamaterial inspired substrate for compact dual band stacked patch antenna,” in 
+
+Proc. IEEE Int. Conf. Electr., Electron., Commun. Comput. , 2023, pp. 1-6. [20] B. Li, W. Chen, Z. Li, Q. Wu, N. Cheng, C. Li, and L. Dai, “Ro-bust weighted sum-rate maximization for transmissive RIS transmitter enabled RSMA networks,” IEEE Commun. Lett. , vol. 27, no. 10, pp. 2847-2851, Oct. 2023. [21] W. Tang, X. Li, J. Y. Dai, S. Jin, Y. Zeng, Q. Cheng, and T. J. Cui, “Wireless communications with programmable metasurface: Transceiver design and experimental results,” China Commun. , vol. 16, no. 5, pp. 46-61, May 2019. [22] L. Dai, B. Wang, M. Wang, X. Yang, J. Tan, S. Bi, S. Xu, F. Yang, Z. Chen, M. D. Renzo, C. -B. Chae, and L. Hanzo, “Reconfigurable intelligent surface-based wireless communications: Antenna design, prototyping, and experimental results,” IEEE Access , vol. 8, pp. 45913-45923, Mar. 2020. [23] W. Tang, M. Z. Chen, X. Chen, J. Y. Dai, Y. Han, M. Di Renzo, Y. Zeng, S. Jin, Q. Cheng, and T. J. Cui, “Wireless communications with reconfigurable intelligent surface: Path loss modeling and experimental measurement,” IEEE Trans. Wireless Commun. , vol. 20, no. 1, pp. 421-439, Jan. 2021. [24] J. Hyeon Park, S. Hyun Kim, M. Miftahul Amri, N. Minh Tran, D. In Kim, and K. W. Choi, “Uplink MIMO communications with RIS-integrated base station: Modeling and experiments,” IEEE Internet Things J. , vol. 12, no. 10, pp. 14150-14171, May 2025. [25] H. Niu, X. Lei, J. An, L. Zhang, and C. Yuen, “On the efficient design of stacked intelligent metasurfaces for secure SISO transmission,” IEEE Trans. Inf. Forensics Secur. , vol. 20, pp. 60-70, Nov. 2025. [26] S. Lin, J. An, L. Gan, M. Debbah, and C. Yuen, “Stacked intelligent metasurface enabled LEO satellite communications relying on statisti-cal CSI,” IEEE Wireless Commun. Lett. , vol. 13, no. 5, pp. 1295-1299, May 2024. [27] A. H. Khan, Z. Hussain, and N. U. Hassan, “Stacked intelligent metasurfaces-assisted satellite-to-ground communication: A path loss perspective,” in Proc. Int. Conf. Microw., Antennas Circuits , 2025, pp. 1-4. [28] Q. Li, M. El-Hajjar, I. Hemadeh, A. Shojaeifard, and L. Hanzo, “Low-overhead channel estimation for RIS-Aided multi-cell networks in the presence of phase quantization errors,” IEEE Trans. Veh. Technol. , vol. 73, no. 5, pp. 6626-6641, May 2024. [29] Z. Peng, Z. Chen, C. Pan, G. Zhou, and H. Ren, “Robust transmission design for RIS-aided communications with both transceiver hardware impairments and imperfect CSI,” IEEE Wireless Commun. Lett. , vol. 11, no. 3, pp. 528-532, Mar. 2022. [30] Q. Li, M. El-Hajjar, and L. Hanzo, “Ergodic spectral efficiency analysis of intelligent omni-surface aided systems suffering from imperfect CSI and hardware impairments,” IEEE Trans. Commun. , vol. 72, no. 8, pp. 5073-5086, Aug. 2024. [31] Y. Liu, E. Liu and R. Wang, “Energy efficiency analysis of intelligent reflecting surface system with hardware impairments,” in Proc. IEEE Global Commun. Conf. (GLOBECOM) , pp. 1-6, 2020. [32] M. Ying, X. Chen, Q. Qi, and Z. Zhang, “QoS-driven satellite con-stellation design for LEO satellite Internet of Things,” IEEE Trans. Wireless Commun. , vol. 25, pp. 3610–3625, 2026. [33] Q. Wu and R. Zhang, “Towards smart and reconfigurable environment: Intelligent reflecting surface aided wireless network,” IEEE Commun. Mag. , vol. 58, no. 1, pp. 106-112, Jan. 2020. [34] X. Lin, Y. Rivenson, N.T. Yardimci, M. Veli, Y. Luo, M. Jarrahi, and A. Ozcan, “All-optical machine learning using diffractive deep neural networks,” Science , vol. 361, no. 6406, pp. 1004-1008, 2018. [35] J. An, C. Xu, D. W. K. Ng, G. C. Alexandropoulos, C. Huang, C. Yuen, and L. Hanzo, “Stacked intelligent metasurfaces for efficient holographic MIMO communications in 6G,” IEEE J. Sel. Areas Com-mun. , vol. 41, no. 8, pp. 2380-2396, Aug. 2023. 14 
+
+[36] C. Lin, X. Chen, and Z. Zhang, “Exploiting on-orbit characteristics for joint parameter and channel tracking in LEO satellite communications,” 
+
+IEEE Trans. Wireless Commun. , vol. 23, no. 12, pp. 19789-19803, Dec. 2024. [37] F. P. Fontan, M. Vazquez-Castro, C. E. Cabado, J. P. Garcia, and E. Kubista, “Statistical modeling of the LMS channel,” IEEE Trans. Veh. Technol. , vol. 50, no. 6, pp. 1549-1567, Nov. 2001. [38] B. R. Vojcic, R. L. Pickholtz, and L. B. Milstein, “Performance of DS-CDMA with imperfect power control operating over a low earth orbiting satellite link,” IEEE J. Sel. Areas Commun. , vol. 12, no. 4, pp. 560-567, May 1994. [39] Technical Specification Group Radio Access Network; Study on New Radio (NR) To Support Non-terrestrial Networks , document TR 38.811, v15.4.0, 3GPP, Sep. 2020. [40] H. Zhang, X. Miao, Z. Ni, S. Wang, G. Pan, C. Cavdar, and J. An, “LEO mega-constellation-terrestrial communications suffering Poisson arc hardcore distributed space interference,” IEEE Trans. Wireless Commun. , vol. 24, no. 4, pp. 2707-2721, Apr. 2025. [41] R. Wang, P. Ren, D. Xu, and L. Lu, “Stochastic geometry analysis of LEO constellation coverage under atmospheric attenuation,” in Proc. IEEE Veh Technol Conf. , 2022, pp. 1-5. [42] Taesang Yoo and A. Goldsmith, “Capacity and power allocation for fading MIMO channels with channel estimation error,” IEEE Trans. Inf. Theory , vol. 52, no. 5, pp. 2203-2214, May 2006. [43] Technical Specification Group Services and System Aspects; Release 17 Description; Summary of Rel-17 Work Items (Release 17), document TR 21.917, v17.0.1, 3GPP, 2023. [44] M. Zhao, N. Ye, Q. Ouyang, Y. Jin, Y. Jin, and L. Zhao, “Multi-satellite cooperative communication: Exploiting time asynchrony in non-orthogonal transmissions,” IEEE Trans. Veh. Technol. , vol. 72, no. 5, pp. 6868-6873, May 2023. [45] X. Chen and Z. Luo, “Asynchronous interference mitigation for LEO multi-satellite cooperative systems,” IEEE Trans. Wireless Commun. ,vol. 23, no. 10, pp. 14956-14971, Oct. 2024. [46] H. Zhang, X. Liu, and L. Xiang, “Improved SPFA algorithm based on cell-like P system,” in Proc. - Int. Conf. Inf. Technol. Med. Educ. ,2019, pp. 679-683. [47] Y. J. Tolossa and G. Abreu, ”Robust weighted sum-rate maximization over full-duplex multi-user MIMO systems under imperfect CSIT,” in 
+
+Proc. Int. Symp. Wirel. Commun. Syst. 2016, pp. 471-475. [48] Q. Shi, M. Razaviyayn, Z. -Q. Luo, and C. He, “An iteratively weighted MMSE approach to distributed sum-utility maximization for a MIMO interfering broadcast channel,” IEEE Trans. Signal Process. , vol. 59, no. 9, pp. 4331-4340, Sept. 2011. [49] Q. Wu and R. Zhang, “Intelligent reflecting surface enhanced wireless network via joint active and passive beamforming,” IEEE Trans. Wireless Commun. , vol. 18, no. 11, pp. 5394-5409, Nov. 2019. [50] Q. Wang, X. Chen, Q. Qi, M. Li, and W. Gerstacker, “Multiple-satellite cooperative information communication and location sensing in LEO satellite constellations,” IEEE Trans. Wireless Commun. , vol. 24, no. 4, pp. 3346-3361, Apr. 2025. [51] J. C. Bezdek and R. J. Hathaway, “Convergence of alternating opti-mization,” Neural, Parallel Sci. Comput. , vol. 11, no. 4, pp. 351-368, Dec. 2003. [52] K. -Y. Wang, A. M. -C. So, T. -H. Chang, W. -K. Ma, and C. -Y. Chi, “Outage constrained robust transmit optimization for multiuser MISO downlinks: Tractable approximations by conic optimization,” 
+
+IEEE Trans. Signal Process. , vol. 62, no. 21, pp. 5690-5705, Nov. 2014. [53] R. Deng, B. Di, H. Zhang, L. Kuang, and L. Song, “Ultra-dense LEO satellite constellations: How many LEO satellites do we need?,” IEEE Trans. Wireless Commun. , vol. 20, no. 8, pp. 4843-4857, Aug. 2021. [54] Z. M. Bakhsh, Y. Omid, G. Chen, F. Kayhan, Y. Ma, and R. Tafazolli, ”Multi-satellite MIMO systems for direct satellite-to-device communi-cations: A survey,” IEEE Commun. Surv. Tutorials , vol. 27, no. 3, pp. 1536-1564, June 2025. [55] G. Chen, S. Wu, Y. Deng, J. Jiao, and Q. Zhang, “VLEO satellite constellation design for regional aviation and marine coverage,” IEEE Trans. Network Sci. Eng. , vol. 11, no. 1, pp. 1188-1201, Jan. 2024.

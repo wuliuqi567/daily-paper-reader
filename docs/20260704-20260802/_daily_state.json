@@ -1,0 +1,265 @@
+{
+  "date": "20260704-20260802",
+  "date_label": "2026-07-04 ~ 2026-08-02",
+  "generated_at": "2026-08-02 09:48:38 UTC",
+  "recommend_exists": true,
+  "run_count": 1,
+  "papers": [
+    {
+      "paper_id": "2607.17076v1",
+      "route": "20260704-20260802/2607.17076v1-satlock-handover-coupled-scheduling-for-weather-resilient-quantum-key-distribution-over-leo-constellations",
+      "title": "SATLOCK: Handover-Coupled Scheduling for Weather-Resilient Quantum Key Distribution over LEO Constellations",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "satellite-rl"
+        }
+      ],
+      "score": 9.0,
+      "evidence": "面向低轨星座的切换感知量子密钥分发路由，采用深度Q网络在线优化",
+      "first_seen_at": "2026-08-02 09:48:38 UTC",
+      "updated_at": "2026-08-02 09:48:38 UTC"
+    },
+    {
+      "paper_id": "2607.04405v1",
+      "route": "20260704-20260802/2607.04405v1-deadline-bound-finite-object-delivery-over-intermittent-leo-satellite-contact-plans-under-residual-service-accounting",
+      "title": "Deadline-Bound Finite-Object Delivery over Intermittent LEO Satellite Contact Plans under Residual-Service Accounting",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "satellite-rl"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "面向LEO卫星接触计划的截止时间约束QoS路由",
+      "first_seen_at": "2026-08-02 09:48:38 UTC",
+      "updated_at": "2026-08-02 09:48:38 UTC"
+    },
+    {
+      "paper_id": "2607.18554v1",
+      "route": "20260704-20260802/2607.18554v1-scalable-policy-optimization-for-networked-multi-agent-reinforcement-learning-with-continuous-state-action-spaces",
+      "title": "Scalable Policy Optimization for Networked Multi-Agent Reinforcement Learning with Continuous State-Action Spaces",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "satellite-rl"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "面向连续空间的网络化多智能体策略优化方法，可迁移至卫星星座分布式资源分配",
+      "first_seen_at": "2026-08-02 09:48:38 UTC",
+      "updated_at": "2026-08-02 09:48:38 UTC"
+    },
+    {
+      "paper_id": "2607.19809v1",
+      "route": "20260704-20260802/2607.19809v1-dreamer-cpc-message-learning-with-world-models-for-decentralized-multi-agent-reinforcement-learning",
+      "title": "Dreamer-CPC: Message Learning with World Models for Decentralized Multi-agent Reinforcement Learning",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "satellite-rl"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "去中心化多智能体强化学习利用世界模型和预测编码进行消息学习，可支撑星间链路分布式协同控制",
+      "first_seen_at": "2026-08-02 09:48:38 UTC",
+      "updated_at": "2026-08-02 09:48:38 UTC"
+    },
+    {
+      "paper_id": "2607.23792v1",
+      "route": "20260704-20260802/2607.23792v1-gnn-based-multi-agent-control-of-traffic-shockwaves-in-sparse-vehicular-ad-hoc-networks",
+      "title": "GNN-based Multi-Agent Control of Traffic Shockwaves in Sparse Vehicular Ad-hoc Networks",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "satellite-rl"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "基于GNN的去中心化多智能体强化学习用于分布式交通控制，类比卫星拥塞与负载均衡",
+      "first_seen_at": "2026-08-02 09:48:38 UTC",
+      "updated_at": "2026-08-02 09:48:38 UTC"
+    },
+    {
+      "paper_id": "2607.03859v1",
+      "route": "20260704-20260802/2607.03859v1-beam-hopping-low-earth-orbit-satellite-resource-allocation-for-differentiated-services-and-robustness-analysis-under-model-attacks",
+      "title": "Beam Hopping Low Earth Orbit Satellite Resource Allocation for Differentiated Services and Robustness Analysis under Model Attacks",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "satellite-rl"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "低轨卫星波束跳变资源分配结合数字孪生，直接针对卫星网络优化",
+      "first_seen_at": "2026-08-02 09:48:38 UTC",
+      "updated_at": "2026-08-02 09:48:38 UTC"
+    },
+    {
+      "paper_id": "2607.04829v1",
+      "route": "20260704-20260802/2607.04829v1-handover-optimal-user-association-policy-for-leo-satellite-based-5g-ntn",
+      "title": "Handover-Optimal User Association Policy for LEO Satellite-based 5G NTN",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "satellite-rl"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "LEO卫星5G NTN中的切换最优用户关联，博弈论优化",
+      "first_seen_at": "2026-08-02 09:48:38 UTC",
+      "updated_at": "2026-08-02 09:48:38 UTC"
+    },
+    {
+      "paper_id": "2607.07142v1",
+      "route": "20260704-20260802/2607.07142v1-small-language-model-based-control-for-bbr-over-low-earth-orbit-satellite-internet",
+      "title": "Small Language Model-based Control for BBR over Low Earth Orbit Satellite Internet",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "satellite-rl"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "使用小语言模型进行低轨卫星互联网拥塞控制,属于自适应流量工程",
+      "first_seen_at": "2026-08-02 09:48:38 UTC",
+      "updated_at": "2026-08-02 09:48:38 UTC"
+    },
+    {
+      "paper_id": "2607.09372v1",
+      "route": "20260704-20260802/2607.09372v1-graph-neural-networks-for-scalable-and-transferable-node-centrality-approximation",
+      "title": "Graph Neural Networks for Scalable and Transferable Node Centrality Approximation",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "satellite-rl"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "GNN可扩展且跨拓扑迁移地近似节点中心性，适用于动态网络拓扑建模",
+      "first_seen_at": "2026-08-02 09:48:38 UTC",
+      "updated_at": "2026-08-02 09:48:38 UTC"
+    },
+    {
+      "paper_id": "2607.16703v1",
+      "route": "20260704-20260802/2607.16703v1-cooperative-marl-based-energy-efficient-power-control-for-two-hop-relaying-networks",
+      "title": "Cooperative MARL-Based Energy-Efficient Power Control for Two-Hop Relaying Networks",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "satellite-rl"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "协作多智能体强化学习用于部分可观CSI下的中继功率控制，可迁移至卫星星座分布式资源分配",
+      "first_seen_at": "2026-08-02 09:48:38 UTC",
+      "updated_at": "2026-08-02 09:48:38 UTC"
+    },
+    {
+      "paper_id": "2607.17561v1",
+      "route": "20260704-20260802/2607.17561v1-self-directed-spectrum-allocation-framework-for-integrated-tn-ntn-6g-networks",
+      "title": "Self-Directed Spectrum Allocation Framework for Integrated TN-NTN 6G Networks",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "satellite-rl"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "基于Q学习的集成地面与非地面网络自适应频谱分配",
+      "first_seen_at": "2026-08-02 09:48:38 UTC",
+      "updated_at": "2026-08-02 09:48:38 UTC"
+    },
+    {
+      "paper_id": "2607.07584v1",
+      "route": "20260704-20260802/2607.07584v1-phaul-a-ppo-based-forwarding-agent-for-sub6-enhanced-integrated-access-and-backhaul-networks",
+      "title": "PHaul: A PPO-based forwarding agent for Sub6 enhanced Integrated Access and Backhaul networks",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "satellite-rl"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "基于PPO的无线回传转发智能体，可迁移至卫星路由",
+      "first_seen_at": "2026-08-02 09:48:38 UTC",
+      "updated_at": "2026-08-02 09:48:38 UTC"
+    },
+    {
+      "paper_id": "2607.08454v1",
+      "route": "20260704-20260802/2607.08454v1-spatio-temporal-scheduling-prediction-under-backhaul-delay-for-resilient-coordinated-beamforming",
+      "title": "Spatio-Temporal Scheduling Prediction Under Backhaul Delay for Resilient Coordinated Beamforming",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "satellite-rl"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "使用谱时域图神经网络预测回传延迟下的用户调度状态，可迁移至卫星链路状态预测",
+      "first_seen_at": "2026-08-02 09:48:38 UTC",
+      "updated_at": "2026-08-02 09:48:38 UTC"
+    },
+    {
+      "paper_id": "2607.09498v1",
+      "route": "20260704-20260802/2607.09498v1-fused-constrained-policy-reuse-optimization-for-wireless-resource-allocation",
+      "title": "Fused Constrained Policy Reuse Optimization for Wireless Resource Allocation",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "satellite-rl"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "约束策略复用深度强化学习用于无线资源分配，可迁移至卫星资源优化",
+      "first_seen_at": "2026-08-02 09:48:38 UTC",
+      "updated_at": "2026-08-02 09:48:38 UTC"
+    },
+    {
+      "paper_id": "2607.11577v1",
+      "route": "20260704-20260802/2607.11577v1-structure-feature-aligned-graph-learning-via-alternating-constrained-optimization",
+      "title": "Structure-Feature Aligned Graph Learning via Alternating Constrained Optimization",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "satellite-rl"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "面向拓扑噪声鲁棒的图神经网络学习，与动态卫星拓扑建模相关",
+      "first_seen_at": "2026-08-02 09:48:38 UTC",
+      "updated_at": "2026-08-02 09:48:38 UTC"
+    },
+    {
+      "paper_id": "2607.12328v1",
+      "route": "20260704-20260802/2607.12328v1-metasurface-antenna-enabled-leo-satellite-constellation-communications-design-and-optimization",
+      "title": "Metasurface Antenna-Enabled LEO Satellite Constellation Communications: Design and Optimization",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "satellite-rl"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "超表面天线低轨星座设计及加权和速率最大化，面向卫星网络优化（物理层）",
+      "first_seen_at": "2026-08-02 09:48:38 UTC",
+      "updated_at": "2026-08-02 09:48:38 UTC"
+    }
+  ]
+}
